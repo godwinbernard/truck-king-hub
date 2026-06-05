@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Homepage Layout Options</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f1f5f9; color: #1e293b; padding: 24px; }
+  h1 { font-size: 20px; font-weight: 700; margin-bottom: 6px; color: #0f172a; }
+  .subtitle { font-size: 14px; color: #64748b; margin-bottom: 24px; }
+  .layouts { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  .layout-card { border-radius: 10px; overflow: hidden; border: 2.5px solid transparent; cursor: pointer; transition: border-color 0.2s, box-shadow 0.2s; background: #fff; box-shadow: 0 2px 8px rgba(0,0,0,0.07); }
+  .layout-card:hover { border-color: #94a3b8; box-shadow: 0 4px 16px rgba(0,0,0,0.12); }
+  .layout-card.selected { border-color: #2563eb; box-shadow: 0 4px 20px rgba(37,99,235,0.18); }
+  .layout-label { padding: 14px 16px 12px; border-top: 1px solid #f1f5f9; }
+  .layout-label h3 { font-size: 14px; font-weight: 700; color: #0f172a; margin-bottom: 3px; }
+  .layout-label p { font-size: 12px; color: #64748b; line-height: 1.5; }
+  .selected-badge { display: none; background: #2563eb; color: #fff; font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 20px; float: right; margin-top: 1px; }
+  .layout-card.selected .selected-badge { display: inline-block; }
+
+  /* ── LAYOUT A: Dark Dashboard ── */
+  .preview-a { background: #0f172a; padding: 12px; }
+  .a-nav { background: #1e293b; border-bottom: 1px solid #334155; padding: 8px 10px; display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+  .a-nav-logo { font-size: 12px; font-weight: 700; color: #f8fafc; letter-spacing: 0.3px; }
+  .a-nav-links { display: flex; gap: 10px; }
+  .a-nav-links span { font-size: 10px; color: #94a3b8; }
+  .a-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .a-card { background: #1e293b; border-radius: 6px; padding: 10px; }
+  .a-card.wide { grid-column: 1 / -1; }
+  .a-card-label { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
+  .a-item { display: flex; align-items: flex-start; gap: 6px; margin-bottom: 5px; }
+  .a-item-dot { width: 5px; height: 5px; border-radius: 50%; background: #f59e0b; margin-top: 4px; flex-shrink: 0; }
+  .a-item-dot.red { background: #ef4444; }
+  .a-item-dot.blue { background: #3b82f6; }
+  .a-item-dot.green { background: #10b981; }
+  .a-item-text { font-size: 10px; color: #e2e8f0; line-height: 1.4; }
+  .a-badge { display: inline-block; font-size: 8px; font-weight: 700; padding: 1px 5px; border-radius: 3px; margin-left: 4px; background: #ef4444; color: #fff; vertical-align: middle; }
+  .a-badge.medium { background: #f59e0b; }
+  .a-meta { font-size: 9px; color: #64748b; margin-top: 1px; }
+  .a-quicklinks { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 4px; }
+  .a-quicklinks span { background: #334155; color: #94a3b8; font-size: 9px; padding: 3px 7px; border-radius: 4px; }
+
+  /* ── LAYOUT B: Professional Light ── */
+  .preview-b { background: #f8fafc; padding: 0; }
+  .b-nav { background: #fff; border-bottom: 1px solid #e2e8f0; padding: 9px 12px; display: flex; align-items: center; justify-content: space-between; }
+  .b-nav-logo { font-size: 13px; font-weight: 800; color: #0f172a; }
+  .b-nav-logo span { color: #2563eb; }
+  .b-nav-links { display: flex; gap: 10px; }
+  .b-nav-links span { font-size: 10px; color: #64748b; }
+  .b-body { padding: 10px 12px; }
+  .b-section-title { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: #94a3b8; margin-bottom: 6px; }
+  .b-brief-item { padding: 7px 0; border-bottom: 1px solid #f1f5f9; display: flex; gap: 8px; align-items: flex-start; }
+  .b-brief-item:last-child { border-bottom: none; }
+  .b-brief-cat { width: 3px; border-radius: 2px; flex-shrink: 0; margin-top: 3px; height: 28px; }
+  .b-brief-title { font-size: 11px; font-weight: 600; color: #1e293b; margin-bottom: 2px; }
+  .b-brief-meta { font-size: 9px; color: #94a3b8; }
+  .b-brief-badge { display: inline-block; font-size: 8px; font-weight: 700; padding: 1px 5px; border-radius: 3px; margin-left: 5px; }
+  .b-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; margin-top: 8px; }
+  .b-module { background: #fff; border: 1px solid #e2e8f0; border-radius: 6px; padding: 8px; }
+  .b-module-title { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: #64748b; margin-bottom: 4px; }
+  .b-module-text { font-size: 10px; color: #1e293b; line-height: 1.4; }
+  .b-module-meta { font-size: 9px; color: #94a3b8; margin-top: 3px; }
+  .b-quicklinks { display: flex; gap: 5px; flex-wrap: wrap; margin-top: 8px; }
+  .b-quicklinks span { background: #f1f5f9; border: 1px solid #e2e8f0; color: #475569; font-size: 9px; padding: 3px 8px; border-radius: 4px; }
+
+  /* ── LAYOUT C: Branded Navy/Gold ── */
+  .preview-c { background: #f0f4ff; padding: 0; }
+  .c-nav { background: #1e3a5f; padding: 9px 12px; display: flex; align-items: center; justify-content: space-between; }
+  .c-nav-logo { font-size: 12px; font-weight: 800; color: #fff; }
+  .c-nav-logo span { color: #fbbf24; }
+  .c-nav-links { display: flex; gap: 10px; }
+  .c-nav-links span { font-size: 10px; color: #93c5fd; }
+  .c-hero { background: #1e3a5f; padding: 8px 12px 12px; border-bottom: 3px solid #fbbf24; }
+  .c-hero-label { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: #fbbf24; margin-bottom: 4px; }
+  .c-hero-title { font-size: 12px; font-weight: 700; color: #fff; margin-bottom: 3px; }
+  .c-hero-summary { font-size: 10px; color: #93c5fd; line-height: 1.4; margin-bottom: 5px; }
+  .c-hero-tags { display: flex; gap: 5px; }
+  .c-hero-tags span { font-size: 8px; font-weight: 700; padding: 2px 6px; border-radius: 3px; }
+  .c-body { padding: 10px 12px; }
+  .c-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; margin-bottom: 8px; }
+  .c-module { background: #fff; border: 1px solid #dbeafe; border-radius: 6px; padding: 8px; border-top: 3px solid #1e3a5f; }
+  .c-module-title { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: #1e3a5f; margin-bottom: 4px; }
+  .c-module-text { font-size: 10px; color: #1e293b; line-height: 1.4; }
+  .c-module-meta { font-size: 9px; color: #94a3b8; margin-top: 3px; }
+  .c-quicklinks { display: flex; gap: 5px; flex-wrap: wrap; }
+  .c-quicklinks span { background: #1e3a5f; color: #fff; font-size: 9px; padding: 3px 8px; border-radius: 4px; }
+</style>
+<script>
+  function selectLayout(el) {
+    document.querySelectorAll('.layout-card').forEach(c => c.classList.remove('selected'));
+    el.classList.add('selected');
+    const choice = el.dataset.choice;
+    if (window.parent && window.parent.recordChoice) {
+      window.parent.recordChoice(choice, el.querySelector('h3').textContent);
+    }
+    try {
+      fetch('/event', { method:'POST', headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({type:'click', choice, text: el.querySelector('h3').textContent}) });
+    } catch(e) {}
+  }
+</script>
+</head>
+<body>
+<h1>Homepage Layout Direction</h1>
+<p class="subtitle">Three distinct visual approaches — same content, different feel. Click to select.</p>
+
+<div class="layouts">
+
+  <!-- LAYOUT A: Dark Dashboard -->
+  <div class="layout-card" data-choice="a" onclick="selectLayout(this)">
+    <div class="preview-a">
+      <div class="a-nav">
+        <span class="a-nav-logo">TRUCKING HUB</span>
+        <div class="a-nav-links">
+          <span>Brief</span><span>Compliance</span><span>Insurance</span><span>Resources</span>
+        </div>
+      </div>
+      <div class="a-grid">
+        <div class="a-card wide">
+          <div class="a-card-label" style="color:#f59e0b;">Today's Trucking Brief</div>
+          <div class="a-item"><div class="a-item-dot red"></div><div><div class="a-item-text">FMCSA proposes new ELD rule changes <span class="a-badge">HIGH</span></div><div class="a-meta">FMCSA · 2 hrs ago</div></div></div>
+          <div class="a-item"><div class="a-item-dot"></div><div><div class="a-item-text">Spot rates down 3% week-over-week</div><div class="a-meta">Overdrive · 3 hrs ago</div></div></div>
+          <div class="a-item"><div class="a-item-dot green"></div><div><div class="a-item-text">Pilot Flying J expands truck parking network</div><div class="a-meta">Truckers News · 5 hrs ago</div></div></div>
+        </div>
+        <div class="a-card">
+          <div class="a-card-label" style="color:#3b82f6;">Compliance Alerts</div>
+          <div class="a-item"><div class="a-item-dot blue"></div><div><div class="a-item-text">2 new FMCSA notices this week</div><div class="a-meta">Federal Register</div></div></div>
+          <div class="a-item"><div class="a-item-dot red"></div><div><div class="a-item-text">Clearinghouse query deadline approaching</div><div class="a-meta">FMCSA</div></div></div>
+        </div>
+        <div class="a-card">
+          <div class="a-card-label" style="color:#10b981;">Insurance Spotlight</div>
+          <div class="a-item"><div class="a-item-dot green"></div><div><div class="a-item-text">How CSA scores affect your premium</div><div class="a-meta">Insurance & Risk</div></div></div>
+          <div class="a-item"><div class="a-item-dot"></div><div><div class="a-item-text">New venture insurance checklist</div><div class="a-meta">Resource</div></div></div>
+        </div>
+        <div class="a-card wide">
+          <div class="a-card-label" style="color:#64748b;">Quick Links</div>
+          <div class="a-quicklinks">
+            <span>FMCSA</span><span>SAFER</span><span>DAT</span><span>Truckstop</span><span>OOIDA</span><span>Federal Register</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="layout-label">
+      <h3>A — Dark Command Center <span class="selected-badge">Selected</span></h3>
+      <p>Dark background, color-coded alerts, dense grid. Feels like a professional ops dashboard.</p>
+    </div>
+  </div>
+
+  <!-- LAYOUT B: Clean Light -->
+  <div class="layout-card" data-choice="b" onclick="selectLayout(this)">
+    <div class="preview-b">
+      <div class="b-nav">
+        <span class="b-nav-logo">Trucking<span>Hub</span></span>
+        <div class="b-nav-links"><span>Brief</span><span>Compliance</span><span>Insurance</span><span>Resources</span></div>
+      </div>
+      <div class="b-body">
+        <div class="b-section-title">Today's Trucking Brief — June 5, 2026</div>
+        <div class="b-brief-item">
+          <div class="b-brief-cat" style="background:#ef4444;"></div>
+          <div>
+            <div class="b-brief-title">FMCSA proposes new ELD rule changes <span class="b-brief-badge" style="background:#fee2e2;color:#ef4444;">COMPLIANCE</span></div>
+            <div class="b-brief-meta">FMCSA · 2 hrs ago · Affects all CMV operators</div>
+          </div>
+        </div>
+        <div class="b-brief-item">
+          <div class="b-brief-cat" style="background:#f59e0b;"></div>
+          <div>
+            <div class="b-brief-title">Spot rates down 3% week-over-week</div>
+            <div class="b-brief-meta">Overdrive · 3 hrs ago · Freight market</div>
+          </div>
+        </div>
+        <div class="b-brief-item">
+          <div class="b-brief-cat" style="background:#10b981;"></div>
+          <div>
+            <div class="b-brief-title">Pilot Flying J expands truck parking</div>
+            <div class="b-brief-meta">Truckers News · 5 hrs ago</div>
+          </div>
+        </div>
+        <div class="b-grid">
+          <div class="b-module">
+            <div class="b-module-title">Compliance Alerts</div>
+            <div class="b-module-text">2 new FMCSA notices this week</div>
+            <div class="b-module-meta">Federal Register · 2 hrs ago</div>
+          </div>
+          <div class="b-module">
+            <div class="b-module-title">Insurance Spotlight</div>
+            <div class="b-module-text">How CSA scores affect your renewal</div>
+            <div class="b-module-meta">Insurance & Risk · 4 hrs ago</div>
+          </div>
+        </div>
+        <div class="b-quicklinks">
+          <span>FMCSA</span><span>SAFER</span><span>DAT</span><span>Truckstop</span><span>OOIDA</span>
+        </div>
+      </div>
+    </div>
+    <div class="layout-label">
+      <h3>B — Clean Professional <span class="selected-badge">Selected</span></h3>
+      <p>White background, strong typography, color-coded category strips. Readable and credible.</p>
+    </div>
+  </div>
+
+  <!-- LAYOUT C: Navy & Gold -->
+  <div class="layout-card" data-choice="c" onclick="selectLayout(this)">
+    <div class="preview-c">
+      <div class="c-nav">
+        <span class="c-nav-logo">Trucking<span>Hub</span></span>
+        <div class="c-nav-links"><span>Brief</span><span>Compliance</span><span>Insurance</span><span>Resources</span></div>
+      </div>
+      <div class="c-hero">
+        <div class="c-hero-label">Today's Top Story</div>
+        <div class="c-hero-title">FMCSA proposes new ELD rule changes</div>
+        <div class="c-hero-summary">Drivers may need to update ELD firmware by Q1 2027. Affects all CMV operators under federal jurisdiction.</div>
+        <div class="c-hero-tags">
+          <span style="background:#fbbf24;color:#1e3a5f;">Compliance</span>
+          <span style="background:#ef4444;color:#fff;">High Priority</span>
+          <span style="background:rgba(255,255,255,0.15);color:#fff;">FMCSA · 2 hrs ago</span>
+        </div>
+      </div>
+      <div class="c-body">
+        <div class="c-grid">
+          <div class="c-module">
+            <div class="c-module-title">Compliance Alerts</div>
+            <div class="c-module-text">2 new FMCSA notices this week</div>
+            <div class="c-module-meta">Federal Register · 2 hrs ago</div>
+          </div>
+          <div class="c-module">
+            <div class="c-module-title">Insurance Spotlight</div>
+            <div class="c-module-text">How CSA scores affect your renewal</div>
+            <div class="c-module-meta">Insurance & Risk · 4 hrs ago</div>
+          </div>
+          <div class="c-module">
+            <div class="c-module-title">Freight Pulse</div>
+            <div class="c-module-text">Spot rates down 3% this week</div>
+            <div class="c-module-meta">Overdrive · 3 hrs ago</div>
+          </div>
+          <div class="c-module">
+            <div class="c-module-title">Owner-Operator</div>
+            <div class="c-module-text">Top load boards compared for 2026</div>
+            <div class="c-module-meta">Resource · Updated today</div>
+          </div>
+        </div>
+        <div class="c-quicklinks">
+          <span>FMCSA</span><span>SAFER</span><span>DAT</span><span>Truckstop</span><span>OOIDA</span>
+        </div>
+      </div>
+    </div>
+    <div class="layout-label">
+      <h3>C — Navy &amp; Gold Brand <span class="selected-badge">Selected</span></h3>
+      <p>Navy header with gold accents, featured top story, structured modules. Strong brand identity.</p>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

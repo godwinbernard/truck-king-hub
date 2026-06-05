@@ -1,0 +1,112 @@
+<h2>Which homepage layout feels right?</h2>
+<p class="subtitle">All three show the same modules — the difference is how dense and structured the information is on first load.</p>
+
+<div class="cards">
+  <div class="card" data-choice="a" onclick="toggleSelect(this)">
+    <div class="card-image" style="background:#0f172a;padding:12px;font-family:monospace;font-size:11px;color:#94a3b8;">
+      <div style="background:#1e293b;padding:6px 8px;margin-bottom:6px;border-left:3px solid #f59e0b;color:#f1f5f9;font-size:12px;font-weight:600;">TRUCKING HUB &nbsp;|&nbsp; Today's Brief &nbsp;|&nbsp; Compliance &nbsp;|&nbsp; Insurance &nbsp;|&nbsp; Resources &nbsp;|&nbsp; 🔍</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;">
+        <div style="grid-column:1/-1;background:#1e293b;padding:8px;border-left:3px solid #f59e0b;">
+          <div style="color:#f59e0b;font-size:9px;text-transform:uppercase;letter-spacing:1px;">Today's Brief</div>
+          <div style="color:#f1f5f9;margin-top:4px;font-size:11px;">▪ FMCSA proposes new ELD rule changes &nbsp;<span style="color:#ef4444;font-size:9px;">HIGH</span></div>
+          <div style="color:#f1f5f9;font-size:11px;">▪ Spot rates down 3% week-over-week</div>
+          <div style="color:#f1f5f9;font-size:11px;">▪ Pilot Flying J adds 12 new locations</div>
+        </div>
+        <div style="background:#1e293b;padding:8px;border-left:3px solid #3b82f6;">
+          <div style="color:#3b82f6;font-size:9px;text-transform:uppercase;letter-spacing:1px;">Compliance Alerts</div>
+          <div style="color:#f1f5f9;margin-top:4px;font-size:10px;">2 new FMCSA notices this week</div>
+          <div style="color:#94a3b8;font-size:9px;margin-top:2px;">Federal Register · 2 hrs ago</div>
+        </div>
+        <div style="background:#1e293b;padding:8px;border-left:3px solid #10b981;">
+          <div style="color:#10b981;font-size:9px;text-transform:uppercase;letter-spacing:1px;">Insurance Spotlight</div>
+          <div style="color:#f1f5f9;margin-top:4px;font-size:10px;">How CSA scores affect your renewal</div>
+          <div style="color:#94a3b8;font-size:9px;margin-top:2px;">Insurance & Risk · 4 hrs ago</div>
+        </div>
+        <div style="grid-column:1/-1;background:#1e293b;padding:6px 8px;">
+          <div style="color:#94a3b8;font-size:9px;text-transform:uppercase;letter-spacing:1px;">Quick Links</div>
+          <div style="display:flex;gap:8px;margin-top:4px;flex-wrap:wrap;">
+            <span style="background:#334155;color:#f1f5f9;padding:2px 6px;font-size:9px;border-radius:2px;">FMCSA</span>
+            <span style="background:#334155;color:#f1f5f9;padding:2px 6px;font-size:9px;border-radius:2px;">SAFER</span>
+            <span style="background:#334155;color:#f1f5f9;padding:2px 6px;font-size:9px;border-radius:2px;">DAT</span>
+            <span style="background:#334155;color:#f1f5f9;padding:2px 6px;font-size:9px;border-radius:2px;">Truckstop</span>
+            <span style="background:#334155;color:#f1f5f9;padding:2px 6px;font-size:9px;border-radius:2px;">OOIDA</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>A — Dark Dashboard</h3>
+      <p>Dark background, color-coded category strips, dense information grid. Feels like a command center. Professional and serious.</p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="b" onclick="toggleSelect(this)">
+    <div class="card-image" style="background:#f8fafc;padding:12px;font-family:sans-serif;font-size:11px;color:#334155;">
+      <div style="background:#fff;padding:6px 8px;margin-bottom:6px;border-bottom:2px solid #e2e8f0;color:#1e293b;font-size:12px;font-weight:700;display:flex;justify-content:space-between;">
+        <span>Trucking Hub</span>
+        <span style="font-size:10px;font-weight:400;color:#64748b;">Brief · Compliance · Insurance · Resources · Search</span>
+      </div>
+      <div style="background:#fff;border:1px solid #e2e8f0;padding:8px;margin-bottom:6px;">
+        <div style="color:#64748b;font-size:9px;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;">Today's Trucking Brief — June 5, 2026</div>
+        <div style="border-left:3px solid #ef4444;padding-left:6px;margin-bottom:4px;">
+          <div style="font-weight:600;font-size:11px;color:#1e293b;">FMCSA proposes new ELD rule changes</div>
+          <div style="color:#64748b;font-size:10px;">Affects all CMV operators · FMCSA · 2 hrs ago &nbsp;<span style="background:#fee2e2;color:#ef4444;padding:1px 4px;font-size:9px;border-radius:2px;">COMPLIANCE</span></div>
+        </div>
+        <div style="border-left:3px solid #94a3b8;padding-left:6px;margin-bottom:4px;">
+          <div style="font-weight:600;font-size:11px;color:#1e293b;">Spot rates down 3% week-over-week</div>
+          <div style="color:#64748b;font-size:10px;">Freight · Overdrive · 3 hrs ago</div>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;">
+        <div style="background:#fff;border:1px solid #e2e8f0;padding:6px;">
+          <div style="color:#64748b;font-size:9px;text-transform:uppercase;margin-bottom:3px;">Compliance</div>
+          <div style="font-size:10px;color:#1e293b;">2 FMCSA notices this week</div>
+        </div>
+        <div style="background:#fff;border:1px solid #e2e8f0;padding:6px;">
+          <div style="color:#64748b;font-size:9px;text-transform:uppercase;margin-bottom:3px;">Insurance</div>
+          <div style="font-size:10px;color:#1e293b;">CSA scores &amp; renewal rates</div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>B — Clean Light</h3>
+      <p>White background, clear typography, subtle borders. Feels like a professional news product. Easy to read, approachable for all users.</p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="c" onclick="toggleSelect(this)">
+    <div class="card-image" style="background:#f0fdf4;padding:12px;font-family:sans-serif;font-size:11px;color:#166534;">
+      <div style="background:#166534;padding:6px 10px;margin-bottom:6px;color:#fff;font-size:12px;font-weight:700;display:flex;justify-content:space-between;align-items:center;">
+        <span>🚛 Trucking Hub</span>
+        <span style="font-size:9px;font-weight:400;opacity:0.8;">Brief · Compliance · Insurance · Resources</span>
+      </div>
+      <div style="background:#fff;border:1px solid #bbf7d0;border-radius:4px;padding:8px;margin-bottom:6px;">
+        <div style="color:#166534;font-size:9px;font-weight:700;text-transform:uppercase;margin-bottom:4px;">Today's Brief</div>
+        <div style="font-weight:600;font-size:11px;color:#1e293b;margin-bottom:2px;">FMCSA proposes ELD rule changes</div>
+        <div style="color:#64748b;font-size:10px;margin-bottom:4px;">Plain English: Drivers may need to update ELD firmware by Q1 2027...</div>
+        <div style="display:flex;gap:4px;">
+          <span style="background:#fef9c3;color:#854d0e;padding:1px 5px;font-size:9px;border-radius:10px;">Compliance</span>
+          <span style="background:#fee2e2;color:#991b1b;padding:1px 5px;font-size:9px;border-radius:10px;">High Priority</span>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px;">
+        <div style="background:#fff;border:1px solid #bbf7d0;border-radius:4px;padding:5px;text-align:center;">
+          <div style="font-size:14px;">⚖️</div>
+          <div style="font-size:9px;color:#166534;font-weight:600;">Compliance</div>
+        </div>
+        <div style="background:#fff;border:1px solid #bbf7d0;border-radius:4px;padding:5px;text-align:center;">
+          <div style="font-size:14px;">🛡️</div>
+          <div style="font-size:9px;color:#166534;font-weight:600;">Insurance</div>
+        </div>
+        <div style="background:#fff;border:1px solid #bbf7d0;border-radius:4px;padding:5px;text-align:center;">
+          <div style="font-size:14px;">📦</div>
+          <div style="font-size:9px;color:#166534;font-weight:600;">Resources</div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>C — Branded Green</h3>
+      <p>Green brand color, rounded cards, pill badges. Warmer and more consumer-friendly. Feels like a modern mobile-first app.</p>
+    </div>
+  </div>
+</div>

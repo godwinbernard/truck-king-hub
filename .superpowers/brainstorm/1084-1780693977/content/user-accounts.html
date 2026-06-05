@@ -1,0 +1,29 @@
+<h2>Should MVP include user accounts?</h2>
+<p class="subtitle">This affects database schema, auth infrastructure, and what personalization is possible from day one.</p>
+
+<div class="options">
+  <div class="option" data-choice="a" onclick="toggleSelect(this)">
+    <div class="letter">A</div>
+    <div class="content">
+      <h3>Public-only MVP — no accounts</h3>
+      <p>Everything is readable without signing in. No auth infrastructure needed. Fastest to build, easiest to maintain. Add accounts in Phase 2 when you know what personalization users actually want.</p>
+      <p><strong>Trade-off:</strong> No saved topics, no personalized alerts, no newsletter opt-in tied to a profile.</p>
+    </div>
+  </div>
+  <div class="option" data-choice="b" onclick="toggleSelect(this)">
+    <div class="letter">B</div>
+    <div class="content">
+      <h3>Email newsletter signup only</h3>
+      <p>No full accounts — just an email capture for the daily brief digest. Simple, low-friction, and immediately useful for building an audience. No auth, no passwords, just a mailing list.</p>
+      <p><strong>Trade-off:</strong> No personalization beyond what you send to everyone.</p>
+    </div>
+  </div>
+  <div class="option" data-choice="c" onclick="toggleSelect(this)">
+    <div class="letter">C</div>
+    <div class="content">
+      <h3>Lightweight accounts from day one</h3>
+      <p>Email + password auth (or magic link). Enables saved topics, compliance alert preferences, and personalized dashboard in MVP. More upfront work but avoids a painful migration later.</p>
+      <p><strong>Trade-off:</strong> Adds 1–2 weeks of dev time, requires email infra, and users have to register before getting value.</p>
+    </div>
+  </div>
+</div>

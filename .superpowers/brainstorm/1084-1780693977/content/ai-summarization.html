@@ -1,0 +1,29 @@
+<h2>Which AI service should power the content summarization?</h2>
+<p class="subtitle">Used to generate plain-English summaries and "why it matters" notes during ingestion. Runs in the background — not user-facing.</p>
+
+<div class="options">
+  <div class="option" data-choice="a" onclick="toggleSelect(this)">
+    <div class="letter">A</div>
+    <div class="content">
+      <h3>OpenAI (GPT-4o mini)</h3>
+      <p>Fast, cheap, widely used. GPT-4o mini is well-suited for structured summarization tasks. Easy to integrate. ~$0.15/1M input tokens.</p>
+      <p><strong>Best for:</strong> Cost-sensitive, high-volume summarization pipelines.</p>
+    </div>
+  </div>
+  <div class="option" data-choice="b" onclick="toggleSelect(this)">
+    <div class="letter">B</div>
+    <div class="content">
+      <h3>Anthropic Claude (Haiku)</h3>
+      <p>Strong at following structured prompts and producing consistent output. Claude Haiku is fast and affordable. ~$0.08/1M input tokens.</p>
+      <p><strong>Best for:</strong> Reliable structured output with good instruction-following.</p>
+    </div>
+  </div>
+  <div class="option" data-choice="c" onclick="toggleSelect(this)">
+    <div class="letter">C</div>
+    <div class="content">
+      <h3>Decide later — stub it out for MVP</h3>
+      <p>Build the pipeline with a placeholder summarizer that returns the raw excerpt. Wire in a real AI service once the pipeline is stable and you've validated the ingestion flow.</p>
+      <p><strong>Best for:</strong> Getting the pipeline running fast without committing to an API key yet.</p>
+    </div>
+  </div>
+</div>
