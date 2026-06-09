@@ -1,66 +1,140 @@
-import Link from 'next/link';
+'use client';
 
-const NAV_LINKS = [
-  { href: '/brief', label: 'Daily Brief' },
-  { href: '/compliance', label: 'Compliance' },
-  { href: '/insurance', label: 'Insurance' },
-  { href: '/resources', label: 'Resources' },
+import Link from 'next/link';
+import { useState } from 'react';
+
+const CATEGORIES = [
+  { href: '/brief',      label: 'News' },
+  { href: '/brief?category=freight', label: 'Logistics' },
+  { href: '/brief?category=compliance', label: 'Compliance' },
+  { href: '/brief?category=equipment', label: 'Trucks' },
+  { href: '/insurance',  label: 'Insurance' },
+  { href: '/resources',  label: 'Resources' },
+  { href: '/brief?category=general', label: 'Lifestyle' },
 ];
 
 export function NavBar() {
+  const [mobileOpen, setMobileOpen] = useState(false);
+
   return (
-    <nav className="bg-navy text-white border-b border-white/10 sticky top-0 z-40" role="navigation" aria-label="Main navigation">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-14">
+    <header className="sticky top-0 z-50 bg-white border-b border-silver-light" role="banner">
 
-          {/* Brand */}
-          <Link href="/" className="flex items-center gap-2.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold rounded">
-            <div className="w-7 h-7 rounded-md bg-gold/20 border border-gold/30 flex items-center justify-center flex-shrink-0" aria-hidden="true">
-              <svg className="w-4 h-4 text-gold" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 18.75a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m3 0h6m-9 0H3.375a1.125 1.125 0 0 1-1.125-1.125V14.25m17.25 4.5a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m3 0h1.125c.621 0 1.129-.504 1.09-1.124a17.902 17.902 0 0 0-3.213-9.193 2.056 2.056 0 0 0-1.58-.86H14.25M16.5 18.75h-2.25m0-11.177v-.958c0-.568-.422-1.048-.987-1.106a48.554 48.554 0 0 0-10.026 0 1.106 1.106 0 0 0-.987 1.106v7.635m12-6.677v6.677m0 4.5v-4.5m0 0h-12" />
-              </svg>
-            </div>
-            <span className="font-extrabold text-base tracking-tight">
-              Truck King<span className="text-gold"> Hub</span>
-            </span>
-          </Link>
+      {/* Top bar — brand + search */}
+      <div className="border-b border-silver-light">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between h-16 gap-4">
 
-          {/* Desktop nav links */}
-          <div className="hidden sm:flex items-center gap-1">
-            {NAV_LINKS.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                className="px-3 py-1.5 text-sm text-blue-200 hover:text-white hover:bg-white/10 rounded-md transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold"
-              >
-                {link.label}
-              </Link>
-            ))}
-            <Link
-              href="/search"
-              className="ml-2 flex items-center gap-1.5 px-3 py-1.5 text-sm bg-white/10 hover:bg-white/20 text-white rounded-md border border-white/15 hover:border-white/25 transition-all duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold"
-              aria-label="Search"
+            {/* Mobile menu button */}
+            <button
+              className="lg:hidden p-2 -ml-2 text-charcoal hover:text-crimson transition-colors"
+              onClick={() => setMobileOpen(!mobileOpen)}
+              aria-label="Toggle menu"
+              aria-expanded={mobileOpen}
             >
-              <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" aria-hidden="true">
-                <path strokeLinecap="round" strokeLinejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
+              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
+                {mobileOpen
+                  ? <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                  : <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+                }
               </svg>
-              <span>Search</span>
+            </button>
+
+            {/* Wordmark */}
+            <Link
+              href="/"
+              className="flex-1 lg:flex-none text-center lg:text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-crimson rounded"
+            >
+              <span
+                className="font-display-hed text-3xl sm:text-4xl text-ink tracking-wide leading-none select-none"
+                style={{ fontFamily: "'Playfair Display', Georgia, serif", fontWeight: 800, letterSpacing: '-0.01em' }}
+              >
+                TRUCK KING <span className="text-crimson">HUB</span>
+              </span>
             </Link>
+
+            {/* Right actions */}
+            <div className="flex items-center gap-3">
+              <Link
+                href="/search"
+                className="hidden sm:flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-charcoal hover:text-crimson transition-colors"
+                aria-label="Search"
+              >
+                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
+                </svg>
+                Search
+              </Link>
+              <div className="hidden sm:block w-px h-4 bg-silver-light" />
+              <Link
+                href="/brief"
+                className="hidden sm:inline-flex items-center gap-1.5 px-4 py-1.5 bg-ink text-white text-xs font-semibold uppercase tracking-widest hover:bg-crimson transition-colors"
+              >
+                Subscribe
+              </Link>
+              {/* Mobile search */}
+              <Link href="/search" className="sm:hidden p-2 text-charcoal hover:text-crimson transition-colors" aria-label="Search">
+                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
+                </svg>
+              </Link>
+            </div>
+
           </div>
-
-          {/* Mobile search icon */}
-          <Link
-            href="/search"
-            className="sm:hidden p-2 rounded-md text-blue-200 hover:text-white hover:bg-white/10 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold"
-            aria-label="Search"
-          >
-            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" aria-hidden="true">
-              <path strokeLinecap="round" strokeLinejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
-            </svg>
-          </Link>
-
         </div>
       </div>
-    </nav>
+
+      {/* Category strip */}
+      <div className="hidden lg:block bg-ink">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <nav className="flex items-center gap-0" aria-label="Category navigation">
+            {CATEGORIES.map((cat) => (
+              <Link
+                key={cat.href}
+                href={cat.href}
+                className="px-4 py-2.5 text-xs font-semibold uppercase tracking-widest text-silver hover:text-white hover:bg-white/10 transition-colors whitespace-nowrap"
+              >
+                {cat.label}
+              </Link>
+            ))}
+            <div className="ml-auto">
+              <Link
+                href="/contact/takedown"
+                className="px-4 py-2.5 text-xs font-semibold uppercase tracking-widest text-silver hover:text-white transition-colors"
+              >
+                Advertise
+              </Link>
+            </div>
+          </nav>
+        </div>
+      </div>
+
+      {/* Mobile drawer */}
+      {mobileOpen && (
+        <div className="lg:hidden bg-white border-t border-silver-light shadow-lg">
+          <nav className="max-w-7xl mx-auto px-4 py-4 flex flex-col gap-1" aria-label="Mobile navigation">
+            {CATEGORIES.map((cat) => (
+              <Link
+                key={cat.href}
+                href={cat.href}
+                onClick={() => setMobileOpen(false)}
+                className="px-3 py-2.5 text-sm font-semibold uppercase tracking-widest text-charcoal hover:text-crimson hover:bg-silver-pale transition-colors"
+              >
+                {cat.label}
+              </Link>
+            ))}
+            <div className="border-t border-silver-light mt-2 pt-2">
+              <Link
+                href="/contact/takedown"
+                onClick={() => setMobileOpen(false)}
+                className="px-3 py-2.5 text-sm font-semibold uppercase tracking-widest text-charcoal hover:text-crimson transition-colors block"
+              >
+                Advertise
+              </Link>
+            </div>
+          </nav>
+        </div>
+      )}
+
+    </header>
   );
 }

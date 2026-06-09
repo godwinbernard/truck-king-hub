@@ -1,35 +1,75 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,800;0,900;1,400;1,700&family=Inter:wght@300;400;500;600;700&family=Bebas+Neue&display=swap');
 @import "tailwindcss";
 
 @theme {
-  --color-navy: #1e3a5f;
-  --color-navy-light: #2a5080;
-  --color-navy-dark: #152b47;
-  --color-gold: #fbbf24;
-  --color-gold-light: #fcd34d;
-  --color-gold-dark: #d97706;
+  --color-ink:           #0d0d0d;
+  --color-ink-soft:      #1a1a1a;
+  --color-charcoal:      #2c2c2c;
+  --color-silver:        #9ca3af;
+  --color-silver-light:  #e5e7eb;
+  --color-silver-pale:   #f3f4f6;
+  --color-crimson:       #c0392b;
+  --color-crimson-dark:  #96281b;
+  --color-parchment:     #fafaf8;
+  --color-cream:         #f5f4f0;
+  --color-gold:          #b8982a;
+  --color-gold-light:    #d4af45;
+  --font-editorial:      'Playfair Display', Georgia, serif;
+  --font-sans:           'Inter', system-ui, sans-serif;
+  --font-display:        'Bebas Neue', 'Impact', sans-serif;
 }
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: #ffffff;
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
+
+.font-editorial      { font-family: var(--font-editorial); }
+.font-display-hed    { font-family: var(--font-display); letter-spacing: 0.02em; }
+
+@keyframes ticker-scroll {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+.ticker-track {
+  animation: ticker-scroll 40s linear infinite;
+  white-space: nowrap;
+  display: inline-flex;
+}
+.ticker-track:hover { animation-play-state: paused; }
+
+.hero-overlay {
+  background: linear-gradient(
+    to bottom,
+    rgba(13,13,13,0.10) 0%,
+    rgba(13,13,13,0.30) 40%,
+    rgba(13,13,13,0.82) 100%
+  );
+}
+
+.editorial-card {
+  transition: transform 200ms ease, box-shadow 200ms ease;
+}
+.editorial-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 40px rgba(0,0,0,0.10);
+}
+
+img { display: block; max-width: 100%; }
+
+:focus-visible {
+  outline: 2px solid var(--color-crimson);
+  outline-offset: 2px;
+}
+
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 3px; }
