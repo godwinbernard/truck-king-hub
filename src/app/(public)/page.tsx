@@ -2,6 +2,10 @@ import { db } from '@/lib/db/client';
 import { articles } from '@/lib/db/schema';
 import { eq, desc, and } from 'drizzle-orm';
 import Link from 'next/link';
+import { unstable_noStore as noStore } from 'next/cache';
+
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
 
 async function getArticles(category?: string, limit = 10) {
   try {
@@ -185,6 +189,7 @@ function EmptyState() {
 }
 
 export default async function HomePage() {
+  noStore();
   const [latest, compliance, freight, equipment, insurance] = await Promise.all([
     getArticles(undefined, 12),
     getArticles('compliance', 5),
