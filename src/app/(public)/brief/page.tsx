@@ -1,103 +1,123 @@
 import { db } from '@/lib/db/client';
-import { contentItems, sources } from '@/lib/db/schema';
-import { inArray, desc, eq } from 'drizzle-orm';
-import { ContentCard } from '@/components/content/ContentCard';
+import { articles } from '@/lib/db/schema';
+import { desc, eq, and } from 'drizzle-orm';
+import Link from 'next/link';
 
-const CATEGORIES = ['compliance', 'insurance', 'freight', 'safety', 'fuel', 'equipment', 'general'];
+const CATEGORIES = ['news', 'compliance', 'freight', 'equipment', 'insurance', 'lifestyle', 'general'];
 
 const CATEGORY_DESC: Record<string, string> = {
+  news:       'Latest trucking news & industry updates',
   compliance: 'FMCSA & DOT regulatory updates',
-  insurance:  'Coverage, premiums & risk news',
-  freight:    'Rates, load boards & market data',
-  safety:     'CSA scores, inspections & HOS',
-  fuel:       'Fuel prices & efficiency tips',
-  equipment:  'Trucks, trailers & marketplace',
-  general:    'Industry news & community',
+  insurance:  'Coverage, premiums & risk intelligence',
+  freight:    'Rates, logistics & freight market',
+  equipment:  'Trucks, trailers & technology',
+  lifestyle:  'Driver life, health & community',
+  general:    'Business insights & owner-operator advice',
 };
+
+const CAT_COLORS: Record<string, string> = {
+  compliance: 'bg-red-600', freight: 'bg-blue-700', insurance: 'bg-amber-600',
+  equipment: 'bg-zinc-700', general: 'bg-emerald-700', news: 'bg-slate-800', lifestyle: 'bg-teal-700',
+};
+
+function fmtDate(d: Date | null) {
+  if (!d) return '';
+  return new Date(d).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+}
+
+function readTime(body: string) {
+  const words = body.trim().split(/\s+/).length;
+  return `${Math.max(1, Math.round(words / 200))} min read`;
+}
 
 export default async function BriefPage({ searchParams }: { searchParams: Promise<{ category?: string }> }) {
   const params = await searchParams;
-  const category = params.category;
+  const category = params.category && CATEGORIES.includes(params.category) ? params.category : undefined;
 
-  const rows = await db
-    .select({
-      id: contentItems.id, title: contentItems.title, slug: contentItems.slug,
-      category: contentItems.category, riskLevel: contentItems.riskLevel,
-      publishedAt: contentItems.publishedAt, aiSummary: contentItems.aiSummary,
-      whyItMatters: contentItems.whyItMatters, sourceName: sources.name,
-    })
-    .from(contentItems)
-    .innerJoin(sources, eq(contentItems.sourceId, sources.id))
-    .where(inArray(contentItems.reviewStatus, ['auto_published', 'approved']))
-    .orderBy(desc(contentItems.publishedAt))
-    .limit(50)
-    .catch(() => []);
+  const conditions = category
+    ? and(eq(articles.status, 'published'), eq(articles.category, category))
+    : eq(articles.status, 'published');
 
-  const filtered = category ? rows.filter((r) => r.category === category) : rows;
-  const activeDesc = category ? CATEGORY_DESC[category] : 'All categories, newest first';
+  const rows = await db.select().from(articles).where(conditions).orderBy(desc(articles.publishedAt)).limit(50);
 
   return (
-    <div className="space-y-8">
+    <div className="bg-white min-h-screen">
 
-      {/* Page header */}
-      <header>
-        <p className="text-xs font-semibold uppercase tracking-widest text-gold mb-1">Intelligence Feed</p>
-        <h1 className="text-2xl sm:text-3xl font-extrabold text-navy leading-tight">Daily Trucking Brief</h1>
-        <p className="text-slate-500 text-sm mt-1">{activeDesc}</p>
-      </header>
-
-      {/* Category filter bar */}
-      <nav aria-label="Filter by category" className="flex flex-wrap gap-2">
-        <a
-          href="/brief"
-          className={`inline-flex items-center h-9 px-4 rounded-full text-sm font-semibold border transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-navy ${
-            !category
-              ? 'bg-navy text-white border-navy'
-              : 'bg-white text-slate-600 border-slate-200 hover:border-navy/40 hover:text-navy'
-          }`}
-        >
-          All
-        </a>
-        {CATEGORIES.map((cat) => (
-          <a
-            key={cat}
-            href={`/brief?category=${cat}`}
-            className={`inline-flex items-center h-9 px-4 rounded-full text-sm font-semibold border capitalize transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-navy ${
-              category === cat
-                ? 'bg-navy text-white border-navy'
-                : 'bg-white text-slate-600 border-slate-200 hover:border-navy/40 hover:text-navy'
-            }`}
-          >
-            {cat}
-          </a>
-        ))}
-      </nav>
-
-      {/* Result count */}
-      {filtered.length > 0 && (
-        <p className="text-xs text-slate-400 tabular-nums">
-          {filtered.length} update{filtered.length !== 1 ? 's' : ''}{category ? ` in ${category}` : ''}
-        </p>
-      )}
-
-      {/* Feed */}
-      {filtered.length === 0 ? (
-        <div className="flex flex-col items-center justify-center py-20 text-center">
-          <div className="w-12 h-12 rounded-full bg-slate-100 flex items-center justify-center mb-4">
-            <svg className="w-6 h-6 text-slate-400" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" aria-hidden="true">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
-            </svg>
-          </div>
-          <p className="text-slate-500 font-semibold text-sm">No updates yet</p>
-          <p className="text-slate-400 text-xs mt-1 max-w-xs">Our ingestion pipeline runs every 2 hours. Check back shortly.</p>
+      {/* Header */}
+      <div className="border-b border-silver-light bg-parchment">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+          <p className="text-[10px] font-black uppercase tracking-widest text-crimson mb-3">Truck King Hub</p>
+          <h1 className="text-4xl font-bold text-ink" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>
+            {category ? CATEGORY_DESC[category] : 'All Articles'}
+          </h1>
+          <p className="text-sm text-silver mt-2">{rows.length} {rows.length === 1 ? 'article' : 'articles'}</p>
         </div>
-      ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {filtered.map((item) => (
-            <ContentCard key={item.id} {...item} sourceName={item.sourceName} />
+      </div>
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+        {/* Category filter */}
+        <div className="flex flex-wrap gap-2 mb-8">
+          <Link href="/brief"
+            className={`px-4 py-1.5 text-xs font-bold uppercase tracking-widest transition-colors ${!category ? 'bg-ink text-white' : 'border border-silver-light text-charcoal hover:border-ink hover:text-ink'}`}>
+            All
+          </Link>
+          {CATEGORIES.map((cat) => (
+            <Link key={cat} href={`/brief?category=${cat}`}
+              className={`px-4 py-1.5 text-xs font-bold uppercase tracking-widest transition-colors ${category === cat ? 'bg-ink text-white' : 'border border-silver-light text-charcoal hover:border-ink hover:text-ink'}`}>
+              {cat}
+            </Link>
           ))}
         </div>
-      )}
+
+        {/* Articles */}
+        {rows.length === 0 ? (
+          <div className="text-center py-20 border border-dashed border-silver-light">
+            <p className="text-silver mb-4">No articles in this category yet.</p>
+            <Link href="/brief" className="text-xs font-bold uppercase tracking-widest text-crimson hover:underline">View all articles →</Link>
+          </div>
+        ) : (
+          <div className="divide-y divide-silver-light">
+            {rows.map((article) => (
+              <Link key={article.id} href={`/article/${article.slug}`}
+                className="group flex flex-col sm:flex-row gap-5 py-7 hover:bg-silver-pale/30 -mx-4 px-4 transition-colors">
+                <div className="sm:w-48 lg:w-56 shrink-0">
+                  <div className="relative h-36 overflow-hidden bg-silver-pale">
+                    {article.coverImage
+                      ? <img src={article.coverImage} alt="" className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" />
+                      : <div className="absolute inset-0 bg-linear-to-br from-silver-pale to-silver-light" />
+                    }
+                    <div className="absolute top-2 left-2">
+                      <span className={`inline-block px-2 py-0.5 text-[10px] font-bold uppercase tracking-widest text-white ${CAT_COLORS[article.category] ?? 'bg-zinc-600'}`}>
+                        {article.category}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                <div className="flex-1 min-w-0 flex flex-col justify-center">
+                  <h2 className="text-xl font-bold text-ink group-hover:text-crimson transition-colors leading-snug mb-2"
+                    style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>
+                    {article.title}
+                  </h2>
+                  <p className="text-sm text-charcoal/70 leading-relaxed line-clamp-2 mb-3">{article.excerpt}</p>
+                  <div className="flex items-center gap-3 text-xs text-silver">
+                    <span className="font-semibold text-charcoal">{article.author}</span>
+                    <span>·</span>
+                    <span>{fmtDate(article.publishedAt)}</span>
+                    <span>·</span>
+                    <span>{readTime(article.body)}</span>
+                  </div>
+                </div>
+                <div className="hidden sm:flex items-center shrink-0">
+                  <svg className="w-5 h-5 text-silver-light group-hover:text-crimson transition-colors" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" aria-hidden="true">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
+                  </svg>
+                </div>
+              </Link>
+            ))}
+          </div>
+        )}
+      </div>
     </div>
   );
 }

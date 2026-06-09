@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { useState } from 'react';
 
 const CATEGORIES = [
@@ -39,17 +40,19 @@ export function NavBar() {
               </svg>
             </button>
 
-            {/* Wordmark */}
+            {/* Logo */}
             <Link
               href="/"
               className="flex-1 lg:flex-none text-center lg:text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-crimson rounded"
             >
-              <span
-                className="font-display-hed text-3xl sm:text-4xl text-ink tracking-wide leading-none select-none"
-                style={{ fontFamily: "'Playfair Display', Georgia, serif", fontWeight: 800, letterSpacing: '-0.01em' }}
-              >
-                TRUCK KING <span className="text-crimson">HUB</span>
-              </span>
+              <Image
+                src="/logo.png"
+                alt="Truck King Hub"
+                width={220}
+                height={60}
+                className="h-12 w-auto mx-auto lg:mx-0 object-contain"
+                priority
+              />
             </Link>
 
             {/* Right actions */}

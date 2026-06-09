@@ -1,44 +1,29 @@
-import { pgTable, uuid, text, boolean, integer, timestamp, customType } from 'drizzle-orm/pg-core';
+import { pgTable, uuid, text, boolean, timestamp, integer, jsonb } from 'drizzle-orm/pg-core';
 
-const tsvector = customType<{ data: string }>({
-  dataType() { return 'tsvector'; },
-});
-
-export const sources = pgTable('sources', {
+export const articles = pgTable('articles', {
   id: uuid('id').primaryKey().defaultRandom(),
-  name: text('name').notNull(),
-  websiteUrl: text('website_url').notNull(),
-  sourceType: text('source_type').notNull(), // 'rss' | 'api' | 'manual'
-  updateMethod: text('update_method').notNull(), // 'rss' | 'federal_register_api' | 'manual'
-  permissionLevel: text('permission_level').notNull(), // 'open' | 'restricted'
-  defaultCategory: text('default_category').notNull(),
-  active: boolean('active').default(true).notNull(),
-  fetchFrequencyMinutes: integer('fetch_frequency_minutes').default(120).notNull(),
-  lastFetchedAt: timestamp('last_fetched_at', { withTimezone: true }),
-  notes: text('notes'),
-  createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
-});
-
-export const contentItems = pgTable('content_items', {
-  id: uuid('id').primaryKey().defaultRandom(),
-  sourceId: uuid('source_id').references(() => sources.id),
   title: text('title').notNull(),
   slug: text('slug').unique().notNull(),
-  originalUrl: text('original_url').unique().notNull(),
-  publishedAt: timestamp('published_at', { withTimezone: true }),
-  fetchedAt: timestamp('fetched_at', { withTimezone: true }).defaultNow().notNull(),
-  author: text('author'),
-  rawExcerpt: text('raw_excerpt'),
-  aiSummary: text('ai_summary'),
-  whyItMatters: text('why_it_matters'),
-  category: text('category').notNull(),
+  author: text('author').notNull().default('Truck King Hub'),
+  contentType: text('content_type').notNull().default('blog'),
+  category: text('category').notNull(), // 'news' | 'compliance' | 'freight' | 'equipment' | 'insurance' | 'general' | 'lifestyle'
+  excerpt: text('excerpt').notNull(),
+  body: text('body').notNull(),
+  coverImage: text('cover_image'),
+  metaTitle: text('meta_title'),
+  metaDescription: text('meta_description'),
+  focusKeyword: text('focus_keyword'),
+  canonicalUrl: text('canonical_url'),
+  openGraphTitle: text('open_graph_title'),
+  openGraphDescription: text('open_graph_description'),
+  schemaMarkup: text('schema_markup'),
   tags: text('tags').array().default([]).notNull(),
-  audience: text('audience').array().default([]).notNull(),
-  riskLevel: text('risk_level').notNull(), // 'low' | 'medium' | 'high'
-  reviewStatus: text('review_status').notNull(), // 'pending_review' | 'auto_published' | 'approved' | 'rejected'
-  duplicateGroupId: uuid('duplicate_group_id'),
-  searchVector: tsvector('search_vector'),
+  featured: boolean('featured').default(false).notNull(),
+  status: text('status').notNull().default('draft'), // 'draft' | 'published' | 'scheduled' | 'archived'
+  publishedAt: timestamp('published_at', { withTimezone: true }),
+  scheduledAt: timestamp('scheduled_at', { withTimezone: true }),
   createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
+  updatedAt: timestamp('updated_at', { withTimezone: true }).defaultNow().notNull(),
 });
 
 export const directoryListings = pgTable('directory_listings', {
@@ -54,15 +39,118 @@ export const directoryListings = pgTable('directory_listings', {
   createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
 });
 
-export const topics = pgTable('topics', {
+export const cmsCategories = pgTable('cms_categories', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  name: text('name').notNull(),
+  slug: text('slug').unique().notNull(),
+  description: text('description'),
+  contentType: text('content_type').notNull().default('blog'),
+  color: text('color'),
+  sortOrder: integer('sort_order').default(0).notNull(),
+  featured: boolean('featured').default(false).notNull(),
+  createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
+});
+
+export const cmsTags = pgTable('cms_tags', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  name: text('name').notNull(),
+  slug: text('slug').unique().notNull(),
+  usageCount: integer('usage_count').default(0).notNull(),
+  createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
+});
+
+export const cmsMedia = pgTable('cms_media', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  filename: text('filename').notNull(),
+  url: text('url').notNull(),
+  altText: text('alt_text'),
+  mediaType: text('media_type').notNull(),
+  fileSizeKb: integer('file_size_kb').default(0).notNull(),
+  tags: text('tags').array().default([]).notNull(),
+  uploadedBy: text('uploaded_by').notNull().default('Truck King Hub'),
+  status: text('status').notNull().default('ready'),
+  createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
+});
+
+export const cmsRoles = pgTable('cms_roles', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  name: text('name').unique().notNull(),
+  description: text('description'),
+  permissions: text('permissions').array().default([]).notNull(),
+  createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
+});
+
+export const cmsUsers = pgTable('cms_users', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  name: text('name').notNull(),
+  email: text('email').unique().notNull(),
+  role: text('role').notNull(),
+  status: text('status').notNull().default('active'),
+  lastActiveAt: timestamp('last_active_at', { withTimezone: true }),
+  createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
+});
+
+export const cmsComments = pgTable('cms_comments', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  articleId: uuid('article_id'),
+  authorName: text('author_name').notNull(),
+  body: text('body').notNull(),
+  status: text('status').notNull().default('pending'),
+  flagged: boolean('flagged').default(false).notNull(),
+  createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
+});
+
+export const cmsAds = pgTable('cms_ads', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  name: text('name').notNull(),
+  placement: text('placement').notNull(),
+  sponsor: text('sponsor').notNull(),
+  status: text('status').notNull().default('active'),
+  impressions: integer('impressions').default(0).notNull(),
+  clicks: integer('clicks').default(0).notNull(),
+  dailyBudget: integer('daily_budget').default(0).notNull(),
+  createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
+});
+
+export const cmsAnalyticsSnapshots = pgTable('cms_analytics_snapshots', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  capturedAt: timestamp('captured_at', { withTimezone: true }).defaultNow().notNull(),
+  pageViews: integer('page_views').default(0).notNull(),
+  sessions: integer('sessions').default(0).notNull(),
+  bounceRate: integer('bounce_rate').default(0).notNull(),
+  trafficSources: jsonb('traffic_sources').notNull(),
+  deviceBreakdown: jsonb('device_breakdown').notNull(),
+  topContent: jsonb('top_content').notNull(),
+});
+
+export const cmsAuditLogs = pgTable('cms_audit_logs', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  actor: text('actor').notNull(),
+  action: text('action').notNull(),
+  targetType: text('target_type').notNull(),
+  targetName: text('target_name').notNull(),
+  details: jsonb('details').notNull(),
+  createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
+});
+
+export const cmsNotifications = pgTable('cms_notifications', {
   id: uuid('id').primaryKey().defaultRandom(),
   title: text('title').notNull(),
-  category: text('category').notNull(),
-  summary: text('summary'),
-  trendScore: integer('trend_score').default(0).notNull(),
-  relatedContentIds: uuid('related_content_ids').array().default([]).notNull(),
-  firstSeenAt: timestamp('first_seen_at', { withTimezone: true }).defaultNow().notNull(),
-  lastSeenAt: timestamp('last_seen_at', { withTimezone: true }).defaultNow().notNull(),
+  body: text('body').notNull(),
+  type: text('type').notNull().default('info'),
+  read: boolean('read').default(false).notNull(),
+  createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
+});
+
+export const cmsScheduledItems = pgTable('cms_scheduled_items', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  title: text('title').notNull(),
+  contentType: text('content_type').notNull(),
+  publishAt: timestamp('publish_at', { withTimezone: true }).notNull(),
+  status: text('status').notNull().default('scheduled'),
+  owner: text('owner').notNull(),
+  priority: text('priority').notNull().default('normal'),
+  createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
 });
 
 export const adminUsers = pgTable('admin_users', {
