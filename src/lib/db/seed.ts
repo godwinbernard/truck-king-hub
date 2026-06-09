@@ -5,7 +5,7 @@ async function seed() {
   await db.insert(sources).values([
     {
       name: 'FMCSA Newsroom',
-      websiteUrl: 'https://www.fmcsa.dot.gov/newsroom',
+      websiteUrl: 'https://www.fmcsa.dot.gov/rss.xml',
       sourceType: 'rss',
       updateMethod: 'rss',
       permissionLevel: 'open',
@@ -25,7 +25,7 @@ async function seed() {
     },
     {
       name: 'Overdrive',
-      websiteUrl: 'https://www.overdriveonline.com',
+      websiteUrl: 'https://www.overdriveonline.com/feed/',
       sourceType: 'rss',
       updateMethod: 'rss',
       permissionLevel: 'open',
@@ -35,7 +35,7 @@ async function seed() {
     },
     {
       name: 'Truckers News',
-      websiteUrl: 'https://www.truckersnews.com',
+      websiteUrl: 'https://www.truckersnews.com/feed/',
       sourceType: 'rss',
       updateMethod: 'rss',
       permissionLevel: 'open',
@@ -45,13 +45,43 @@ async function seed() {
     },
     {
       name: 'TheTrucker.com',
-      websiteUrl: 'https://www.thetrucker.com',
+      websiteUrl: 'https://www.thetrucker.com/feed/',
       sourceType: 'rss',
       updateMethod: 'rss',
       permissionLevel: 'open',
       defaultCategory: 'general',
       fetchFrequencyMinutes: 120,
       notes: 'TheTrucker.com RSS feed',
+    },
+    {
+      name: 'FleetOwner',
+      websiteUrl: 'https://www.fleetowner.com/rss/all/',
+      sourceType: 'rss',
+      updateMethod: 'rss',
+      permissionLevel: 'open',
+      defaultCategory: 'freight',
+      fetchFrequencyMinutes: 120,
+      notes: 'Fleet Owner magazine RSS feed',
+    },
+    {
+      name: 'Transport Topics',
+      websiteUrl: 'https://www.ttnews.com/rss.xml',
+      sourceType: 'rss',
+      updateMethod: 'rss',
+      permissionLevel: 'open',
+      defaultCategory: 'freight',
+      fetchFrequencyMinutes: 120,
+      notes: 'Transport Topics news RSS feed',
+    },
+    {
+      name: 'Commercial Carrier Journal',
+      websiteUrl: 'https://www.ccjdigital.com/feed/',
+      sourceType: 'rss',
+      updateMethod: 'rss',
+      permissionLevel: 'open',
+      defaultCategory: 'equipment',
+      fetchFrequencyMinutes: 180,
+      notes: 'CCJ - equipment, technology, and operations news',
     },
   ]).onConflictDoNothing();
 
