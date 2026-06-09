@@ -37,8 +37,8 @@ export default async function EditArticlePage({ params }: { params: Promise<{ id
           openGraphTitle: article.openGraphTitle ?? '',
           openGraphDescription: article.openGraphDescription ?? '',
           schemaMarkup: article.schemaMarkup ?? '',
-          scheduledAt: article.scheduledAt ?? '',
-          tags: article.tags as unknown as string,
+          scheduledAt: article.scheduledAt ? article.scheduledAt.toISOString() : '',
+          tags: article.tags,
           featured: article.featured,
           status: article.status,
         }}
