@@ -41,11 +41,13 @@ function toDatetimeLocal(value?: string | Date | null) {
   return local.toISOString().slice(0, 16);
 }
 
+type ArticleEditorInitial = Partial<Omit<ArticleForm, 'tags'>> & { tags?: string[] | string };
+
 export function ArticleEditor({
   initial,
   id,
 }: {
-  initial?: Partial<ArticleForm & { tags: string[] }>;
+  initial?: ArticleEditorInitial;
   id?: string;
 }) {
   const router = useRouter();
