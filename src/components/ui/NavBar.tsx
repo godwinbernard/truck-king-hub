@@ -23,7 +23,7 @@ export function NavBar() {
       {/* Top bar — brand + search */}
       <div className="border-b border-silver-light">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16 gap-4">
+          <div className="flex items-center justify-between h-20 gap-4">
 
             {/* Mobile menu button */}
             <button
@@ -48,9 +48,9 @@ export function NavBar() {
               <Image
                 src="/logo.png"
                 alt="Truck King Hub"
-                width={220}
-                height={60}
-                className="h-12 w-auto mx-auto lg:mx-0 object-contain"
+                width={320}
+                height={80}
+                className="h-16 w-auto mx-auto lg:mx-0 object-contain"
                 priority
               />
             </Link>
