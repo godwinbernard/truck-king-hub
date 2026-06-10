@@ -179,6 +179,58 @@ const RESOURCE_TABS = [
   { label: 'Resources', href: '/resources', desc: 'Load boards, fuel cards & tools' },
 ];
 
+// ── Homepage Ad Slot ─────────────────────────────────────────────────────────
+const AD_MESSAGES = {
+  leaderboard: {
+    label: 'Advertisement — Prime Placement',
+    headline: 'Reach 10,000+ Trucking Professionals',
+    sub: 'Advertise your trucking brand, software, insurance, or service directly to owner-operators and fleet managers.',
+    cta: 'Get Media Kit →',
+  },
+  sidebar_a: {
+    label: 'Sponsored',
+    headline: 'Your Brand Here',
+    sub: 'Targeted ads for trucking professionals. Insurance, equipment, fuel cards, and more.',
+    cta: 'Advertise →',
+  },
+  mid_page: {
+    label: 'Advertisement',
+    headline: 'Sponsor This Section',
+    sub: 'Put your brand in front of active trucking decision-makers. High visibility, targeted audience.',
+    cta: 'Learn More →',
+  },
+  footer_banner: {
+    label: 'Advertisement — Footer',
+    headline: 'Connect With Truck King Hub Readers',
+    sub: 'Join the brands that reach independent owner-operators and small fleet owners every day.',
+    cta: 'Contact Us →',
+  },
+};
+
+function AdSlot({ slot }: { slot: keyof typeof AD_MESSAGES }) {
+  const m = AD_MESSAGES[slot];
+  const isLeaderboard = slot === 'leaderboard' || slot === 'footer_banner';
+  return (
+    <div
+      className={`flex ${isLeaderboard ? 'flex-col sm:flex-row' : 'flex-col'} items-center justify-between gap-4 px-6 py-5`}
+      style={{ background: 'rgba(245,197,24,0.05)', border: '1px dashed rgba(245,197,24,0.3)' }}
+    >
+      <div className={isLeaderboard ? '' : 'text-center'}>
+        <p className="text-[9px] font-black uppercase tracking-widest mb-1" style={{ color: '#4b5563' }}>{m.label}</p>
+        <p className="font-black uppercase text-white leading-tight mb-1" style={{ fontFamily: 'Impact, sans-serif', fontSize: '1.05rem' }}>{m.headline}</p>
+        <p className="text-xs" style={{ color: '#6b7280' }}>{m.sub}</p>
+      </div>
+      <a
+        href="mailto:ads@truckkinghub.com"
+        className="shrink-0 px-5 py-2.5 text-xs font-black uppercase tracking-widest transition-opacity hover:opacity-80 whitespace-nowrap"
+        style={{ background: '#F5C518', color: '#0d0d0d' }}
+      >
+        {m.cta}
+      </a>
+    </div>
+  );
+}
+
 function EmptyState() {
   return (
     <div className="flex flex-col items-center justify-center py-16 text-center border border-dashed" style={{ borderColor: '#2a2a2a' }}>
@@ -293,6 +345,11 @@ export default async function HomePage() {
         </div>
       </section>
 
+      {/* ── AD SLOT 1: Leaderboard (below hero) ── */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4" style={{ background: '#0d0d0d' }}>
+        <AdSlot slot="leaderboard" />
+      </div>
+
       {/* ── AUDIENCE TILES ── */}
       <div style={{ borderTop: '4px solid #F5C518', background: '#0d0d0d' }}>
         <div className="grid grid-cols-2 lg:grid-cols-4">
@@ -350,6 +407,11 @@ export default async function HomePage() {
           )}
         </div>
       </section>
+
+      {/* ── AD SLOT 2: Mid-page (after Resource Center) ── */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-6" style={{ background: '#0d0d0d' }}>
+        <AdSlot slot="mid_page" />
+      </div>
 
       {/* ── PRESS / ABOUT SPLIT ── */}
       <section style={{ background: '#0d0d0d', borderTop: '1px solid #2a2a2a' }} className="py-14">
@@ -524,6 +586,11 @@ export default async function HomePage() {
         </div>
       </section>
 
+      {/* ── AD SLOT 3: After Latest News ── */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-6" style={{ background: '#0d0d0d' }}>
+        <AdSlot slot="sidebar_a" />
+      </div>
+
       {/* ── INDUSTRY FACTS ── */}
       <section style={{ background: '#111111', borderTop: '1px solid #2a2a2a' }} className="py-14">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -589,6 +656,11 @@ export default async function HomePage() {
           </div>
         </div>
       </section>
+
+      {/* ── AD SLOT 4: Footer banner (before Insurance CTA) ── */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-6" style={{ background: '#0d0d0d' }}>
+        <AdSlot slot="footer_banner" />
+      </div>
 
       {/* ── INSURANCE CTA ── */}
       <section style={{ background: '#0d0d0d', borderTop: '1px solid #2a2a2a' }} className="py-14">
