@@ -108,57 +108,57 @@ const INDUSTRY_FACTS = [
     stat: '$800B+',
     title: 'Trucking drives the US economy',
     body: 'The trucking industry generates over $800 billion annually and moves roughly 70% of all freight tonnage in the United States. Without trucks, store shelves would be empty within days.',
-    img: 'https://images.unsplash.com/photo-1519003722824-194d4455a60c?w=800&q=75&auto=format&fit=crop',
+    img: 'https://images.unsplash.com/photo-1502877338535-766e1452684a?w=800&q=75&auto=format&fit=crop',
     tag: 'Industry Fact',
   },
   {
     stat: '3.5M',
     title: 'Truck drivers keep America moving',
     body: 'There are approximately 3.5 million professional truck drivers in the US. Owner-operators — independent truckers who own their rigs — make up roughly 350,000 of that total.',
-    img: 'https://images.unsplash.com/photo-1586201375761-83865001e31c?w=800&q=75&auto=format&fit=crop',
+    img: 'https://images.unsplash.com/photo-1471194402529-8e0f5a675de6?w=800&q=75&auto=format&fit=crop',
     tag: 'Workforce',
   },
   {
     stat: 'CSA',
     title: 'Your safety score affects everything',
     body: 'FMCSA\'s Compliance, Safety, Accountability (CSA) program scores carriers across 7 categories. A high CSA score can trigger roadside inspections, raise insurance premiums by 20–40%, and even result in out-of-service orders.',
-    img: 'https://images.unsplash.com/photo-1601597111158-2fceff292cdc?w=800&q=75&auto=format&fit=crop',
+    img: 'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=800&q=75&auto=format&fit=crop',
     tag: 'Compliance',
   },
 ];
 
 const LATEST_NEWS = [
   {
-    title: 'FMCSA Proposes New HOS Flexibility Rules for Short-Haul Operators',
-    excerpt: 'The Federal Motor Carrier Safety Administration is reviewing Hours of Service regulations that could expand the short-haul exemption radius from 150 to 200 air miles, giving local drivers more flexibility.',
+    title: 'FMCSA Eyes Expanded Short-Haul Exemption — 200-Mile Radius Proposed',
+    excerpt: 'The agency is considering increasing the short-haul radius from 150 to 200 air miles. Tens of thousands of local operators could be freed from full ELD logging requirements if the rule passes.',
     category: 'compliance',
-    date: 'Jun 2025',
-    img: 'https://images.unsplash.com/photo-1601584115197-04ecc0da31d7?w=800&q=75&auto=format&fit=crop',
+    date: 'Jun 10, 2025',
+    img: 'https://images.unsplash.com/photo-1589939705384-5185137a7f0f?w=800&q=75&auto=format&fit=crop',
     href: '/compliance',
   },
   {
-    title: 'Diesel Prices Hold Steady — What It Means for Spot Rates',
-    excerpt: 'National average diesel prices have stabilized near $3.60/gallon after months of volatility. Analysts say flat fuel costs could put upward pressure on spot rates as carriers reassess fuel surcharge calculations.',
+    title: 'Diesel Levels Off at $3.60 — Spot Rate Increase Expected This Quarter',
+    excerpt: 'After months of price swings, national diesel has stabilized. Analysts say steady fuel costs may push spot rates upward as carriers revisit their fuel surcharge formulas heading into summer.',
     category: 'freight',
-    date: 'Jun 2025',
-    img: 'https://images.unsplash.com/photo-1601584115197-04ecc0da31d7?w=800&q=75&auto=format&fit=crop',
+    date: 'Jun 9, 2025',
+    img: 'https://images.unsplash.com/photo-1545558014-8692077e9b5c?w=800&q=75&auto=format&fit=crop',
     href: '/brief?category=freight',
   },
   {
-    title: 'Commercial Truck Insurance Premiums Up 8% YoY — Here\'s Why',
-    excerpt: 'Rising litigation costs, nuclear verdicts, and increased accident frequency are pushing commercial trucking insurance premiums higher. Owner-operators with clean CSA scores are faring better at renewal.',
+    title: 'Nuclear Verdicts Push Commercial Truck Insurance Up 8% Year Over Year',
+    excerpt: 'Litigation costs and multi-million dollar jury awards are driving premiums higher across the board. Carriers with clean CSA scores and dashcams are seeing smaller increases at renewal.',
     category: 'insurance',
-    date: 'May 2025',
-    img: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&q=75&auto=format&fit=crop',
+    date: 'Jun 7, 2025',
+    img: 'https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=800&q=75&auto=format&fit=crop',
     href: '/insurance',
   },
   {
-    title: 'ELD Mandate: What\'s Still Confusing Drivers in 2025',
-    excerpt: 'Despite years on the books, the ELD mandate still trips up owner-operators on personal conveyance, adverse driving conditions exceptions, and what counts as on-duty time. We break it down.',
-    category: 'compliance',
-    date: 'May 2025',
-    img: 'https://images.unsplash.com/photo-1519003722824-194d4455a60c?w=800&q=75&auto=format&fit=crop',
-    href: '/compliance',
+    title: 'Owner-Operator Count Falls 3% as Low Rates and High Costs Squeeze Independents',
+    excerpt: 'FMCSA data shows active single-truck carriers declined for a third straight quarter. Industry insiders point to suppressed spot rates, rising insurance, and higher fuel costs as the leading culprits.',
+    category: 'news',
+    date: 'Jun 5, 2025',
+    img: 'https://images.unsplash.com/photo-1558618047-3c8c76ca7d13?w=800&q=75&auto=format&fit=crop',
+    href: '/brief',
   },
 ];
 
@@ -179,43 +179,109 @@ const RESOURCE_TABS = [
   { label: 'Resources', href: '/resources', desc: 'Load boards, fuel cards & tools' },
 ];
 
-// ── Homepage Ad Slot ─────────────────────────────────────────────────────────
-const AD_MESSAGES = {
-  leaderboard: {
-    label: 'Advertisement — Prime Placement',
-    headline: 'Reach 10,000+ Trucking Professionals',
-    sub: 'Advertise your trucking brand, software, insurance, or service directly to owner-operators and fleet managers.',
-    cta: 'Get Media Kit →',
-  },
-  sidebar_a: {
-    label: 'Sponsored',
-    headline: 'Your Brand Here',
-    sub: 'Targeted ads for trucking professionals. Insurance, equipment, fuel cards, and more.',
-    cta: 'Advertise →',
-  },
-  mid_page: {
-    label: 'Advertisement',
-    headline: 'Sponsor This Section',
-    sub: 'Put your brand in front of active trucking decision-makers. High visibility, targeted audience.',
-    cta: 'Learn More →',
-  },
-  footer_banner: {
-    label: 'Advertisement — Footer',
-    headline: 'Connect With Truck King Hub Readers',
-    sub: 'Join the brands that reach independent owner-operators and small fleet owners every day.',
-    cta: 'Contact Us →',
-  },
-};
+// ── Homepage Ad Banners ──────────────────────────────────────────────────────
+type AdSlotName = 'leaderboard' | 'mid_page' | 'sidebar_a' | 'footer_banner';
 
-function AdSlot({ slot }: { slot: keyof typeof AD_MESSAGES }) {
-  const m = AD_MESSAGES[slot];
-  const isLeaderboard = slot === 'leaderboard' || slot === 'footer_banner';
+function RealAdBanner({ slot }: { slot: AdSlotName }) {
+  // ── Slot 1: Prestige Trucking Insurance (leaderboard) ──
+  if (slot === 'leaderboard') {
+    return (
+      <a
+        href="https://www.prestigetrucking.com"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="flex flex-col sm:flex-row items-center justify-between gap-5 px-6 py-5 w-full transition-opacity hover:opacity-90"
+        style={{ background: '#0f0f1a', border: '1px solid rgba(30,58,138,0.5)', textDecoration: 'none' }}
+        aria-label="Advertisement: Prestige Trucking Insurance"
+      >
+        <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4 w-full">
+          <div className="flex flex-col">
+            <p className="text-[9px] font-black uppercase tracking-widest mb-2" style={{ color: '#4b5563' }}>Advertisement</p>
+            <div className="flex items-center gap-3 mb-2">
+              <span className="text-2xl" aria-hidden="true">🛡️</span>
+              <p
+                className="font-black uppercase text-white leading-tight"
+                style={{ fontFamily: 'Impact, Haettenschweiler, Arial Narrow Bold, sans-serif', fontSize: '1.25rem', color: '#ffffff' }}
+              >
+                PROTECT YOUR RIG WITH PRESTIGE
+              </p>
+            </div>
+            <p className="text-xs" style={{ color: '#6b7280' }}>
+              Trucking insurance built for owner-operators. Fast quotes. Real coverage.
+            </p>
+          </div>
+        </div>
+        <span
+          className="shrink-0 px-5 py-2.5 text-xs font-black uppercase tracking-widest whitespace-nowrap"
+          style={{ background: '#F5C518', color: '#0d0d0d' }}
+        >
+          Get Free Quote →
+        </span>
+      </a>
+    );
+  }
+
+  // ── Slot 2: GEICO Commercial Insurance (mid_page) ──
+  if (slot === 'mid_page') {
+    return (
+      <a
+        href="https://www.geico.com/commercial-auto/"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="flex flex-col sm:flex-row items-center justify-between gap-5 px-6 py-5 w-full transition-opacity hover:opacity-90"
+        style={{ background: '#0d1a0d', border: '1px solid rgba(0,166,81,0.4)', textDecoration: 'none' }}
+        aria-label="Advertisement: GEICO Commercial Insurance"
+      >
+        <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4 w-full">
+          <div className="flex flex-col">
+            <p className="text-[9px] font-black uppercase tracking-widest mb-2" style={{ color: '#4b5563' }}>Advertisement</p>
+            <div className="flex items-center gap-3 mb-2">
+              <span className="text-2xl" aria-hidden="true">🦎</span>
+              <p
+                className="font-black uppercase text-white leading-tight"
+                style={{ fontFamily: 'Impact, Haettenschweiler, Arial Narrow Bold, sans-serif', fontSize: '1.25rem', color: '#ffffff' }}
+              >
+                GEICO COMMERCIAL — COULD SAVE YOU 15%
+              </p>
+            </div>
+            <p className="text-xs" style={{ color: '#6b7280' }}>
+              Commercial truck insurance from America&apos;s trusted name. Get your quote in minutes.
+            </p>
+          </div>
+        </div>
+        <span
+          className="shrink-0 px-5 py-2.5 text-xs font-black uppercase tracking-widest whitespace-nowrap"
+          style={{ background: '#00a651', color: '#ffffff' }}
+        >
+          Get Quote →
+        </span>
+      </a>
+    );
+  }
+
+  // ── Slots 3 & 4: Generic "Advertise Here" placeholders ──
+  const placeholders: Record<'sidebar_a' | 'footer_banner', { label: string; headline: string; sub: string; cta: string }> = {
+    sidebar_a: {
+      label: 'Sponsored',
+      headline: 'Your Brand Here',
+      sub: 'Targeted ads for trucking professionals. Insurance, equipment, fuel cards, and more.',
+      cta: 'Advertise →',
+    },
+    footer_banner: {
+      label: 'Advertisement — Footer',
+      headline: 'Connect With Truck King Hub Readers',
+      sub: 'Join the brands that reach independent owner-operators and small fleet owners every day.',
+      cta: 'Contact Us →',
+    },
+  };
+
+  const m = placeholders[slot];
   return (
     <div
-      className={`flex ${isLeaderboard ? 'flex-col sm:flex-row' : 'flex-col'} items-center justify-between gap-4 px-6 py-5`}
+      className="flex flex-col sm:flex-row items-center justify-between gap-4 px-6 py-5"
       style={{ background: 'rgba(245,197,24,0.05)', border: '1px dashed rgba(245,197,24,0.3)' }}
     >
-      <div className={isLeaderboard ? '' : 'text-center'}>
+      <div>
         <p className="text-[9px] font-black uppercase tracking-widest mb-1" style={{ color: '#4b5563' }}>{m.label}</p>
         <p className="font-black uppercase text-white leading-tight mb-1" style={{ fontFamily: 'Impact, sans-serif', fontSize: '1.05rem' }}>{m.headline}</p>
         <p className="text-xs" style={{ color: '#6b7280' }}>{m.sub}</p>
@@ -347,7 +413,7 @@ export default async function HomePage() {
 
       {/* ── AD SLOT 1: Leaderboard (below hero) ── */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4" style={{ background: '#0d0d0d' }}>
-        <AdSlot slot="leaderboard" />
+        <RealAdBanner slot="leaderboard" />
       </div>
 
       {/* ── AUDIENCE TILES ── */}
@@ -410,7 +476,7 @@ export default async function HomePage() {
 
       {/* ── AD SLOT 2: Mid-page (after Resource Center) ── */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-6" style={{ background: '#0d0d0d' }}>
-        <AdSlot slot="mid_page" />
+        <RealAdBanner slot="mid_page" />
       </div>
 
       {/* ── PRESS / ABOUT SPLIT ── */}
@@ -541,6 +607,35 @@ export default async function HomePage() {
         </div>
       </section>
 
+      {/* ── RESOURCE GUIDE BANNER ── */}
+      <div style={{ background: '#111111', borderTop: '1px solid #2a2a2a', borderBottom: '1px solid #2a2a2a' }}>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <Link
+            href="/resources"
+            className="group flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 py-5 transition-opacity hover:opacity-80"
+          >
+            <div className="flex items-center gap-4">
+              <span className="shrink-0 text-2xl">⚡</span>
+              <div>
+                <p className="text-[10px] font-black uppercase tracking-widest mb-0.5" style={{ color: '#F5C518' }}>Resource Guide</p>
+                <p className="font-black uppercase text-white text-base leading-snug" style={{ fontFamily: 'Impact, sans-serif' }}>
+                  What Each Resource Category Helps With
+                </p>
+                <p className="text-xs mt-1" style={{ color: '#9ca3af' }}>
+                  Load boards · Fuel cards · Compliance tools · Insurance · Equipment marketplaces · Trucking associations
+                </p>
+              </div>
+            </div>
+            <span
+              className="shrink-0 px-5 py-2.5 text-xs font-black uppercase tracking-widest transition-all group-hover:opacity-80 whitespace-nowrap"
+              style={{ background: '#F5C518', color: '#0d0d0d' }}
+            >
+              Explore Resources →
+            </span>
+          </Link>
+        </div>
+      </div>
+
       {/* ── LATEST NEWS (hardcoded with images) ── */}
       <section style={{ background: '#0d0d0d', borderTop: '1px solid #2a2a2a' }} className="py-14">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -588,7 +683,7 @@ export default async function HomePage() {
 
       {/* ── AD SLOT 3: After Latest News ── */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-6" style={{ background: '#0d0d0d' }}>
-        <AdSlot slot="sidebar_a" />
+        <RealAdBanner slot="sidebar_a" />
       </div>
 
       {/* ── INDUSTRY FACTS ── */}
@@ -659,7 +754,7 @@ export default async function HomePage() {
 
       {/* ── AD SLOT 4: Footer banner (before Insurance CTA) ── */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-6" style={{ background: '#0d0d0d' }}>
-        <AdSlot slot="footer_banner" />
+        <RealAdBanner slot="footer_banner" />
       </div>
 
       {/* ── INSURANCE CTA ── */}

@@ -5,6 +5,15 @@ const QUICK_LINKS = [
   { href: '/brief?category=equipment',  label: 'Trucks & Equipment' },
   { href: '/insurance',                 label: 'Insurance & Risk' },
   { href: '/resources',                 label: 'Resource Directory' },
+  { href: '/about',                     label: 'About Us' },
+  { href: '/media-kit',                 label: 'Media Kit' },
+];
+
+const LEGAL_LINKS = [
+  { href: '/privacy-policy',  label: 'Privacy Policy' },
+  { href: '/terms',           label: 'Terms of Use' },
+  { href: '/sitemap-page',    label: 'Sitemap' },
+  { href: '/contact/takedown',label: 'DMCA / Takedown' },
 ];
 
 const SOCIAL = [
@@ -115,13 +124,19 @@ export function Footer() {
 
         </div>
 
+        {/* Legal links row */}
+        <div className="flex flex-wrap items-center gap-x-5 gap-y-2 mb-6">
+          <p className="text-xs font-black uppercase tracking-widest" style={{ color: '#F5C518' }}>Legal</p>
+          {LEGAL_LINKS.map((l) => (
+            <a key={l.href} href={l.href} className="text-xs hover:underline transition-colors" style={{ color: '#666' }}>{l.label}</a>
+          ))}
+        </div>
+
         {/* Bottom bar */}
         <div style={{ borderTop: '1px solid #e5e7eb' }} className="pt-6 flex flex-col sm:flex-row items-center justify-between gap-3">
-          <div className="flex items-center gap-4 text-xs" style={{ color: '#888' }}>
-            <a href="/contact/takedown" className="hover:text-black transition-colors">Site Credits</a>
-            <a href="/contact/takedown" className="hover:text-black transition-colors">Sitemap</a>
-            <a href="/contact/takedown" className="hover:text-black transition-colors">Privacy Policy</a>
-            <span>Copyright © {year}. All Rights Reserved.</span>
+          <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs" style={{ color: '#888' }}>
+            <span>© {year} Truck King Hub. All Rights Reserved.</span>
+            <span>www.truckkinghub.com</span>
           </div>
           <a href="#" className="text-xs font-bold uppercase tracking-widest flex items-center gap-1 hover:opacity-70 transition-opacity" style={{ color: '#0d0d0d' }}>
             Back to the Top

@@ -4,6 +4,8 @@ import Link from 'next/link';
 import { useState } from 'react';
 
 const NAV_LINKS = [
+  { href: '/',                            label: 'Home' },
+  { href: '/calculators',                 label: 'Calculators' },
   { href: '/brief',                       label: 'News' },
   { href: '/brief?category=freight',      label: 'Logistics' },
   { href: '/brief?category=compliance',   label: 'Compliance' },
