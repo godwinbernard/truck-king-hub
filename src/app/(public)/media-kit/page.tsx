@@ -262,11 +262,11 @@ export default function MediaKitPage() {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <a
-              href="mailto:ads@truckkinghub.com"
+              href="mailto:info@truckkinghub.com"
               className="inline-block px-8 py-3 rounded font-black uppercase text-sm tracking-widest"
               style={{ background: '#F5C518', color: '#0d0d0d' }}
             >
-              Email: ads@truckkinghub.com
+              Email: info@truckkinghub.com
             </a>
           </div>
           <p className="text-xs mt-6" style={{ color: '#6b7280' }}>

@@ -94,21 +94,14 @@ export function Footer() {
               <p className="font-bold text-black">Truck King Hub</p>
               <p>United States</p>
             </address>
-            <div className="space-y-2 mb-6">
-              {[
-                { label: 'General', value: 'contact@truckkinghub.com' },
-                { label: 'Advertise', value: 'ads@truckkinghub.com' },
-              ].map((item) => (
-                <div key={item.label} className="flex items-center gap-2 text-sm">
-                  <span className="w-5 h-5 flex items-center justify-center rounded-full shrink-0" style={{ background: '#F5C518' }}>
-                    <svg className="w-3 h-3" fill="#0d0d0d" viewBox="0 0 24 24" aria-hidden="true">
-                      <path d="M1.5 8.67v8.58a3 3 0 0 0 3 3h15a3 3 0 0 0 3-3V8.67l-8.928 5.493a3 3 0 0 1-3.144 0L1.5 8.67Z" />
-                      <path d="M22.5 6.908V6.75a3 3 0 0 0-3-3h-15a3 3 0 0 0-3 3v.158l9.714 5.978a1.5 1.5 0 0 0 1.572 0L22.5 6.908Z" />
-                    </svg>
-                  </span>
-                  <span style={{ color: '#444' }}><strong style={{ color: '#000' }}>{item.label}:</strong> {item.value}</span>
-                </div>
-              ))}
+            <div className="flex items-center gap-2 text-sm mb-6">
+              <span className="w-5 h-5 flex items-center justify-center rounded-full shrink-0" style={{ background: '#F5C518' }}>
+                <svg className="w-3 h-3" fill="#0d0d0d" viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M1.5 8.67v8.58a3 3 0 0 0 3 3h15a3 3 0 0 0 3-3V8.67l-8.928 5.493a3 3 0 0 1-3.144 0L1.5 8.67Z" />
+                  <path d="M22.5 6.908V6.75a3 3 0 0 0-3-3h-15a3 3 0 0 0-3 3v.158l9.714 5.978a1.5 1.5 0 0 0 1.572 0L22.5 6.908Z" />
+                </svg>
+              </span>
+              <a href="mailto:info@truckkinghub.com" className="hover:underline" style={{ color: '#333' }}>info@truckkinghub.com</a>
             </div>
             <a
               href="/contact/takedown"

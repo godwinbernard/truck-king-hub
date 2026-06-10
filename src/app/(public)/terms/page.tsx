@@ -199,8 +199,8 @@ export default function TermsPage() {
                 DMCA Takedown page
               </Link>{' '}
               or email{' '}
-              <a href="mailto:legal@truckkinghub.com" style={{ color: '#F5C518', textDecoration: 'underline' }}>
-                legal@truckkinghub.com
+              <a href="mailto:info@truckkinghub.com" style={{ color: '#F5C518', textDecoration: 'underline' }}>
+                info@truckkinghub.com
               </a>
               . We will review and respond to valid DMCA notices promptly.
             </p>
@@ -275,8 +275,8 @@ export default function TermsPage() {
               <p className="font-bold mb-1" style={{ color: '#ffffff' }}>Truck King Hub — Legal</p>
               <p className="text-sm mb-1" style={{ color: '#d1d5db' }}>
                 Email:{' '}
-                <a href="mailto:legal@truckkinghub.com" style={{ color: '#F5C518', textDecoration: 'underline' }}>
-                  legal@truckkinghub.com
+                <a href="mailto:info@truckkinghub.com" style={{ color: '#F5C518', textDecoration: 'underline' }}>
+                  info@truckkinghub.com
                 </a>
               </p>
               <p className="text-sm" style={{ color: '#9ca3af' }}>

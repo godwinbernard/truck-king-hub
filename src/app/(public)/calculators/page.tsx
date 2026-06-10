@@ -132,6 +132,19 @@ export default function CalculatorsPage() {
   const [tripStops, setTripStops] = useState(1.5);
   const [tripBuffer, setTripBuffer] = useState(0.75);
 
+  const [iftaMiles, setIftaMiles] = useState(2500);
+  const [iftaMpg, setIftaMpg] = useState(7.2);
+  const [iftaTaxRate, setIftaTaxRate] = useState(0.24);
+
+  const [detentionWaitHours, setDetentionWaitHours] = useState(4);
+  const [detentionFreeHours, setDetentionFreeHours] = useState(2);
+  const [detentionRate, setDetentionRate] = useState(75);
+
+  const [surchargeMiles, setSurchargeMiles] = useState(1200);
+  const [surchargeBasePrice, setSurchargeBasePrice] = useState(2.85);
+  const [surchargeCurrentPrice, setSurchargeCurrentPrice] = useState(3.85);
+  const [surchargeMpg, setSurchargeMpg] = useState(6.8);
+
   const fuelGallons = fuelMpg > 0 ? fuelMiles / fuelMpg : 0;
   const fuelCost = fuelGallons * dieselPrice;
 
@@ -146,13 +159,26 @@ export default function CalculatorsPage() {
   const driveHours = tripSpeed > 0 ? tripMiles / tripSpeed : 0;
   const totalTripHours = driveHours + tripStops + tripBuffer;
 
+  const iftaGallons = iftaMpg > 0 ? iftaMiles / iftaMpg : 0;
+  const iftaEstimate = iftaGallons * iftaTaxRate;
+
+  const detentionBillableHours = Math.max(0, detentionWaitHours - detentionFreeHours);
+  const detentionPay = detentionBillableHours * detentionRate;
+
+  const surchargeFuelDifference = Math.max(0, surchargeCurrentPrice - surchargeBasePrice);
+  const fuelSurchargePerMile = surchargeMpg > 0 ? surchargeFuelDifference / surchargeMpg : 0;
+  const fuelSurchargeTotal = fuelSurchargePerMile * surchargeMiles;
+
   const quickFacts = useMemo(() => [
     { label: 'Fuel cost', value: formatMoney(fuelCost) },
     { label: 'Cost / mile', value: formatMoney(costPerMile) },
     { label: 'Profit / load', value: formatMoney(profit) },
     { label: 'Break-even', value: formatMoney(breakEvenRate) },
     { label: 'Trip time', value: formatHours(totalTripHours) },
-  ], [fuelCost, costPerMile, profit, breakEvenRate, totalTripHours]);
+    { label: 'IFTA est.', value: formatMoney(iftaEstimate) },
+    { label: 'Detention', value: formatMoney(detentionPay) },
+    { label: 'Fuel surcharge', value: formatMoney(fuelSurchargeTotal) },
+  ], [fuelCost, costPerMile, profit, breakEvenRate, totalTripHours, iftaEstimate, detentionPay, fuelSurchargeTotal]);
 
   return (
     <div style={{ background: '#0d0d0d', minHeight: '100vh', color: '#fff' }}>
@@ -300,6 +326,70 @@ export default function CalculatorsPage() {
                 <NumberField label="Average speed" value={tripSpeed} onChange={setTripSpeed} step={1} suffix="mph" />
                 <NumberField label="Planned stops" value={tripStops} onChange={setTripStops} step={0.25} suffix="hrs" />
                 <NumberField label="Delay buffer" value={tripBuffer} onChange={setTripBuffer} step={0.25} suffix="hrs" />
+              </div>
+            </CalculatorCard>
+
+            <CalculatorCard
+              eyebrow="Fuel Tax"
+              title="IFTA Estimator"
+              description="Estimate IFTA fuel tax exposure using taxable miles, fuel economy, and a blended tax rate per gallon."
+              result={
+                <div>
+                  <p className="text-3xl font-black text-white">{formatMoney(iftaEstimate)}</p>
+                  <p className="mt-1 text-sm" style={{ color: '#9ca3af' }}>
+                    Based on {iftaGallons.toFixed(1)} taxable gallons
+                  </p>
+                </div>
+              }
+              hint="This is a rough planning number. Actual IFTA obligations vary by jurisdiction and filing data."
+            >
+              <div className="grid gap-4 sm:grid-cols-3">
+                <NumberField label="Taxable miles" value={iftaMiles} onChange={setIftaMiles} step={1} />
+                <NumberField label="MPG" value={iftaMpg} onChange={setIftaMpg} step={0.1} />
+                <NumberField label="Tax rate" value={iftaTaxRate} onChange={setIftaTaxRate} step={0.01} suffix="/gal" />
+              </div>
+            </CalculatorCard>
+
+            <CalculatorCard
+              eyebrow="Accessorials"
+              title="Detention Pay Calculator"
+              description="Figure out how much detention pay is owed after free time expires."
+              result={
+                <div>
+                  <p className="text-3xl font-black text-white">{formatMoney(detentionPay)}</p>
+                  <p className="mt-1 text-sm" style={{ color: '#9ca3af' }}>
+                    {detentionBillableHours.toFixed(2)} billable hours
+                  </p>
+                </div>
+              }
+              hint="Useful for brokers, dispatch, and billing teams when waiting time affects profitability."
+            >
+              <div className="grid gap-4 sm:grid-cols-3">
+                <NumberField label="Wait time" value={detentionWaitHours} onChange={setDetentionWaitHours} step={0.25} suffix="hrs" />
+                <NumberField label="Free time" value={detentionFreeHours} onChange={setDetentionFreeHours} step={0.25} suffix="hrs" />
+                <NumberField label="Rate" value={detentionRate} onChange={setDetentionRate} step={1} suffix="/hr" />
+              </div>
+            </CalculatorCard>
+
+            <CalculatorCard
+              eyebrow="Rate Recovery"
+              title="Fuel Surcharge Calculator"
+              description="Estimate a trip fuel surcharge from the difference between base fuel price and current price."
+              result={
+                <div>
+                  <p className="text-3xl font-black text-white">{formatMoney(fuelSurchargeTotal)}</p>
+                  <p className="mt-1 text-sm" style={{ color: '#9ca3af' }}>
+                    {formatMoney(fuelSurchargePerMile)} per mile
+                  </p>
+                </div>
+              }
+              hint="This helps you decide whether a lane is recovering enough fuel cost to stay profitable."
+            >
+              <div className="grid gap-4 sm:grid-cols-4">
+                <NumberField label="Trip miles" value={surchargeMiles} onChange={setSurchargeMiles} step={1} />
+                <NumberField label="Base price" value={surchargeBasePrice} onChange={setSurchargeBasePrice} step={0.01} suffix="/gal" />
+                <NumberField label="Current price" value={surchargeCurrentPrice} onChange={setSurchargeCurrentPrice} step={0.01} suffix="/gal" />
+                <NumberField label="MPG" value={surchargeMpg} onChange={setSurchargeMpg} step={0.1} />
               </div>
             </CalculatorCard>
           </div>

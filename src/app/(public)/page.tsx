@@ -179,6 +179,34 @@ const RESOURCE_TABS = [
   { label: 'Resources', href: '/resources', desc: 'Load boards, fuel cards & tools' },
 ];
 
+const CALCULATOR_FEATURES = [
+  {
+    title: 'Fuel Cost',
+    desc: 'Estimate trip fuel spend before you book the load.',
+    href: '/calculators',
+  },
+  {
+    title: 'Cost Per Mile',
+    desc: 'See your true operating cost on every lane.',
+    href: '/calculators',
+  },
+  {
+    title: 'Profit Per Load',
+    desc: 'Measure net profit after fuel, tolls, and pay.',
+    href: '/calculators',
+  },
+  {
+    title: 'Break-Even Rate',
+    desc: 'Know the minimum rate needed to stay profitable.',
+    href: '/calculators',
+  },
+  {
+    title: 'Trip Time',
+    desc: 'Plan dispatch windows with more realistic timing.',
+    href: '/calculators',
+  },
+];
+
 // ── Homepage Ad Banners ──────────────────────────────────────────────────────
 type AdSlotName = 'leaderboard' | 'mid_page' | 'sidebar_a' | 'footer_banner';
 
@@ -287,7 +315,7 @@ function RealAdBanner({ slot }: { slot: AdSlotName }) {
         <p className="text-xs" style={{ color: '#6b7280' }}>{m.sub}</p>
       </div>
       <a
-        href="mailto:ads@truckkinghub.com"
+        href="mailto:info@truckkinghub.com"
         className="shrink-0 px-5 py-2.5 text-xs font-black uppercase tracking-widest transition-opacity hover:opacity-80 whitespace-nowrap"
         style={{ background: '#F5C518', color: '#0d0d0d' }}
       >
@@ -439,6 +467,50 @@ export default async function HomePage() {
 
       {/* ── STATS RING BAR ── */}
       <AnimatedStats />
+
+      {/* ── CALCULATOR LANDING PAGE ── */}
+      <section style={{ background: '#0d0d0d', borderTop: '1px solid #2a2a2a' }} className="py-14">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <ScrollReveal>
+            <SectionEyebrow label="Trucking Calculators" />
+            <h2 className="heading-bar text-3xl font-black uppercase text-white mb-4" style={{ fontFamily: 'Impact, sans-serif' }}>
+              Plan Costs Before You Roll
+            </h2>
+            <p className="max-w-3xl text-sm leading-relaxed mb-8" style={{ color: '#9ca3af' }}>
+              Quick trucking math for owner-operators and fleet managers. Estimate fuel, profit, break-even rates, and trip duration from one simple dashboard.
+            </p>
+          </ScrollReveal>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-5 gap-4">
+            {CALCULATOR_FEATURES.map((item) => (
+              <Link
+                key={item.title}
+                href={item.href}
+                className="card-shimmer group flex flex-col justify-between p-5 transition-all hover:-translate-y-1 hover:opacity-90 duration-300"
+                style={{ background: '#1a1a1a', border: '1px solid #2a2a2a', minHeight: 170 }}
+              >
+                <div>
+                  <p className="text-[10px] font-black uppercase tracking-widest mb-3" style={{ color: '#F5C518' }}>
+                    Calculator
+                  </p>
+                  <h3 className="text-lg font-black uppercase text-white leading-snug" style={{ fontFamily: 'Impact, sans-serif' }}>
+                    {item.title}
+                  </h3>
+                  <p className="mt-2 text-sm leading-relaxed" style={{ color: '#9ca3af' }}>
+                    {item.desc}
+                  </p>
+                </div>
+                <span className="mt-5 inline-flex items-center gap-2 text-xs font-black uppercase tracking-widest" style={{ color: '#F5C518' }}>
+                  Open Calculator
+                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" aria-hidden="true">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
+                  </svg>
+                </span>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
 
       {/* ── RESOURCE CENTER (tabbed) ── */}
       <section style={{ background: '#111111', borderTop: '1px solid #2a2a2a' }} className="py-14">

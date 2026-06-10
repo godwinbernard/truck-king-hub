@@ -165,7 +165,7 @@ export default function AboutPage() {
               'All content is original writing — we do not republish, scrape, or repost content from other outlets.',
               'Facts, figures, and regulatory citations are sourced from primary sources: FMCSA, DOT, ATRI, FreightWaves data, and official government publications.',
               'Sponsored content is clearly labeled. Editorial coverage is never for sale.',
-              'We correct errors promptly. If you spot a factual mistake, contact us at editorial@truckkinghub.com.',
+              'We correct errors promptly. If you spot a factual mistake, contact us at info@truckkinghub.com.',
               'We do not publish rumors, unverified claims, or speculative pricing as fact.',
             ].map((point) => (
               <li key={point} className="flex gap-3 text-sm leading-relaxed" style={{ color: '#d1d5db' }}>
@@ -221,7 +221,7 @@ export default function AboutPage() {
               Browse Resources
             </Link>
             <a
-              href="mailto:editorial@truckkinghub.com"
+              href="mailto:info@truckkinghub.com"
               className="inline-block px-8 py-3 rounded font-bold uppercase text-sm tracking-wide"
               style={{ border: '1px solid #F5C518', color: '#F5C518' }}
             >

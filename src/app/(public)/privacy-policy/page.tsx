@@ -231,8 +231,8 @@ export default function PrivacyPolicyPage() {
             </ul>
             <p className="text-sm leading-relaxed" style={{ color: '#d1d5db' }}>
               To exercise your rights, contact us at{' '}
-              <a href="mailto:privacy@truckkinghub.com" style={{ color: '#F5C518', textDecoration: 'underline' }}>
-                privacy@truckkinghub.com
+              <a href="mailto:info@truckkinghub.com" style={{ color: '#F5C518', textDecoration: 'underline' }}>
+                info@truckkinghub.com
               </a>
               . We will respond within 45 days of receipt of your verifiable request.
             </p>
@@ -282,8 +282,8 @@ export default function PrivacyPolicyPage() {
               <p className="font-bold mb-1" style={{ color: '#ffffff' }}>Truck King Hub</p>
               <p className="text-sm mb-1" style={{ color: '#d1d5db' }}>
                 Privacy Inquiries:{' '}
-                <a href="mailto:privacy@truckkinghub.com" style={{ color: '#F5C518', textDecoration: 'underline' }}>
-                  privacy@truckkinghub.com
+                <a href="mailto:info@truckkinghub.com" style={{ color: '#F5C518', textDecoration: 'underline' }}>
+                  info@truckkinghub.com
                 </a>
               </p>
               <p className="text-sm" style={{ color: '#9ca3af' }}>
