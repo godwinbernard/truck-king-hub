@@ -92,10 +92,78 @@ const AUDIENCE_TILES = [
 ];
 
 const STATS = [
-  { value: '25%', label: 'Curated Sources' },
-  { value: '4', label: 'Approved Feeds' },
-  { value: '100%', label: 'Free Access' },
-  { value: 'Daily', label: 'Updates' },
+  { value: '3.5M+', label: 'Truck Drivers in the US' },
+  { value: '$800B', label: 'Annual Trucking Revenue' },
+  { value: '70%', label: 'Of All US Freight Moved by Truck' },
+  { value: 'Daily', label: 'Intelligence Updates' },
+];
+
+const INDUSTRY_FACTS = [
+  {
+    stat: '$800B+',
+    title: 'Trucking drives the US economy',
+    body: 'The trucking industry generates over $800 billion annually and moves roughly 70% of all freight tonnage in the United States. Without trucks, store shelves would be empty within days.',
+    img: 'https://images.unsplash.com/photo-1519003722824-194d4455a60c?w=800&q=75&auto=format&fit=crop',
+    tag: 'Industry Fact',
+  },
+  {
+    stat: '3.5M',
+    title: 'Truck drivers keep America moving',
+    body: 'There are approximately 3.5 million professional truck drivers in the US. Owner-operators — independent truckers who own their rigs — make up roughly 350,000 of that total.',
+    img: 'https://images.unsplash.com/photo-1586201375761-83865001e31c?w=800&q=75&auto=format&fit=crop',
+    tag: 'Workforce',
+  },
+  {
+    stat: 'CSA',
+    title: 'Your safety score affects everything',
+    body: 'FMCSA\'s Compliance, Safety, Accountability (CSA) program scores carriers across 7 categories. A high CSA score can trigger roadside inspections, raise insurance premiums by 20–40%, and even result in out-of-service orders.',
+    img: 'https://images.unsplash.com/photo-1601597111158-2fceff292cdc?w=800&q=75&auto=format&fit=crop',
+    tag: 'Compliance',
+  },
+];
+
+const LATEST_NEWS = [
+  {
+    title: 'FMCSA Proposes New HOS Flexibility Rules for Short-Haul Operators',
+    excerpt: 'The Federal Motor Carrier Safety Administration is reviewing Hours of Service regulations that could expand the short-haul exemption radius from 150 to 200 air miles, giving local drivers more flexibility.',
+    category: 'compliance',
+    date: 'Jun 2025',
+    img: 'https://images.unsplash.com/photo-1601584115197-04ecc0da31d7?w=800&q=75&auto=format&fit=crop',
+    href: '/compliance',
+  },
+  {
+    title: 'Diesel Prices Hold Steady — What It Means for Spot Rates',
+    excerpt: 'National average diesel prices have stabilized near $3.60/gallon after months of volatility. Analysts say flat fuel costs could put upward pressure on spot rates as carriers reassess fuel surcharge calculations.',
+    category: 'freight',
+    date: 'Jun 2025',
+    img: 'https://images.unsplash.com/photo-1571987454543-2b3a3a4f2a5e?w=800&q=75&auto=format&fit=crop',
+    href: '/brief?category=freight',
+  },
+  {
+    title: 'Commercial Truck Insurance Premiums Up 8% YoY — Here\'s Why',
+    excerpt: 'Rising litigation costs, nuclear verdicts, and increased accident frequency are pushing commercial trucking insurance premiums higher. Owner-operators with clean CSA scores are faring better at renewal.',
+    category: 'insurance',
+    date: 'May 2025',
+    img: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&q=75&auto=format&fit=crop',
+    href: '/insurance',
+  },
+  {
+    title: 'ELD Mandate: What\'s Still Confusing Drivers in 2025',
+    excerpt: 'Despite years on the books, the ELD mandate still trips up owner-operators on personal conveyance, adverse driving conditions exceptions, and what counts as on-duty time. We break it down.',
+    category: 'compliance',
+    date: 'May 2025',
+    img: 'https://images.unsplash.com/photo-1504222490345-c075b7b1b5fa?w=800&q=75&auto=format&fit=crop',
+    href: '/compliance',
+  },
+];
+
+const QUICK_REFERENCES = [
+  { label: 'FMCSA Hours of Service', desc: 'Max 11 hrs driving / 14 hrs on-duty window / 10 hrs off', icon: '🕐', href: '/compliance' },
+  { label: 'CDL Medical Certificate', desc: 'Required every 2 years; DOT physical from certified examiner', icon: '🏥', href: '/compliance' },
+  { label: 'Cargo Insurance Minimums', desc: '$750K–$5M liability depending on cargo type and authority', icon: '🛡️', href: '/insurance' },
+  { label: 'IFTA Fuel Tax Reporting', desc: 'Quarterly filings required for trucks operating in 2+ states', icon: '⛽', href: '/resources' },
+  { label: 'CSA Score Thresholds', desc: 'Scores above 65–80% trigger FMCSA intervention by BASIC category', icon: '📊', href: '/compliance' },
+  { label: 'Bobtail Insurance', desc: 'Covers your tractor when operating without a trailer attached', icon: '🚛', href: '/insurance' },
 ];
 
 const RESOURCE_TABS = [
@@ -411,6 +479,107 @@ export default async function HomePage() {
                 className="w-full h-full object-cover"
               />
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── LATEST NEWS (hardcoded with images) ── */}
+      <section style={{ background: '#0d0d0d', borderTop: '1px solid #2a2a2a' }} className="py-14">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <SectionEyebrow label="Latest News" />
+          <h2 className="text-3xl font-black uppercase text-white mb-8" style={{ fontFamily: 'Impact, sans-serif' }}>
+            What&apos;s Happening In Trucking
+          </h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            {LATEST_NEWS.map((item) => (
+              <Link
+                key={item.title}
+                href={item.href}
+                className="group flex flex-col overflow-hidden transition-opacity hover:opacity-90"
+                style={{ background: '#1a1a1a', border: '1px solid #2a2a2a' }}
+              >
+                <div className="relative overflow-hidden" style={{ height: 160 }}>
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={item.img} alt="" aria-hidden="true"
+                    className="absolute inset-0 w-full h-full object-cover group-hover:scale-[1.04] transition-transform duration-500" loading="lazy" />
+                  <div className="absolute top-3 left-3">
+                    <span className="inline-block px-2 py-0.5 text-[10px] font-black uppercase tracking-widest text-white"
+                      style={{ background: CAT_COLORS[item.category] ?? '#52525b' }}>
+                      {item.category}
+                    </span>
+                  </div>
+                </div>
+                <div className="flex flex-col flex-1 p-4">
+                  <h3 className="font-bold text-white leading-snug mb-2 text-sm line-clamp-2">{item.title}</h3>
+                  <p className="text-xs line-clamp-3 leading-relaxed flex-1" style={{ color: '#9ca3af' }}>{item.excerpt}</p>
+                  <p className="text-xs mt-3 pt-3 font-medium" style={{ borderTop: '1px solid #2a2a2a', color: '#6b7280' }}>{item.date}</p>
+                </div>
+              </Link>
+            ))}
+          </div>
+          <div className="mt-6 text-right">
+            <Link href="/brief" className="text-xs font-black uppercase tracking-widest hover:opacity-70 transition-opacity" style={{ color: '#F5C518' }}>
+              View All Articles →
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* ── INDUSTRY FACTS ── */}
+      <section style={{ background: '#111111', borderTop: '1px solid #2a2a2a' }} className="py-14">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <SectionEyebrow label="Industry Intelligence" />
+          <h2 className="text-3xl font-black uppercase text-white mb-8" style={{ fontFamily: 'Impact, sans-serif' }}>
+            Facts Every Operator Should Know
+          </h2>
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            {INDUSTRY_FACTS.map((fact) => (
+              <div key={fact.title} className="flex flex-col overflow-hidden" style={{ background: '#1a1a1a', border: '1px solid #2a2a2a' }}>
+                <div className="relative overflow-hidden" style={{ height: 200 }}>
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={fact.img} alt="" aria-hidden="true" className="absolute inset-0 w-full h-full object-cover opacity-70" loading="lazy" />
+                  <div className="absolute inset-0" style={{ background: 'linear-gradient(to top, rgba(26,26,26,0.95) 30%, transparent 100%)' }} />
+                  <div className="absolute bottom-4 left-4">
+                    <span className="text-4xl font-black leading-none" style={{ color: '#F5C518', fontFamily: 'Impact, sans-serif' }}>{fact.stat}</span>
+                  </div>
+                  <div className="absolute top-3 right-3">
+                    <span className="px-2 py-0.5 text-[10px] font-black uppercase tracking-widest" style={{ background: 'rgba(245,197,24,0.2)', color: '#F5C518', border: '1px solid rgba(245,197,24,0.4)' }}>
+                      {fact.tag}
+                    </span>
+                  </div>
+                </div>
+                <div className="p-5">
+                  <h3 className="font-black uppercase text-white text-base mb-2 leading-snug" style={{ fontFamily: 'Impact, sans-serif' }}>{fact.title}</h3>
+                  <p className="text-sm leading-relaxed" style={{ color: '#9ca3af' }}>{fact.body}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── QUICK REFERENCE ── */}
+      <section style={{ background: '#0d0d0d', borderTop: '1px solid #2a2a2a' }} className="py-14">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <SectionEyebrow label="Quick Reference" />
+          <h2 className="text-3xl font-black uppercase text-white mb-8" style={{ fontFamily: 'Impact, sans-serif' }}>
+            Essential Rules &amp; Requirements
+          </h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {QUICK_REFERENCES.map((ref) => (
+              <Link
+                key={ref.label}
+                href={ref.href}
+                className="group flex items-start gap-4 p-5 transition-opacity hover:opacity-80"
+                style={{ background: '#1a1a1a', border: '1px solid #2a2a2a' }}
+              >
+                <span className="text-2xl shrink-0 mt-0.5">{ref.icon}</span>
+                <div>
+                  <p className="font-black uppercase text-white text-sm mb-1 leading-snug group-hover:opacity-80" style={{ fontFamily: 'Impact, sans-serif' }}>{ref.label}</p>
+                  <p className="text-xs leading-relaxed" style={{ color: '#9ca3af' }}>{ref.desc}</p>
+                </div>
+              </Link>
+            ))}
           </div>
         </div>
       </section>
