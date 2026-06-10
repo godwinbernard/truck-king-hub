@@ -55,7 +55,7 @@ export function NavBar() {
                 <Link
                   key={link.href}
                   href={link.href}
-                  className="px-3 py-2 text-xs font-semibold uppercase tracking-widest text-white/70 hover:text-white transition-colors whitespace-nowrap"
+                  className="nav-link px-3 py-2 text-xs font-semibold uppercase tracking-widest text-white/70 hover:text-white transition-colors whitespace-nowrap"
                 >
                   {link.label}
                 </Link>

@@ -86,3 +86,148 @@ img { display: block; max-width: 100%; }
 ::-webkit-scrollbar { width: 5px; height: 5px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: #3a3a3a; border-radius: 3px; }
+
+/* ── ANIMATIONS ── */
+
+/* Fade-up on scroll */
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(28px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.animate-fade-up {
+  animation: fade-up 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.animate-fade-up-delay-1 { animation-delay: 0.1s; }
+.animate-fade-up-delay-2 { animation-delay: 0.2s; }
+.animate-fade-up-delay-3 { animation-delay: 0.3s; }
+.animate-fade-up-delay-4 { animation-delay: 0.4s; }
+
+/* Fade-in */
+@keyframes fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+.animate-fade-in { animation: fade-in 0.6s ease both; }
+
+/* Slide-in from left */
+@keyframes slide-left {
+  from { opacity: 0; transform: translateX(-24px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+.animate-slide-left { animation: slide-left 0.5s cubic-bezier(0.22, 1, 0.36, 1) both; }
+
+/* Pulse yellow glow on stat rings */
+@keyframes ring-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(245,197,24,0.4); }
+  50%       { box-shadow: 0 0 0 10px rgba(245,197,24,0); }
+}
+.stat-ring {
+  border: 4px solid #F5C518;
+  border-radius: 9999px;
+  width: 130px;
+  height: 130px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  animation: ring-pulse 2.8s ease-in-out infinite;
+}
+
+/* Card shimmer on hover */
+.card-shimmer {
+  position: relative;
+  overflow: hidden;
+}
+.card-shimmer::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(105deg, transparent 40%, rgba(245,197,24,0.06) 50%, transparent 60%);
+  transform: translateX(-100%);
+  transition: transform 0.5s ease;
+}
+.card-shimmer:hover::after { transform: translateX(100%); }
+
+/* Yellow underline slide on nav links */
+.nav-link {
+  position: relative;
+}
+.nav-link::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: #F5C518;
+  transition: width 0.25s ease;
+}
+.nav-link:hover::after { width: 100%; }
+
+/* Spinning truck icon */
+@keyframes spin-slow {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+.spin-slow { animation: spin-slow 8s linear infinite; }
+
+/* Number count-up flash */
+@keyframes count-flash {
+  0%   { color: #F5C518; }
+  100% { color: #ffffff; }
+}
+.count-flash { animation: count-flash 1.2s ease forwards; }
+
+/* Scroll-reveal: hidden by default, JS adds .revealed */
+.reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.55s cubic-bezier(0.22,1,0.36,1), transform 0.55s cubic-bezier(0.22,1,0.36,1);
+}
+.reveal.revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Yellow border shimmer on section headings */
+@keyframes border-slide {
+  from { width: 0; }
+  to   { width: 48px; }
+}
+.heading-bar::after {
+  content: '';
+  display: block;
+  height: 3px;
+  background: #F5C518;
+  margin-top: 8px;
+  animation: border-slide 0.6s cubic-bezier(0.22,1,0.36,1) 0.2s both;
+}
+
+/* Pulse dot for "live" indicators */
+@keyframes pulse-dot {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50%       { transform: scale(1.5); opacity: 0.6; }
+}
+.pulse-dot {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  border-radius: 9999px;
+  background: #F5C518;
+  animation: pulse-dot 1.4s ease-in-out infinite;
+}
+
+/* Floating upward animation for hero badge */
+@keyframes float-up {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-5px); }
+}
+.float-badge { animation: float-up 3s ease-in-out infinite; }
+
+/* Gradient text */
+.gradient-text {
+  background: linear-gradient(90deg, #F5C518, #fff 60%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}

@@ -12,7 +12,7 @@ if (!password) {
 
 async function createAdmin() {
   const passwordHash = await bcrypt.hash(password, 12);
-  await db.insert(adminUsers).values({ email, passwordHash }).onConflictDoNothing();
+  await db.insert(adminUsers).values({ email, passwordHash, role: 'Admin' }).onConflictDoNothing();
   console.log(`Admin user created: ${email}`);
   process.exit(0);
 }

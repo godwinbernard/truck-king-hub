@@ -211,6 +211,7 @@ export function buildDashboardModel(articleRows: ArticleRow[]): DashboardModel {
     { label: 'Published', value: String(published), detail: 'Live across the public site' },
     { label: 'Drafts', value: String(drafts), detail: 'Waiting on editorial review' },
     { label: 'Scheduled', value: String(scheduled), detail: 'Queued for future publishing' },
+    { label: 'Archived', value: String(archived), detail: 'Saved for reference and republishing' },
     { label: 'Featured', value: String(featured), detail: 'Pinned to the homepage hero or cards' },
     { label: 'Avg. Read Time', value: `${avgReadTime} min`, detail: 'Estimated from article length' },
   ];

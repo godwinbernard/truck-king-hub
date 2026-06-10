@@ -3,6 +3,8 @@ import { articles } from '@/lib/db/schema';
 import { getSession } from '@/lib/admin/session';
 import { eq } from 'drizzle-orm';
 import { NextRequest } from 'next/server';
+import { ArticleValidationError, buildArticlePayload } from '@/lib/admin/articles';
+import { can } from '@/lib/admin/permissions';
 
 function slugify(value: string) {
   return value.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
@@ -27,60 +29,77 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
   if (!session?.adminId) return Response.json({ error: 'Unauthorized' }, { status: 401 });
 
   const { id } = await params;
-  const body = await req.json();
-  const {
-    title,
-    slug,
-    author,
-    contentType,
-    category,
-    excerpt,
-    body: content,
-    coverImage,
-    metaTitle,
-    metaDescription,
-    focusKeyword,
-    canonicalUrl,
-    openGraphTitle,
-    openGraphDescription,
-    schemaMarkup,
-    tags,
-    featured,
-    status,
-    scheduledAt,
-  } = body;
-
   const [existing] = await db.select().from(articles).where(eq(articles.id, id));
   if (!existing) return Response.json({ error: 'Not found' }, { status: 404 });
+  try {
+    const payload = buildArticlePayload(await req.json());
+    if (!can(session.role, 'edit_article')) {
+      return Response.json({ error: 'Forbidden' }, { status: 403 });
+    }
+    if (payload.status === 'published' && !can(session.role, 'publish_article')) {
+      return Response.json({ error: 'Forbidden' }, { status: 403 });
+    }
+    if (payload.status === 'scheduled' && !can(session.role, 'schedule_article')) {
+      return Response.json({ error: 'Forbidden' }, { status: 403 });
+    }
+    if (payload.status === 'archived' && !can(session.role, 'archive_article')) {
+      return Response.json({ error: 'Forbidden' }, { status: 403 });
+    }
 
-  const wasPublished = existing.status === 'published';
-  const nowPublished = status === 'published';
-  const normalizedStatus = status || existing.status;
-  const scheduledDate = scheduledAt ? new Date(scheduledAt) : null;
+    const [slugOwner] = await db.select({ id: articles.id }).from(articles).where(eq(articles.slug, payload.slug));
+    if (slugOwner && slugOwner.id !== id) {
+      return Response.json({ error: 'Slug already exists' }, { status: 409 });
+    }
 
-  const [updated] = await db.update(articles).set({
-    title, slug, author, category, excerpt,
-    contentType: contentType || existing.contentType || 'blog',
-    body: content, coverImage, metaTitle, metaDescription,
-    focusKeyword: focusKeyword || null,
-    canonicalUrl: canonicalUrl || null,
-    openGraphTitle: openGraphTitle || null,
-    openGraphDescription: openGraphDescription || null,
-    schemaMarkup: schemaMarkup || null,
-    tags: tags || [],
-    featured: featured || false,
-    status: normalizedStatus,
-    publishedAt: nowPublished && !wasPublished ? new Date() : normalizedStatus === 'published' ? existing.publishedAt ?? new Date() : existing.publishedAt,
-    scheduledAt: normalizedStatus === 'scheduled' ? scheduledDate : null,
-    updatedAt: new Date(),
-  }).where(eq(articles.id, id)).returning();
+    const nextStatus = payload.status || existing.status;
+    const publishedAt =
+      nextStatus === 'published'
+        ? existing.publishedAt ?? new Date()
+        : nextStatus === 'archived'
+          ? existing.publishedAt
+          : existing.status === 'published' && nextStatus === 'draft'
+            ? existing.publishedAt
+            : null;
 
-  return Response.json({ article: updated });
+    const [updated] = await db.update(articles).set({
+      title: payload.title,
+      slug: payload.slug,
+      author: payload.author,
+      category: payload.category,
+      excerpt: payload.excerpt,
+      contentType: payload.contentType,
+      body: payload.body,
+      coverImage: payload.coverImage,
+      metaTitle: payload.metaTitle,
+      metaDescription: payload.metaDescription,
+      focusKeyword: payload.focusKeyword,
+      canonicalUrl: payload.canonicalUrl,
+      openGraphTitle: payload.openGraphTitle,
+      openGraphDescription: payload.openGraphDescription,
+      schemaMarkup: payload.schemaMarkup,
+      tags: payload.tags,
+      featured: payload.featured,
+      status: nextStatus,
+      publishedAt,
+      scheduledAt: nextStatus === 'scheduled' ? new Date(payload.scheduledAt!) : null,
+      updatedAt: new Date(),
+    }).where(eq(articles.id, id)).returning();
+
+    return Response.json({ article: updated });
+  } catch (error) {
+    if (error instanceof ArticleValidationError) {
+      return Response.json({ error: error.message }, { status: error.status });
+    }
+    return Response.json({ error: 'Save failed' }, { status: 500 });
+  }
 }
 
 export async function POST(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const session = await getSession();
   if (!session?.adminId) return Response.json({ error: 'Unauthorized' }, { status: 401 });
+  if (!can(session.role, 'create_article')) {
+    return Response.json({ error: 'Forbidden' }, { status: 403 });
+  }
 
   const { id } = await params;
   const body = await req.json().catch(() => ({}));
@@ -120,6 +139,9 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
 export async function DELETE(_req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const session = await getSession();
   if (!session?.adminId) return Response.json({ error: 'Unauthorized' }, { status: 401 });
+  if (!can(session.role, 'delete_article')) {
+    return Response.json({ error: 'Forbidden' }, { status: 403 });
+  }
 
   const { id } = await params;
   await db.delete(articles).where(eq(articles.id, id));

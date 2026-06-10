@@ -59,6 +59,13 @@ export const cmsTags = pgTable('cms_tags', {
   createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
 });
 
+export const cmsArticleTags = pgTable('cms_article_tags', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  articleId: uuid('article_id').notNull(),
+  tagId: uuid('tag_id').notNull(),
+  createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
+});
+
 export const cmsMedia = pgTable('cms_media', {
   id: uuid('id').primaryKey().defaultRandom(),
   filename: text('filename').notNull(),
@@ -157,6 +164,7 @@ export const adminUsers = pgTable('admin_users', {
   id: uuid('id').primaryKey().defaultRandom(),
   email: text('email').unique().notNull(),
   passwordHash: text('password_hash').notNull(),
+  role: text('role').notNull().default('Admin'),
   createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
 });
 

@@ -101,6 +101,28 @@ export default async function AdminLayout({ children }: { children: React.ReactN
                 </Link>
               </div>
             </div>
+            <div className="border-t border-silver-light px-4 py-3 sm:px-6 lg:hidden">
+              <div className="flex gap-2 overflow-x-auto pb-1">
+                {WORKSPACES.map((item) => (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    className="whitespace-nowrap rounded-full border border-silver-light px-3 py-1.5 text-xs font-semibold text-charcoal"
+                  >
+                    {item.label}
+                  </Link>
+                ))}
+                {CMS_NAV.slice(0, 6).map((item) => (
+                  <a
+                    key={item.href}
+                    href={`/admin${item.href}`}
+                    className="whitespace-nowrap rounded-full border border-silver-light px-3 py-1.5 text-xs font-semibold text-charcoal"
+                  >
+                    {item.label}
+                  </a>
+                ))}
+              </div>
+            </div>
           </header>
 
           <main className="flex-1 px-4 py-6 sm:px-6 lg:px-8">

@@ -18,6 +18,7 @@ export async function POST(req: NextRequest) {
   const session = await getSession();
   session.adminId = users[0].id;
   session.email = users[0].email;
+  session.role = users[0].role ?? 'Admin';
   await session.save();
 
   return new Response(JSON.stringify({ ok: true }), { status: 200 });

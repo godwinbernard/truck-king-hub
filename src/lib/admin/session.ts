@@ -4,6 +4,7 @@ import { cookies } from 'next/headers';
 export type AdminSession = {
   adminId?: string;
   email?: string;
+  role?: string;
 };
 
 export const sessionOptions: SessionOptions = {

@@ -254,11 +254,19 @@ async function seed() {
     const slug = slugify(a.title);
     // Stagger published dates so they appear in order
     const publishedAt = new Date(now.getTime() - (ARTICLES.length - i) * 60 * 60 * 1000);
+    const contentType =
+      a.category === 'news' ? 'news' :
+      a.category === 'equipment' ? 'review' :
+      a.category === 'compliance' ? 'article' :
+      a.category === 'freight' ? 'article' :
+      a.category === 'insurance' ? 'article' :
+      a.category === 'lifestyle' ? 'blog' :
+      'blog';
 
     await sql`
-      INSERT INTO articles (title, slug, author, category, excerpt, body, cover_image, meta_title, meta_description, tags, featured, status, published_at)
+      INSERT INTO articles (title, slug, author, content_type, category, excerpt, body, cover_image, meta_title, meta_description, tags, featured, status, published_at)
       VALUES (
-        ${a.title}, ${slug}, ${a.author}, ${a.category},
+        ${a.title}, ${slug}, ${a.author}, ${contentType}, ${a.category},
         ${a.excerpt}, ${a.body},
         ${a.coverImage}, ${a.metaTitle}, ${a.metaDescription},
         ${a.tags}, ${a.featured}, 'published', ${publishedAt}

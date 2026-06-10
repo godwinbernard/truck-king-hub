@@ -31,15 +31,20 @@ export default function ArticlesPage() {
   const [items, setItems] = useState<Article[]>([]);
   const [loading, setLoading] = useState(true);
 
-  async function load() {
-    const res = await fetch('/api/admin/articles');
-    const data = await res.json();
-    setItems(data.articles ?? []);
-    setLoading(false);
-  }
-
   useEffect(() => {
-    load();
+    let mounted = true;
+
+    void (async () => {
+      const res = await fetch('/api/admin/articles');
+      const data = await res.json();
+      if (!mounted) return;
+      setItems(data.articles ?? []);
+      setLoading(false);
+    })();
+
+    return () => {
+      mounted = false;
+    };
   }, []);
 
   async function del(id: string, title: string) {

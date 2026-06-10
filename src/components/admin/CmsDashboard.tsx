@@ -61,7 +61,7 @@ function DataTable({
 }: {
   title: string;
   items: Array<Record<string, string | number | boolean | undefined | null>>;
-  columns: Array<{ key: string; label: string; render?: (value: any, row: any) => React.ReactNode }>;
+  columns: Array<{ key: string; label: string; render?: (value: unknown, row: Record<string, string | number | boolean | undefined | null>) => React.ReactNode }>;
   emptyLabel: string;
 }) {
   return (

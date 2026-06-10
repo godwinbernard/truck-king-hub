@@ -45,6 +45,142 @@ const CATEGORY_ICONS: Record<string, string> = {
   training:         'M4.26 10.147a60.438 60.438 0 0 0-.491 6.347A48.62 48.62 0 0 1 12 20.904a48.62 48.62 0 0 1 8.232-4.41 60.46 60.46 0 0 0-.491-6.347m-15.482 0a50.636 50.636 0 0 0-2.658-.813A59.906 59.906 0 0 1 12 3.493a59.903 59.903 0 0 1 10.399 5.84c-.896.248-1.783.52-2.658.814m-15.482 0A50.717 50.717 0 0 1 12 13.489a50.702 50.702 0 0 1 3.741-3.342M6.75 15a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Zm0 0v-3.675A55.378 55.378 0 0 1 12 8.443m-7.007 11.55A5.981 5.981 0 0 0 6.75 15.75v-1.5',
 };
 
+const FEATURED_RESOURCES = [
+  {
+    title: 'FMCSA SAFER',
+    category: 'compliance_tool',
+    description: 'Verify carrier authority, safety fitness, and operating status.',
+    url: 'https://safer.fmcsa.dot.gov/',
+    bestFor: 'Carrier lookup and compliance checks',
+  },
+  {
+    title: 'FMCSA Home',
+    category: 'compliance_tool',
+    description: 'Official federal trucking safety and regulations portal.',
+    url: 'https://www.fmcsa.dot.gov/',
+    bestFor: 'Rules, guidance, and federal updates',
+  },
+  {
+    title: 'OOIDA',
+    category: 'association',
+    description: 'Owner-operator advocacy, news, and member resources.',
+    url: 'https://www.ooida.com/',
+    bestFor: 'Independent drivers and small fleets',
+  },
+  {
+    title: 'DAT Freight & Analytics',
+    category: 'load_board',
+    description: 'Freight marketplace, load boards, and rate tools.',
+    url: 'https://www.dat.com/',
+    bestFor: 'Load matching and market intelligence',
+  },
+  {
+    title: 'Truckstop',
+    category: 'load_board',
+    description: 'Load board and freight-matching platform for carriers.',
+    url: 'https://truckstop.com/',
+    bestFor: 'Spot market freight and brokerage access',
+  },
+  {
+    title: 'WEX Fleet Cards',
+    category: 'fuel_card',
+    description: 'Fleet payment tools for fuel, tracking, and controls.',
+    url: 'https://www.wexinc.com/',
+    bestFor: 'Fuel expense management',
+  },
+  {
+    title: 'Comdata',
+    category: 'fuel_card',
+    description: 'Fuel cards, payment controls, and trucking finance tools.',
+    url: 'https://www.comdata.com/',
+    bestFor: 'Fleet fuel and payments',
+  },
+  {
+    title: "Love's Truck Care",
+    category: 'maintenance',
+    description: 'Truck stop service, roadside support, and maintenance.',
+    url: 'https://www.loves.com/',
+    bestFor: 'Road service and preventive maintenance',
+  },
+  {
+    title: 'Pilot Flying J',
+    category: 'truck_stop',
+    description: 'Fuel stops, parking, showers, and driver amenities.',
+    url: 'https://pilotflyingj.com/',
+    bestFor: 'Fuel, parking, and over-the-road convenience',
+  },
+  {
+    title: 'TravelCenters of America',
+    category: 'truck_stop',
+    description: 'Full-service travel centers for professional drivers.',
+    url: 'https://www.ta-petro.com/',
+    bestFor: 'Road stops and truck maintenance access',
+  },
+  {
+    title: 'Motive',
+    category: 'eld',
+    description: 'Fleet platform for ELDs, safety, and operations visibility.',
+    url: 'https://gomotive.com/',
+    bestFor: 'Hours of service and fleet telematics',
+  },
+  {
+    title: 'J. J. Keller',
+    category: 'compliance_tool',
+    description: 'Compliance manuals, training, and DOT safety solutions.',
+    url: 'https://www.jjkeller.com/',
+    bestFor: 'Regulatory compliance and driver training',
+  },
+  {
+    title: 'Bestpass',
+    category: 'compliance_tool',
+    description: 'Toll management and expense consolidation for fleets.',
+    url: 'https://www.bestpass.com/',
+    bestFor: 'Toll tracking and cost control',
+  },
+  {
+    title: 'Trucker Path',
+    category: 'load_board',
+    description: 'Truck navigation, parking, fuel prices, and load tools.',
+    url: 'https://truckerpath.com/',
+    bestFor: 'Parking, routing, and trip planning',
+  },
+  {
+    title: 'Uber Freight',
+    category: 'load_board',
+    description: 'Digital freight matching and shipper-carrier workflows.',
+    url: 'https://www.uberfreight.com/',
+    bestFor: 'Finding freight and managing loads',
+  },
+  {
+    title: 'Progressive Commercial',
+    category: 'insurance',
+    description: 'Commercial truck insurance options and quote tools.',
+    url: 'https://www.progressivecommercial.com/',
+    bestFor: 'Commercial auto and trucking coverage',
+  },
+  {
+    title: 'Sentry',
+    category: 'insurance',
+    description: 'Specialized trucking insurance for fleets and owner-operators.',
+    url: 'https://www.sentry.com/',
+    bestFor: 'Fleet and owner-operator insurance',
+  },
+  {
+    title: 'Truckstop Factoring',
+    category: 'factoring',
+    description: 'Invoice factoring and cash flow tools for carriers.',
+    url: 'https://truckstop.com/factoring/',
+    bestFor: 'Fast access to freight cash flow',
+  },
+  {
+    title: 'Amazon Relay',
+    category: 'load_board',
+    description: 'Carrier program and freight opportunities for trucking companies.',
+    url: 'https://relay.amazon.com/',
+    bestFor: 'Direct carrier freight access',
+  },
+];
+
 export default async function ResourcesPage() {
   const listings: Listing[] = await db
     .select()
@@ -78,6 +214,62 @@ export default async function ResourcesPage() {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-12">
 
+        <section>
+          <div className="flex items-start justify-between gap-4 mb-5">
+            <div>
+              <p className="text-[10px] font-black uppercase tracking-widest mb-2 flex items-center gap-1" style={{ color: '#F5C518' }}>⚡ Editorial Picks</p>
+              <h2 className="text-2xl font-black uppercase text-white" style={{ fontFamily: 'Impact, sans-serif' }}>Essential Resources for Truckers</h2>
+            </div>
+            <p className="hidden md:block text-xs text-right max-w-md" style={{ color: '#9ca3af' }}>
+              Official lookup tools, freight marketplaces, and trucking organizations that help owner-operators and fleets stay compliant and profitable.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            {FEATURED_RESOURCES.map((resource) => (
+              <a
+                key={resource.title}
+                href={resource.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group flex flex-col p-5 transition-opacity hover:opacity-85"
+                style={{ background: '#1a1a1a', border: '1px solid #2a2a2a' }}
+              >
+                <div className="flex items-start justify-between gap-2 mb-3">
+                  <span className="inline-block px-2 py-0.5 text-[10px] font-black uppercase tracking-widest text-white" style={{ background: '#52525b' }}>
+                    {CATEGORY_LABELS[resource.category] ?? resource.category}
+                  </span>
+                  <svg className="w-4 h-4 shrink-0" style={{ color: '#F5C518' }} fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" aria-hidden="true">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 6H5.25A2.25 2.25 0 0 0 3 8.25v10.5A2.25 2.25 0 0 0 5.25 21h10.5A2.25 2.25 0 0 0 18 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
+                  </svg>
+                </div>
+                <h3 className="text-sm font-bold text-white leading-snug mb-2">{resource.title}</h3>
+                <p className="text-xs leading-relaxed mb-3" style={{ color: '#9ca3af' }}>{resource.description}</p>
+                <p className="text-[11px] font-semibold mt-auto" style={{ color: '#d1d5db' }}>
+                  Best for: <span style={{ color: '#9ca3af' }}>{resource.bestFor}</span>
+                </p>
+              </a>
+            ))}
+          </div>
+        </section>
+
+        <section className="p-6" style={{ background: '#111111', border: '1px solid #2a2a2a' }}>
+          <p className="text-[10px] font-black uppercase tracking-widest mb-3 flex items-center gap-1" style={{ color: '#F5C518' }}>⚡ Resource Guide</p>
+          <h2 className="text-xl sm:text-2xl font-black uppercase text-white mb-3" style={{ fontFamily: 'Impact, sans-serif' }}>
+            What Each Resource Category Helps With
+          </h2>
+          <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+            {Object.entries(CATEGORY_DESC).map(([key, desc]) => (
+              <div key={key} className="p-4" style={{ background: '#1a1a1a', border: '1px solid #2a2a2a' }}>
+                <p className="text-[10px] font-black uppercase tracking-widest mb-2" style={{ color: '#F5C518' }}>
+                  {CATEGORY_LABELS[key] ?? key}
+                </p>
+                <p className="text-sm leading-relaxed" style={{ color: '#9ca3af' }}>{desc}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+
         {/* Trust banner */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           {[
@@ -100,37 +292,49 @@ export default async function ResourcesPage() {
         </div>
 
         {/* Directory content */}
-        {categoryCount === 0 ? (
-          <div className="flex flex-col items-center justify-center py-20 text-center border border-dashed" style={{ borderColor: '#2a2a2a' }}>
-            <p className="font-bold text-white text-sm">Directory listings coming soon</p>
-            <p className="text-xs mt-1" style={{ color: '#9ca3af' }}>We&apos;re reviewing and adding resources now.</p>
+        <section>
+          <div className="flex items-start justify-between gap-4 mb-5">
+            <div>
+              <p className="text-[10px] font-black uppercase tracking-widest mb-2 flex items-center gap-1" style={{ color: '#F5C518' }}>⚡ Directory</p>
+              <h2 className="text-2xl font-black uppercase text-white" style={{ fontFamily: 'Impact, sans-serif' }}>Reviewed Listings</h2>
+            </div>
+            <p className="text-xs text-right" style={{ color: '#9ca3af' }}>
+              {categoryCount} categories · {listings.length} listings
+            </p>
           </div>
-        ) : (
-          Object.entries(grouped).map(([category, items]) => (
-            <section key={category} aria-labelledby={`cat-${category}`}>
-              <div className="flex items-center gap-3 mb-5">
-                <div className="w-8 h-8 flex items-center justify-center shrink-0" style={{ background: 'rgba(245,197,24,0.15)' }}>
-                  <svg className="w-4 h-4" style={{ color: '#F5C518' }} fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" aria-hidden="true">
-                    <path strokeLinecap="round" strokeLinejoin="round" d={CATEGORY_ICONS[category] ?? CATEGORY_ICONS.compliance_tool} />
-                  </svg>
+
+          {categoryCount === 0 ? (
+            <div className="flex flex-col items-center justify-center py-20 text-center border border-dashed" style={{ borderColor: '#2a2a2a' }}>
+              <p className="font-bold text-white text-sm">Directory listings coming soon</p>
+              <p className="text-xs mt-1" style={{ color: '#9ca3af' }}>We&apos;re reviewing and adding resources now.</p>
+            </div>
+          ) : (
+            Object.entries(grouped).map(([category, items]) => (
+              <section key={category} aria-labelledby={`cat-${category}`}>
+                <div className="flex items-center gap-3 mb-5">
+                  <div className="w-8 h-8 flex items-center justify-center shrink-0" style={{ background: 'rgba(245,197,24,0.15)' }}>
+                    <svg className="w-4 h-4" style={{ color: '#F5C518' }} fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" aria-hidden="true">
+                      <path strokeLinecap="round" strokeLinejoin="round" d={CATEGORY_ICONS[category] ?? CATEGORY_ICONS.compliance_tool} />
+                    </svg>
+                  </div>
+                  <div>
+                    <h2 id={`cat-${category}`} className="text-base font-black uppercase text-white" style={{ fontFamily: 'Impact, sans-serif' }}>
+                      {CATEGORY_LABELS[category] ?? category}
+                    </h2>
+                    {CATEGORY_DESC[category] && (
+                      <p className="text-xs" style={{ color: '#9ca3af' }}>{CATEGORY_DESC[category]}</p>
+                    )}
+                  </div>
                 </div>
-                <div>
-                  <h2 id={`cat-${category}`} className="text-base font-black uppercase text-white" style={{ fontFamily: 'Impact, sans-serif' }}>
-                    {CATEGORY_LABELS[category] ?? category}
-                  </h2>
-                  {CATEGORY_DESC[category] && (
-                    <p className="text-xs" style={{ color: '#9ca3af' }}>{CATEGORY_DESC[category]}</p>
-                  )}
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {items.map((item) => (
+                    <ResourceCard key={item.id} item={item} />
+                  ))}
                 </div>
-              </div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                {items.map((item) => (
-                  <ResourceCard key={item.id} item={item} />
-                ))}
-              </div>
-            </section>
-          ))
-        )}
+              </section>
+            ))
+          )}
+        </section>
       </div>
     </div>
   );

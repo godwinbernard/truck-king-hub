@@ -3,6 +3,8 @@ import { articles } from '@/lib/db/schema';
 import { eq, desc, and } from 'drizzle-orm';
 import Link from 'next/link';
 import { unstable_noStore as noStore } from 'next/cache';
+import { ScrollReveal } from '@/components/ui/ScrollReveal';
+import { AnimatedStats } from '@/components/ui/AnimatedStats';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
@@ -44,10 +46,12 @@ function YellowCat({ category }: { category: string }) {
   );
 }
 
-function SectionEyebrow({ icon = '⚡', label }: { icon?: string; label: string }) {
+function SectionEyebrow({ icon = '⚡', label, animate = false }: { icon?: string; label: string; animate?: boolean }) {
   return (
-    <p className="text-[11px] font-black uppercase tracking-widest mb-2 flex items-center gap-1.5" style={{ color: '#F5C518' }}>
-      <span>{icon}</span>{label}
+    <p className={`text-[11px] font-black uppercase tracking-widest mb-2 flex items-center gap-1.5${animate ? ' animate-fade-in' : ''}`} style={{ color: '#F5C518' }}>
+      <span className={animate ? 'float-badge' : ''}>{icon}</span>
+      {label}
+      {animate && <span className="pulse-dot ml-2" />}
     </p>
   );
 }
@@ -58,7 +62,8 @@ function BreakingTicker({ items }: { items: Article[] }) {
   return (
     <div className="overflow-hidden" style={{ background: '#F5C518' }} aria-label="Breaking news ticker">
       <div className="flex items-stretch">
-        <div className="shrink-0 px-4 flex items-center" style={{ background: '#0d0d0d' }}>
+        <div className="shrink-0 px-4 flex items-center gap-2" style={{ background: '#0d0d0d' }}>
+          <span className="pulse-dot" />
           <span className="text-[10px] font-black uppercase tracking-widest text-white whitespace-nowrap">Breaking</span>
         </div>
         <div className="overflow-hidden flex-1 py-2.5">
@@ -189,17 +194,19 @@ function DarkCard({ item, imgUrl }: { item: Article; imgUrl: string }) {
   return (
     <Link
       href={`/article/${item.slug}`}
-      className="group flex flex-col overflow-hidden transition-opacity hover:opacity-90"
+      className="card-shimmer group flex flex-col overflow-hidden transition-all hover:opacity-90 hover:-translate-y-1 duration-300"
       style={{ background: '#1a1a1a', border: '1px solid #2a2a2a' }}
     >
       <div className="relative overflow-hidden" style={{ height: 160 }}>
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img src={item.coverImage || imgUrl} alt="" aria-hidden="true"
-          className="absolute inset-0 w-full h-full object-cover group-hover:scale-[1.04] transition-transform duration-500" loading="lazy" />
+          className="absolute inset-0 w-full h-full object-cover group-hover:scale-[1.06] transition-transform duration-500" loading="lazy" />
+        <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+          style={{ background: 'linear-gradient(to top, rgba(245,197,24,0.15) 0%, transparent 60%)' }} />
         <div className="absolute top-3 left-3"><YellowCat category={item.category} /></div>
       </div>
       <div className="flex flex-col flex-1 p-4">
-        <h3 className="font-bold text-white leading-snug mb-2 text-base line-clamp-2">{item.title}</h3>
+        <h3 className="font-bold text-white leading-snug mb-2 text-base line-clamp-2 group-hover:opacity-80 transition-opacity">{item.title}</h3>
         <p className="text-sm line-clamp-2 leading-relaxed flex-1" style={{ color: '#9ca3af' }}>{item.excerpt}</p>
         <div className="flex items-center justify-between mt-3 pt-3" style={{ borderTop: '1px solid #2a2a2a' }}>
           <span className="text-xs font-medium" style={{ color: '#9ca3af' }}>{item.author}</span>
@@ -308,20 +315,7 @@ export default async function HomePage() {
       </div>
 
       {/* ── STATS RING BAR ── */}
-      <section className="map-bg py-14">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 place-items-center">
-            {STATS.map((s) => (
-              <div key={s.label} className="flex flex-col items-center gap-3">
-                <div className="stat-ring">
-                  <span className="font-black text-white text-2xl leading-none" style={{ fontFamily: 'Impact, sans-serif' }}>{s.value}</span>
-                </div>
-                <p className="text-[10px] font-black uppercase tracking-widest text-center" style={{ color: '#9ca3af' }}>{s.label}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+      <AnimatedStats />
 
       {/* ── RESOURCE CENTER (tabbed) ── */}
       <section style={{ background: '#111111', borderTop: '1px solid #2a2a2a' }} className="py-14">
