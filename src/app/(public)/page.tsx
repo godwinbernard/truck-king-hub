@@ -247,18 +247,18 @@ export default async function HomePage() {
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 flex flex-col justify-center" style={{ minHeight: 560 }}>
           {hero ? (
             <>
-              <SectionEyebrow label="The Most Complete Trucking Intelligence" />
+              <SectionEyebrow label="The Most Complete Trucking Intelligence" animate />
               <h1
-                className="font-black uppercase text-white mb-6 leading-none"
+                className="font-black uppercase text-white mb-6 leading-none animate-fade-up"
                 style={{ fontSize: 'clamp(2.5rem, 6vw, 5rem)', fontFamily: 'Impact, Haettenschweiler, Arial Narrow Bold, sans-serif', maxWidth: 700 }}
               >
                 {hero.title}
               </h1>
-              <p className="text-white/80 text-base mb-8 max-w-xl leading-relaxed">{hero.excerpt}</p>
-              <div className="flex items-center gap-4">
+              <p className="text-white/80 text-base mb-8 max-w-xl leading-relaxed animate-fade-up animate-fade-up-delay-1">{hero.excerpt}</p>
+              <div className="flex items-center gap-4 animate-fade-up animate-fade-up-delay-2">
                 <Link
                   href={`/article/${hero.slug}`}
-                  className="inline-flex items-center gap-2 px-6 py-3 text-sm font-black uppercase tracking-widest transition-opacity hover:opacity-90"
+                  className="inline-flex items-center gap-2 px-6 py-3 text-sm font-black uppercase tracking-widest transition-all hover:opacity-90 hover:scale-105 duration-200"
                   style={{ background: '#F5C518', color: '#0d0d0d' }}
                 >
                   Learn More
@@ -273,17 +273,17 @@ export default async function HomePage() {
             </>
           ) : (
             <>
-              <SectionEyebrow label="The Most Complete Trucking Intelligence" />
+              <SectionEyebrow label="The Most Complete Trucking Intelligence" animate />
               <h1
-                className="font-black uppercase text-white mb-6 leading-none"
+                className="font-black uppercase text-white mb-6 leading-none animate-fade-up"
                 style={{ fontSize: 'clamp(2.5rem, 6vw, 5rem)', fontFamily: 'Impact, Haettenschweiler, Arial Narrow Bold, sans-serif', maxWidth: 700 }}
               >
                 Daily Intelligence For Owner-Operators
               </h1>
-              <p className="text-white/80 text-base mb-8 max-w-xl">FMCSA updates, compliance alerts, insurance intel, and freight news — every day.</p>
+              <p className="text-white/80 text-base mb-8 max-w-xl animate-fade-up animate-fade-up-delay-1">FMCSA updates, compliance alerts, insurance intel, and freight news — every day.</p>
               <Link
                 href="/brief"
-                className="inline-flex items-center gap-2 px-6 py-3 text-sm font-black uppercase tracking-widest"
+                className="inline-flex items-center gap-2 px-6 py-3 text-sm font-black uppercase tracking-widest animate-fade-up animate-fade-up-delay-2 hover:scale-105 transition-transform"
                 style={{ background: '#F5C518', color: '#0d0d0d' }}
               >
                 Browse All News →
@@ -320,10 +320,12 @@ export default async function HomePage() {
       {/* ── RESOURCE CENTER (tabbed) ── */}
       <section style={{ background: '#111111', borderTop: '1px solid #2a2a2a' }} className="py-14">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <ScrollReveal>
           <SectionEyebrow label="Truck King Resources" />
-          <h2 className="text-3xl font-black uppercase text-white mb-8" style={{ fontFamily: 'Impact, sans-serif' }}>
+          <h2 className="heading-bar text-3xl font-black uppercase text-white mb-8" style={{ fontFamily: 'Impact, sans-serif' }}>
             Resource Center
           </h2>
+          </ScrollReveal>
           <div className="flex gap-1 mb-8 overflow-x-auto pb-2">
             {RESOURCE_TABS.map((tab, i) => (
               <Link
@@ -485,30 +487,33 @@ export default async function HomePage() {
             What&apos;s Happening In Trucking
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            {LATEST_NEWS.map((item) => (
-              <Link
-                key={item.title}
-                href={item.href}
-                className="group flex flex-col overflow-hidden transition-opacity hover:opacity-90"
-                style={{ background: '#1a1a1a', border: '1px solid #2a2a2a' }}
-              >
-                <div className="relative overflow-hidden" style={{ height: 160 }}>
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={item.img} alt="" aria-hidden="true"
-                    className="absolute inset-0 w-full h-full object-cover group-hover:scale-[1.04] transition-transform duration-500" loading="lazy" />
-                  <div className="absolute top-3 left-3">
-                    <span className="inline-block px-2 py-0.5 text-[10px] font-black uppercase tracking-widest text-white"
-                      style={{ background: CAT_COLORS[item.category] ?? '#52525b' }}>
-                      {item.category}
-                    </span>
+            {LATEST_NEWS.map((item, i) => (
+              <ScrollReveal key={item.title} delay={i * 80}>
+                <Link
+                  href={item.href}
+                  className="card-shimmer group flex flex-col overflow-hidden transition-all hover:-translate-y-1 hover:opacity-90 duration-300 h-full"
+                  style={{ background: '#1a1a1a', border: '1px solid #2a2a2a' }}
+                >
+                  <div className="relative overflow-hidden" style={{ height: 160 }}>
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src={item.img} alt="" aria-hidden="true"
+                      className="absolute inset-0 w-full h-full object-cover group-hover:scale-[1.06] transition-transform duration-500" loading="lazy" />
+                    <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                      style={{ background: 'linear-gradient(to top, rgba(245,197,24,0.12) 0%, transparent 60%)' }} />
+                    <div className="absolute top-3 left-3">
+                      <span className="inline-block px-2 py-0.5 text-[10px] font-black uppercase tracking-widest text-white"
+                        style={{ background: CAT_COLORS[item.category] ?? '#52525b' }}>
+                        {item.category}
+                      </span>
+                    </div>
                   </div>
-                </div>
-                <div className="flex flex-col flex-1 p-4">
-                  <h3 className="font-bold text-white leading-snug mb-2 text-sm line-clamp-2">{item.title}</h3>
-                  <p className="text-xs line-clamp-3 leading-relaxed flex-1" style={{ color: '#9ca3af' }}>{item.excerpt}</p>
-                  <p className="text-xs mt-3 pt-3 font-medium" style={{ borderTop: '1px solid #2a2a2a', color: '#6b7280' }}>{item.date}</p>
-                </div>
-              </Link>
+                  <div className="flex flex-col flex-1 p-4">
+                    <h3 className="font-bold text-white leading-snug mb-2 text-sm line-clamp-2 group-hover:opacity-80 transition-opacity">{item.title}</h3>
+                    <p className="text-xs line-clamp-3 leading-relaxed flex-1" style={{ color: '#9ca3af' }}>{item.excerpt}</p>
+                    <p className="text-xs mt-3 pt-3 font-medium" style={{ borderTop: '1px solid #2a2a2a', color: '#6b7280' }}>{item.date}</p>
+                  </div>
+                </Link>
+              </ScrollReveal>
             ))}
           </div>
           <div className="mt-6 text-right">
@@ -522,31 +527,35 @@ export default async function HomePage() {
       {/* ── INDUSTRY FACTS ── */}
       <section style={{ background: '#111111', borderTop: '1px solid #2a2a2a' }} className="py-14">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <SectionEyebrow label="Industry Intelligence" />
-          <h2 className="text-3xl font-black uppercase text-white mb-8" style={{ fontFamily: 'Impact, sans-serif' }}>
-            Facts Every Operator Should Know
-          </h2>
+          <ScrollReveal>
+            <SectionEyebrow label="Industry Intelligence" />
+            <h2 className="heading-bar text-3xl font-black uppercase text-white mb-8" style={{ fontFamily: 'Impact, sans-serif' }}>
+              Facts Every Operator Should Know
+            </h2>
+          </ScrollReveal>
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            {INDUSTRY_FACTS.map((fact) => (
-              <div key={fact.title} className="flex flex-col overflow-hidden" style={{ background: '#1a1a1a', border: '1px solid #2a2a2a' }}>
-                <div className="relative overflow-hidden" style={{ height: 200 }}>
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={fact.img} alt="" aria-hidden="true" className="absolute inset-0 w-full h-full object-cover opacity-70" loading="lazy" />
-                  <div className="absolute inset-0" style={{ background: 'linear-gradient(to top, rgba(26,26,26,0.95) 30%, transparent 100%)' }} />
-                  <div className="absolute bottom-4 left-4">
-                    <span className="text-4xl font-black leading-none" style={{ color: '#F5C518', fontFamily: 'Impact, sans-serif' }}>{fact.stat}</span>
+            {INDUSTRY_FACTS.map((fact, i) => (
+              <ScrollReveal key={fact.title} delay={i * 100}>
+                <div className="card-shimmer group flex flex-col overflow-hidden transition-all hover:-translate-y-1 duration-300 h-full" style={{ background: '#1a1a1a', border: '1px solid #2a2a2a' }}>
+                  <div className="relative overflow-hidden" style={{ height: 220 }}>
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src={fact.img} alt="" aria-hidden="true" className="absolute inset-0 w-full h-full object-cover opacity-70 group-hover:scale-105 group-hover:opacity-90 transition-all duration-500" loading="lazy" />
+                    <div className="absolute inset-0" style={{ background: 'linear-gradient(to top, rgba(26,26,26,0.95) 30%, transparent 100%)' }} />
+                    <div className="absolute bottom-4 left-4">
+                      <span className="text-4xl font-black leading-none gradient-text" style={{ fontFamily: 'Impact, sans-serif' }}>{fact.stat}</span>
+                    </div>
+                    <div className="absolute top-3 right-3">
+                      <span className="px-2 py-0.5 text-[10px] font-black uppercase tracking-widest" style={{ background: 'rgba(245,197,24,0.2)', color: '#F5C518', border: '1px solid rgba(245,197,24,0.4)' }}>
+                        {fact.tag}
+                      </span>
+                    </div>
                   </div>
-                  <div className="absolute top-3 right-3">
-                    <span className="px-2 py-0.5 text-[10px] font-black uppercase tracking-widest" style={{ background: 'rgba(245,197,24,0.2)', color: '#F5C518', border: '1px solid rgba(245,197,24,0.4)' }}>
-                      {fact.tag}
-                    </span>
+                  <div className="p-5">
+                    <h3 className="font-black uppercase text-white text-base mb-2 leading-snug" style={{ fontFamily: 'Impact, sans-serif' }}>{fact.title}</h3>
+                    <p className="text-sm leading-relaxed" style={{ color: '#9ca3af' }}>{fact.body}</p>
                   </div>
                 </div>
-                <div className="p-5">
-                  <h3 className="font-black uppercase text-white text-base mb-2 leading-snug" style={{ fontFamily: 'Impact, sans-serif' }}>{fact.title}</h3>
-                  <p className="text-sm leading-relaxed" style={{ color: '#9ca3af' }}>{fact.body}</p>
-                </div>
-              </div>
+              </ScrollReveal>
             ))}
           </div>
         </div>
@@ -555,24 +564,27 @@ export default async function HomePage() {
       {/* ── QUICK REFERENCE ── */}
       <section style={{ background: '#0d0d0d', borderTop: '1px solid #2a2a2a' }} className="py-14">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <SectionEyebrow label="Quick Reference" />
-          <h2 className="text-3xl font-black uppercase text-white mb-8" style={{ fontFamily: 'Impact, sans-serif' }}>
-            Essential Rules &amp; Requirements
-          </h2>
+          <ScrollReveal>
+            <SectionEyebrow label="Quick Reference" />
+            <h2 className="heading-bar text-3xl font-black uppercase text-white mb-8" style={{ fontFamily: 'Impact, sans-serif' }}>
+              Essential Rules &amp; Requirements
+            </h2>
+          </ScrollReveal>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {QUICK_REFERENCES.map((ref) => (
-              <Link
-                key={ref.label}
-                href={ref.href}
-                className="group flex items-start gap-4 p-5 transition-opacity hover:opacity-80"
-                style={{ background: '#1a1a1a', border: '1px solid #2a2a2a' }}
-              >
-                <span className="text-2xl shrink-0 mt-0.5">{ref.icon}</span>
-                <div>
-                  <p className="font-black uppercase text-white text-sm mb-1 leading-snug group-hover:opacity-80" style={{ fontFamily: 'Impact, sans-serif' }}>{ref.label}</p>
-                  <p className="text-xs leading-relaxed" style={{ color: '#9ca3af' }}>{ref.desc}</p>
-                </div>
-              </Link>
+            {QUICK_REFERENCES.map((ref, i) => (
+              <ScrollReveal key={ref.label} delay={i * 60}>
+                <Link
+                  href={ref.href}
+                  className="card-shimmer group flex items-start gap-4 p-5 transition-all hover:-translate-y-0.5 hover:opacity-90 duration-200 h-full"
+                  style={{ background: '#1a1a1a', border: '1px solid #2a2a2a' }}
+                >
+                  <span className="text-2xl shrink-0 mt-0.5 group-hover:scale-125 transition-transform duration-200">{ref.icon}</span>
+                  <div>
+                    <p className="font-black uppercase text-white text-sm mb-1 leading-snug" style={{ fontFamily: 'Impact, sans-serif' }}>{ref.label}</p>
+                    <p className="text-xs leading-relaxed" style={{ color: '#9ca3af' }}>{ref.desc}</p>
+                  </div>
+                </Link>
+              </ScrollReveal>
             ))}
           </div>
         </div>
