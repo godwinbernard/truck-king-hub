@@ -85,8 +85,8 @@ const HERO_IMG = 'https://images.unsplash.com/photo-1586201375761-83865001e31c?w
 const CARD_IMAGES = [
   'https://images.unsplash.com/photo-1586201375761-83865001e31c?w=800&q=75&auto=format&fit=crop',
   'https://images.unsplash.com/photo-1578575437130-527eed3abbec?w=800&q=75&auto=format&fit=crop',
-  'https://images.unsplash.com/photo-1504222490345-c075b7b1b5fa?w=800&q=75&auto=format&fit=crop',
-  'https://images.unsplash.com/photo-1532298229144-0ec0c57515c7?w=800&q=75&auto=format&fit=crop',
+  'https://images.unsplash.com/photo-1601584115197-04ecc0da31d7?w=800&q=75&auto=format&fit=crop',
+  'https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?w=800&q=75&auto=format&fit=crop',
 ];
 
 const AUDIENCE_TILES = [
@@ -141,7 +141,7 @@ const LATEST_NEWS = [
     excerpt: 'National average diesel prices have stabilized near $3.60/gallon after months of volatility. Analysts say flat fuel costs could put upward pressure on spot rates as carriers reassess fuel surcharge calculations.',
     category: 'freight',
     date: 'Jun 2025',
-    img: 'https://images.unsplash.com/photo-1571987454543-2b3a3a4f2a5e?w=800&q=75&auto=format&fit=crop',
+    img: 'https://images.unsplash.com/photo-1601584115197-04ecc0da31d7?w=800&q=75&auto=format&fit=crop',
     href: '/brief?category=freight',
   },
   {
@@ -157,7 +157,7 @@ const LATEST_NEWS = [
     excerpt: 'Despite years on the books, the ELD mandate still trips up owner-operators on personal conveyance, adverse driving conditions exceptions, and what counts as on-duty time. We break it down.',
     category: 'compliance',
     date: 'May 2025',
-    img: 'https://images.unsplash.com/photo-1504222490345-c075b7b1b5fa?w=800&q=75&auto=format&fit=crop',
+    img: 'https://images.unsplash.com/photo-1519003722824-194d4455a60c?w=800&q=75&auto=format&fit=crop',
     href: '/compliance',
   },
 ];
@@ -470,7 +470,7 @@ export default async function HomePage() {
             <div className="hidden lg:block relative overflow-hidden" style={{ height: 420 }}>
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
-                src="https://images.unsplash.com/photo-1532298229144-0ec0c57515c7?w=900&q=80&auto=format&fit=crop"
+                src="https://images.unsplash.com/photo-1601584115197-04ecc0da31d7?w=900&q=80&auto=format&fit=crop"
                 alt="Semi truck on highway"
                 className="w-full h-full object-cover"
               />

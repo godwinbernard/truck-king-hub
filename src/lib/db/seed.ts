@@ -146,7 +146,7 @@ For anyone in trucking, staying informed about DOT rules is not optional. It is 
     metaTitle: 'What to Know About DOT Regulations and Compliance',
     metaDescription: 'Learn the basics of DOT regulations, compliance requirements, safety rules, and what truck drivers and fleets need to know.',
     tags: ['DOT compliance', 'trucking regulations', 'hours of service rules'],
-    coverImage: 'https://images.unsplash.com/photo-1504222490345-c075b7b1b5fa?w=1200&q=80&auto=format&fit=crop',
+    coverImage: 'https://images.unsplash.com/photo-1519003722824-194d4455a60c?w=1200&q=80&auto=format&fit=crop',
     featured: false,
   },
   {
