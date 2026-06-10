@@ -81,16 +81,56 @@ function fallbackIndex(value: string) {
   return [...value].reduce((sum, char) => sum + char.charCodeAt(0), 0) % FALLBACK_IMAGES.length;
 }
 
+const CAT_IMAGES: Record<string, string> = {
+  insurance: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=900&q=75&auto=format&fit=crop',
+  compliance: 'https://images.unsplash.com/photo-1601597111158-2fceff292cdc?w=900&q=75&auto=format&fit=crop',
+  freight: 'https://images.unsplash.com/photo-1601584115197-04ecc0da31d7?w=900&q=75&auto=format&fit=crop',
+  equipment: 'https://images.unsplash.com/photo-1586201375761-83865001e31c?w=900&q=75&auto=format&fit=crop',
+  general: 'https://images.unsplash.com/photo-1504222490345-c075b7b1b5fa?w=900&q=75&auto=format&fit=crop',
+  news: 'https://images.unsplash.com/photo-1519003722824-194d4455a60c?w=900&q=75&auto=format&fit=crop',
+  lifestyle: 'https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?w=900&q=75&auto=format&fit=crop',
+};
+
+function AdBanner({ slot }: { slot: 'top' | 'mid' | 'bottom' }) {
+  const messages: Record<string, { headline: string; sub: string; cta: string }> = {
+    top: { headline: 'Advertise With Truck King Hub', sub: 'Reach 10,000+ owner-operators and fleet managers every month.', cta: 'Get Media Kit →' },
+    mid: { headline: 'Your Ad Here', sub: 'Target truckers, fleet owners, and logistics decision-makers directly.', cta: 'Contact Us →' },
+    bottom: { headline: 'Sponsor This Content', sub: 'Put your brand in front of active trucking professionals.', cta: 'Learn More →' },
+  };
+  const m = messages[slot];
+  return (
+    <div className="my-10 p-5 flex flex-col sm:flex-row items-center justify-between gap-4"
+      style={{ background: 'rgba(245,197,24,0.06)', border: '1px dashed rgba(245,197,24,0.35)' }}>
+      <div>
+        <p className="text-[9px] font-black uppercase tracking-widest mb-1" style={{ color: '#6b7280' }}>Advertisement</p>
+        <p className="font-black uppercase text-white text-sm" style={{ fontFamily: 'Impact, sans-serif' }}>{m.headline}</p>
+        <p className="text-xs mt-1" style={{ color: '#9ca3af' }}>{m.sub}</p>
+      </div>
+      <a href="/contact/takedown"
+        className="shrink-0 px-4 py-2 text-xs font-black uppercase tracking-widest transition-opacity hover:opacity-80"
+        style={{ background: '#F5C518', color: '#0d0d0d' }}>
+        {m.cta}
+      </a>
+    </div>
+  );
+}
+
 export default async function ArticlePage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const [article] = await db.select().from(articles).where(eq(articles.slug, slug));
   if (!article || article.status !== 'published') notFound();
 
   const imgSrc = article.coverImage || FALLBACK_IMAGES[fallbackIndex(article.slug)];
+  const midImg = CAT_IMAGES[article.category] ?? FALLBACK_IMAGES[1];
   const catBg = CAT_COLORS[article.category] ?? '#52525b';
 
   return (
     <article style={{ background: '#0d0d0d', minHeight: '100vh', color: '#fff' }}>
+
+      {/* Top ad banner */}
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 pt-4">
+        <AdBanner slot="top" />
+      </div>
 
       {/* Hero image */}
       <div className="relative w-full overflow-hidden" style={{ height: 'clamp(300px, 45vw, 520px)', background: '#111111' }}>
@@ -138,10 +178,25 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
           {article.excerpt}
         </p>
 
-        {/* Body */}
+        {/* Body — first half */}
         <div className="prose-content max-w-none">
           {renderBody(article.body)}
         </div>
+
+        {/* Mid-article image */}
+        <div className="my-10 relative overflow-hidden" style={{ height: 280, background: '#1a1a1a' }}>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src={midImg} alt="" aria-hidden="true" className="w-full h-full object-cover opacity-60" loading="lazy" />
+          <div className="absolute inset-0" style={{ background: 'linear-gradient(to top, rgba(13,13,13,0.7) 0%, transparent 60%)' }} />
+          <div className="absolute bottom-4 left-4">
+            <span className="text-[10px] font-black uppercase tracking-widest px-2 py-0.5" style={{ background: 'rgba(245,197,24,0.2)', color: '#F5C518', border: '1px solid rgba(245,197,24,0.4)' }}>
+              ⚡ {article.category}
+            </span>
+          </div>
+        </div>
+
+        {/* Mid-article ad */}
+        <AdBanner slot="mid" />
 
         {/* Tags */}
         {article.tags.length > 0 && (
@@ -155,8 +210,11 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
           </div>
         )}
 
+        {/* Bottom ad */}
+        <AdBanner slot="bottom" />
+
         {/* Back link */}
-        <div className="mt-12 pt-8" style={{ borderTop: '1px solid #2a2a2a' }}>
+        <div className="mt-4 pt-8" style={{ borderTop: '1px solid #2a2a2a' }}>
           <Link href="/" className="inline-flex items-center gap-2 text-sm font-black uppercase tracking-widest hover:opacity-70 transition-opacity" style={{ color: '#F5C518' }}>
             ← More from Truck King Hub
           </Link>

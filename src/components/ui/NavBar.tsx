@@ -1,7 +1,6 @@
 'use client';
 
 import Link from 'next/link';
-import Image from 'next/image';
 import { useState } from 'react';
 
 const NAV_LINKS = [
@@ -42,14 +41,12 @@ export function NavBar() {
 
             {/* Logo */}
             <Link href="/" className="flex-1 lg:flex-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-yellow-400 rounded">
-              <Image
-                src="/logo.png"
-                alt="Truck King Hub"
-                width={280}
-                height={70}
-                className="h-14 w-auto mx-auto lg:mx-0 object-contain"
-                priority
-              />
+              <span className="flex items-center gap-1 font-black uppercase tracking-tight leading-none select-none"
+                style={{ fontFamily: 'Impact, sans-serif', fontSize: '1.5rem' }}>
+                <span className="text-white">TRUCK KING</span>
+                <span style={{ color: '#F5C518' }}>HUB</span>
+                <span className="ml-1 text-xs font-black px-1 py-0.5 align-middle" style={{ background: '#F5C518', color: '#0d0d0d', fontFamily: 'system-ui', letterSpacing: 0 }}>⚡</span>
+              </span>
             </Link>
 
             {/* Desktop nav links */}
