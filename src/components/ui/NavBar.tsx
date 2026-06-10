@@ -77,18 +77,6 @@ export function NavBar() {
                 </svg>
                 <span className="hidden xl:inline">Search</span>
               </Link>
-              <Link
-                href="/contact/takedown"
-                className="hidden sm:inline-flex items-center gap-1.5 px-5 py-2 text-xs font-black uppercase tracking-widest transition-colors"
-                style={{ background: '#F5C518', color: '#0d0d0d' }}
-                onMouseEnter={(e) => { (e.currentTarget as HTMLAnchorElement).style.background = '#d4a017'; }}
-                onMouseLeave={(e) => { (e.currentTarget as HTMLAnchorElement).style.background = '#F5C518'; }}
-              >
-                Request Demo
-                <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" aria-hidden="true">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
-                </svg>
-              </Link>
               {/* Mobile search */}
               <Link href="/search" className="sm:hidden p-2 text-white/60 hover:text-white transition-colors" aria-label="Search">
                 <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
@@ -115,16 +103,6 @@ export function NavBar() {
                 {cat.label}
               </Link>
             ))}
-            <div style={{ borderTop: '1px solid #2a2a2a' }} className="mt-2 pt-3">
-              <Link
-                href="/contact/takedown"
-                onClick={() => setMobileOpen(false)}
-                className="inline-flex items-center gap-2 px-5 py-2.5 text-sm font-black uppercase tracking-widest"
-                style={{ background: '#F5C518', color: '#0d0d0d' }}
-              >
-                Request Demo →
-              </Link>
-            </div>
           </nav>
         </div>
       )}
