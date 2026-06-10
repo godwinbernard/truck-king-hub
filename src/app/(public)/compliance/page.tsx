@@ -50,10 +50,8 @@ export default async function CompliancePage() {
           <div style={{ borderTop: '1px solid #2a2a2a' }}>
             {compliance.map((a) => (
               <Link key={a.id} href={`/article/${a.slug}`}
-                className="group flex flex-col sm:flex-row gap-5 py-7 -mx-4 px-4 transition-colors"
-                style={{ borderBottom: '1px solid #2a2a2a' }}
-                onMouseEnter={(e) => { (e.currentTarget as HTMLAnchorElement).style.background = '#111111'; }}
-                onMouseLeave={(e) => { (e.currentTarget as HTMLAnchorElement).style.background = 'transparent'; }}>
+                className="article-row group flex flex-col sm:flex-row gap-5 py-7 -mx-4 px-4 transition-colors"
+                style={{ borderBottom: '1px solid #2a2a2a' }}>
                 <div className="flex-1 min-w-0">
                   <span className="inline-block px-2 py-0.5 text-[10px] font-bold uppercase tracking-widest text-white bg-red-600 mb-2">Compliance</span>
                   <h2 className="text-xl font-bold text-white leading-snug mb-2 group-hover:opacity-80 transition-opacity">{a.title}</h2>

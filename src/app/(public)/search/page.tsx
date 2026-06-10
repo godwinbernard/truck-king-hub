@@ -102,10 +102,8 @@ export default async function SearchPage({ searchParams }: { searchParams: Promi
           <div style={{ borderTop: '1px solid #2a2a2a' }}>
             {results.map((a) => (
               <Link key={a.id} href={`/article/${a.slug}`}
-                className="group flex flex-col py-6 -mx-4 px-4 transition-colors"
-                style={{ borderBottom: '1px solid #2a2a2a' }}
-                onMouseEnter={(e) => { (e.currentTarget as HTMLAnchorElement).style.background = '#111111'; }}
-                onMouseLeave={(e) => { (e.currentTarget as HTMLAnchorElement).style.background = 'transparent'; }}>
+                className="article-row group flex flex-col py-6 -mx-4 px-4 transition-colors"
+                style={{ borderBottom: '1px solid #2a2a2a' }}>
                 <div className="flex items-center gap-2 mb-2">
                   <span className="inline-block px-2 py-0.5 text-[10px] font-bold uppercase tracking-widest text-white"
                     style={{ background: CAT_COLORS[a.category] ?? '#52525b' }}>

@@ -84,10 +84,8 @@ export default async function BriefPage({ searchParams }: { searchParams: Promis
           <div style={{ borderTop: '1px solid #2a2a2a' }}>
             {rows.map((article) => (
               <Link key={article.id} href={`/article/${article.slug}`}
-                className="group flex flex-col sm:flex-row gap-5 py-7 -mx-4 px-4 transition-colors"
-                style={{ borderBottom: '1px solid #2a2a2a' }}
-                onMouseEnter={(e) => { (e.currentTarget as HTMLAnchorElement).style.background = '#111111'; }}
-                onMouseLeave={(e) => { (e.currentTarget as HTMLAnchorElement).style.background = 'transparent'; }}>
+                className="article-row group flex flex-col sm:flex-row gap-5 py-7 -mx-4 px-4 transition-colors"
+                style={{ borderBottom: '1px solid #2a2a2a' }}>
                 <div className="sm:w-48 lg:w-56 shrink-0">
                   <div className="relative h-36 overflow-hidden" style={{ background: '#1a1a1a' }}>
                     {article.coverImage
