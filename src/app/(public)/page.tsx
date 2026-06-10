@@ -84,7 +84,7 @@ function BreakingTicker({ items }: { items: Article[] }) {
 const HERO_IMG = 'https://images.unsplash.com/photo-1586201375761-83865001e31c?w=1600&q=85&auto=format&fit=crop';
 const CARD_IMAGES = [
   'https://images.unsplash.com/photo-1586201375761-83865001e31c?w=800&q=75&auto=format&fit=crop',
-  'https://images.unsplash.com/photo-1578575437130-527eed3abbec?w=800&q=75&auto=format&fit=crop',
+  'https://images.unsplash.com/photo-1519003722824-194d4455a60c?w=800&q=75&auto=format&fit=crop',
   'https://images.unsplash.com/photo-1601584115197-04ecc0da31d7?w=800&q=75&auto=format&fit=crop',
   'https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?w=800&q=75&auto=format&fit=crop',
 ];
