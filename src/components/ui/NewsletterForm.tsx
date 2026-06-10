@@ -10,12 +10,14 @@ export function NewsletterForm() {
       <input
         type="email"
         placeholder="Your email address"
-        className="w-full md:w-72 px-4 py-3 text-sm bg-white/10 border border-white/20 text-white placeholder:text-silver focus:outline-none focus:border-crimson transition-colors"
+        className="w-full md:w-72 px-4 py-3 text-sm text-white focus:outline-none transition-colors"
+        style={{ background: 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.2)' }}
         aria-label="Email address"
       />
       <button
         type="submit"
-        className="px-6 py-3 bg-crimson hover:bg-crimson-dark text-white text-xs font-bold uppercase tracking-widest transition-colors whitespace-nowrap"
+        className="px-6 py-3 text-xs font-black uppercase tracking-widest transition-opacity hover:opacity-80 whitespace-nowrap"
+        style={{ background: '#F5C518', color: '#0d0d0d' }}
       >
         Subscribe
       </button>
