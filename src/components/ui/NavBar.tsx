@@ -4,30 +4,30 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useState } from 'react';
 
-const CATEGORIES = [
-  { href: '/brief',      label: 'News' },
-  { href: '/brief?category=freight', label: 'Logistics' },
-  { href: '/brief?category=compliance', label: 'Compliance' },
-  { href: '/brief?category=equipment', label: 'Trucks' },
-  { href: '/insurance',  label: 'Insurance' },
-  { href: '/resources',  label: 'Resources' },
-  { href: '/brief?category=general', label: 'Lifestyle' },
+const NAV_LINKS = [
+  { href: '/brief',                       label: 'News' },
+  { href: '/brief?category=freight',      label: 'Logistics' },
+  { href: '/brief?category=compliance',   label: 'Compliance' },
+  { href: '/brief?category=equipment',    label: 'Trucks' },
+  { href: '/insurance',                   label: 'Insurance' },
+  { href: '/resources',                   label: 'Resources' },
+  { href: '/brief?category=general',      label: 'Lifestyle' },
 ];
 
 export function NavBar() {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-50 bg-white border-b border-silver-light" role="banner">
+    <header className="sticky top-0 z-50" role="banner" style={{ background: '#0d0d0d' }}>
 
-      {/* Top bar — brand + search */}
-      <div className="border-b border-silver-light">
+      {/* Main nav row */}
+      <div style={{ borderBottom: '1px solid #2a2a2a' }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-20 gap-4">
 
             {/* Mobile menu button */}
             <button
-              className="lg:hidden p-2 -ml-2 text-charcoal hover:text-crimson transition-colors"
+              className="lg:hidden p-2 -ml-2 text-white/60 hover:text-white transition-colors"
               onClick={() => setMobileOpen(!mobileOpen)}
               aria-label="Toggle menu"
               aria-expanded={mobileOpen}
@@ -41,41 +41,56 @@ export function NavBar() {
             </button>
 
             {/* Logo */}
-            <Link
-              href="/"
-              className="flex-1 lg:flex-none text-center lg:text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-crimson rounded"
-            >
+            <Link href="/" className="flex-1 lg:flex-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-yellow-400 rounded">
               <Image
                 src="/logo.png"
                 alt="Truck King Hub"
-                width={320}
-                height={80}
-                className="h-16 w-auto mx-auto lg:mx-0 object-contain"
+                width={280}
+                height={70}
+                className="h-14 w-auto mx-auto lg:mx-0 object-contain"
                 priority
               />
             </Link>
+
+            {/* Desktop nav links */}
+            <nav className="hidden lg:flex items-center gap-1" aria-label="Main navigation">
+              {NAV_LINKS.map((link) => (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className="px-3 py-2 text-xs font-semibold uppercase tracking-widest text-white/70 hover:text-white transition-colors whitespace-nowrap"
+                >
+                  {link.label}
+                </Link>
+              ))}
+            </nav>
 
             {/* Right actions */}
             <div className="flex items-center gap-3">
               <Link
                 href="/search"
-                className="hidden sm:flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-charcoal hover:text-crimson transition-colors"
+                className="hidden sm:flex items-center gap-1.5 text-xs font-semibold uppercase tracking-widest text-white/60 hover:text-white transition-colors"
                 aria-label="Search"
               >
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
                 </svg>
-                Search
+                <span className="hidden xl:inline">Search</span>
               </Link>
-              <div className="hidden sm:block w-px h-4 bg-silver-light" />
               <Link
-                href="/brief"
-                className="hidden sm:inline-flex items-center gap-1.5 px-4 py-1.5 bg-ink text-white text-xs font-semibold uppercase tracking-widest hover:bg-crimson transition-colors"
+                href="/contact/takedown"
+                className="hidden sm:inline-flex items-center gap-1.5 px-5 py-2 text-xs font-black uppercase tracking-widest transition-colors"
+                style={{ background: '#F5C518', color: '#0d0d0d' }}
+                onMouseEnter={(e) => { (e.currentTarget as HTMLAnchorElement).style.background = '#d4a017'; }}
+                onMouseLeave={(e) => { (e.currentTarget as HTMLAnchorElement).style.background = '#F5C518'; }}
               >
-                Subscribe
+                Request Demo
+                <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" aria-hidden="true">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
+                </svg>
               </Link>
               {/* Mobile search */}
-              <Link href="/search" className="sm:hidden p-2 text-charcoal hover:text-crimson transition-colors" aria-label="Search">
+              <Link href="/search" className="sm:hidden p-2 text-white/60 hover:text-white transition-colors" aria-label="Search">
                 <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
                 </svg>
@@ -86,52 +101,28 @@ export function NavBar() {
         </div>
       </div>
 
-      {/* Category strip */}
-      <div className="hidden lg:block bg-ink">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <nav className="flex items-center gap-0" aria-label="Category navigation">
-            {CATEGORIES.map((cat) => (
-              <Link
-                key={cat.href}
-                href={cat.href}
-                className="px-4 py-2.5 text-xs font-semibold uppercase tracking-widest text-silver hover:text-white hover:bg-white/10 transition-colors whitespace-nowrap"
-              >
-                {cat.label}
-              </Link>
-            ))}
-            <div className="ml-auto">
-              <Link
-                href="/contact/takedown"
-                className="px-4 py-2.5 text-xs font-semibold uppercase tracking-widest text-silver hover:text-white transition-colors"
-              >
-                Advertise
-              </Link>
-            </div>
-          </nav>
-        </div>
-      </div>
-
       {/* Mobile drawer */}
       {mobileOpen && (
-        <div className="lg:hidden bg-white border-t border-silver-light shadow-lg">
+        <div style={{ background: '#111111', borderBottom: '1px solid #2a2a2a' }}>
           <nav className="max-w-7xl mx-auto px-4 py-4 flex flex-col gap-1" aria-label="Mobile navigation">
-            {CATEGORIES.map((cat) => (
+            {NAV_LINKS.map((cat) => (
               <Link
                 key={cat.href}
                 href={cat.href}
                 onClick={() => setMobileOpen(false)}
-                className="px-3 py-2.5 text-sm font-semibold uppercase tracking-widest text-charcoal hover:text-crimson hover:bg-silver-pale transition-colors"
+                className="px-3 py-2.5 text-sm font-semibold uppercase tracking-widest text-white/70 hover:text-white transition-colors"
               >
                 {cat.label}
               </Link>
             ))}
-            <div className="border-t border-silver-light mt-2 pt-2">
+            <div style={{ borderTop: '1px solid #2a2a2a' }} className="mt-2 pt-3">
               <Link
                 href="/contact/takedown"
                 onClick={() => setMobileOpen(false)}
-                className="px-3 py-2.5 text-sm font-semibold uppercase tracking-widest text-charcoal hover:text-crimson transition-colors block"
+                className="inline-flex items-center gap-2 px-5 py-2.5 text-sm font-black uppercase tracking-widest"
+                style={{ background: '#F5C518', color: '#0d0d0d' }}
               >
-                Advertise
+                Request Demo →
               </Link>
             </div>
           </nav>
