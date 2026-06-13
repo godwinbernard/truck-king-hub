@@ -49,7 +49,7 @@ export default async function BriefPage({ searchParams }: { searchParams: Promis
       <div style={{ borderBottom: '1px solid #2a2a2a', background: '#111111' }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
           <p className="text-[10px] font-black uppercase tracking-widest mb-3 flex items-center gap-1" style={{ color: '#F5C518' }}>⚡ Truck King Hub</p>
-          <h1 className="text-4xl font-black uppercase text-white" style={{ fontFamily: 'Impact, sans-serif' }}>
+          <h1 className="text-4xl font-black uppercase text-white" style={{ fontFamily: 'Georgia, serif' }}>
             {category ? CATEGORY_DESC[category] : 'All Articles'}
           </h1>
           <p className="text-sm mt-2" style={{ color: '#9ca3af' }}>{rows.length} {rows.length === 1 ? 'article' : 'articles'}</p>

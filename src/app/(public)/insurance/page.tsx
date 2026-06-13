@@ -74,7 +74,7 @@ export default async function InsurancePage() {
       <div style={{ borderBottom: '1px solid #2a2a2a', background: '#111111' }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
           <p className="text-[10px] font-black uppercase tracking-widest mb-3 flex items-center gap-1" style={{ color: '#F5C518' }}>⚡ Truck King Hub</p>
-          <h1 className="text-4xl font-black uppercase text-white" style={{ fontFamily: 'Impact, sans-serif' }}>
+          <h1 className="text-4xl font-black uppercase text-white" style={{ fontFamily: 'Georgia, serif' }}>
             Insurance &amp; Risk Center
           </h1>
           <p className="text-sm mt-2 max-w-2xl" style={{ color: '#9ca3af' }}>
@@ -100,7 +100,7 @@ export default async function InsurancePage() {
 
         <article className="mb-12 p-6 sm:p-8" style={{ background: '#111111', border: '1px solid #2a2a2a' }}>
           <p className="text-[10px] font-black uppercase tracking-widest mb-3 flex items-center gap-1" style={{ color: '#F5C518' }}>⚡ Featured Article</p>
-          <h2 className="text-3xl sm:text-4xl font-black uppercase text-white leading-tight" style={{ fontFamily: 'Impact, sans-serif' }}>
+          <h2 className="text-3xl sm:text-4xl font-black uppercase text-white leading-tight" style={{ fontFamily: 'Georgia, serif' }}>
             How Trucking Insurance Premiums Are Calculated in the USA
           </h2>
           <p className="mt-3 text-sm max-w-3xl leading-relaxed" style={{ color: '#9ca3af' }}>
@@ -110,7 +110,7 @@ export default async function InsurancePage() {
           <div className="mt-8 grid gap-6">
             {ARTICLE_SECTIONS.map((section) => (
               <section key={section.title} className="p-5 sm:p-6" style={{ background: '#1a1a1a', border: '1px solid #2a2a2a' }}>
-                <h3 className="text-lg sm:text-xl font-black uppercase text-white mb-3" style={{ fontFamily: 'Impact, sans-serif' }}>
+                <h3 className="text-lg sm:text-xl font-black uppercase text-white mb-3" style={{ fontFamily: 'Georgia, serif' }}>
                   {section.title}
                 </h3>
                 <p className="text-sm leading-relaxed" style={{ color: '#9ca3af' }}>
@@ -121,7 +121,7 @@ export default async function InsurancePage() {
           </div>
 
           <div className="mt-8 p-5 sm:p-6" style={{ background: 'rgba(245,197,24,0.08)', border: '1px solid rgba(245,197,24,0.25)' }}>
-            <h3 className="text-lg font-black uppercase text-white mb-2" style={{ fontFamily: 'Impact, sans-serif' }}>Bottom line</h3>
+            <h3 className="text-lg font-black uppercase text-white mb-2" style={{ fontFamily: 'Georgia, serif' }}>Bottom line</h3>
             <p className="text-sm leading-relaxed" style={{ color: '#9ca3af' }}>
               Insurance pricing is really a reflection of operating discipline. The safer, cleaner, and more organized your trucking business is, the better your chances of getting stronger renewal terms over time. The cheapest policy is not always the best policy. The best policy is the one that protects the truck, the cargo, the driver, and the business.
             </p>
@@ -155,7 +155,7 @@ export default async function InsurancePage() {
 
         {others.length > 0 && (
           <div className="mt-12 pt-8" style={{ borderTop: '1px solid #2a2a2a' }}>
-            <h2 className="text-lg font-black uppercase text-white mb-6" style={{ fontFamily: 'Impact, sans-serif' }}>More from Truck King Hub</h2>
+            <h2 className="text-lg font-black uppercase text-white mb-6" style={{ fontFamily: 'Georgia, serif' }}>More from Truck King Hub</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {others.map((a) => (
                 <Link key={a.id} href={`/article/${a.slug}`}

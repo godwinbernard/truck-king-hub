@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { unstable_noStore as noStore } from 'next/cache';
 import { ScrollReveal } from '@/components/ui/ScrollReveal';
 import { AnimatedStats } from '@/components/ui/AnimatedStats';
+import { DieselTracker } from '@/components/ui/DieselTracker';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
@@ -16,6 +17,20 @@ async function getArticles(category?: string, limit = 10) {
       : eq(articles.status, 'published');
     return await db.select().from(articles).where(conditions).orderBy(desc(articles.publishedAt)).limit(limit);
   } catch { return []; }
+}
+
+async function getDieselSnapshot(): Promise<{ price: number; change: number; weekOf: string; source: string }> {
+  try {
+    const base = process.env.NEXT_PUBLIC_BASE_URL ?? 'https://truck-king-hub.vercel.app';
+    const res = await fetch(`${base}/api/diesel`, { next: { revalidate: 21600 } });
+    if (!res.ok) throw new Error('diesel fetch failed');
+    const data = await res.json();
+    const national = data.regions?.find((r: { code: string }) => r.code === 'NUS');
+    if (!national) throw new Error('no national data');
+    return { price: national.price, change: national.change, weekOf: data.weekOf, source: data.source };
+  } catch {
+    return { price: 3.623, change: -0.039, weekOf: 'Jun 9, 2025', source: 'fallback' };
+  }
 }
 
 function fmtDate(d: Date | null) {
@@ -83,17 +98,17 @@ function BreakingTicker({ items }: { items: Article[] }) {
 
 const HERO_IMG = 'https://images.unsplash.com/photo-1586201375761-83865001e31c?w=1600&q=85&auto=format&fit=crop';
 const CARD_IMAGES = [
-  'https://images.unsplash.com/photo-1586201375761-83865001e31c?w=800&q=75&auto=format&fit=crop',
-  'https://images.unsplash.com/photo-1519003722824-194d4455a60c?w=800&q=75&auto=format&fit=crop',
   'https://images.unsplash.com/photo-1601584115197-04ecc0da31d7?w=800&q=75&auto=format&fit=crop',
+  'https://images.unsplash.com/photo-1519003722824-194d4455a60c?w=800&q=75&auto=format&fit=crop',
+  'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=75&auto=format&fit=crop',
   'https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?w=800&q=75&auto=format&fit=crop',
 ];
 
 const AUDIENCE_TILES = [
-  { label: 'Truckload Carriers', img: 'https://images.unsplash.com/photo-1519003722824-194d4455a60c?w=600&q=70&auto=format&fit=crop', href: '/brief?category=freight' },
+  { label: 'Truckload Carriers', img: 'https://images.unsplash.com/photo-1500375592092-40eb2168fd21?w=600&q=70&auto=format&fit=crop', href: '/brief?category=freight' },
   { label: 'Compliance & FMCSA', img: 'https://images.unsplash.com/photo-1601597111158-2fceff292cdc?w=600&q=70&auto=format&fit=crop', href: '/compliance' },
   { label: 'Insurance & Risk', img: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&q=70&auto=format&fit=crop', href: '/insurance' },
-  { label: 'Owner-Operators', img: 'https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?w=600&q=70&auto=format&fit=crop', href: '/resources' },
+  { label: 'Owner-Operators', img: 'https://images.unsplash.com/photo-1504701954957-2010ec3bcec1?w=600&q=70&auto=format&fit=crop', href: '/resources' },
 ];
 
 const STATS = [
@@ -214,112 +229,258 @@ function RealAdBanner({ slot }: { slot: AdSlotName }) {
   // ── Slot 1: Prestige Trucking Insurance (leaderboard) ──
   if (slot === 'leaderboard') {
     return (
-      <a
-        href="https://www.prestigetrucking.com"
-        target="_blank"
-        rel="noopener noreferrer"
-        className="flex flex-col sm:flex-row items-center justify-between gap-5 px-6 py-5 w-full transition-opacity hover:opacity-90"
-        style={{ background: '#0f0f1a', border: '1px solid rgba(30,58,138,0.5)', textDecoration: 'none' }}
+      <div
+        className="relative w-full overflow-hidden"
+        style={{
+          background: '#0a0f1e',
+          backgroundImage: 'repeating-linear-gradient(45deg, rgba(255,255,255,0.018) 0px, rgba(255,255,255,0.018) 1px, transparent 1px, transparent 12px)',
+          borderLeft: '4px solid #F5C518',
+          borderBottom: '1px solid #F5C518',
+        }}
+        role="complementary"
         aria-label="Advertisement: Prestige Trucking Insurance"
       >
-        <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4 w-full">
-          <div className="flex flex-col">
-            <p className="text-[9px] font-black uppercase tracking-widest mb-2" style={{ color: '#4b5563' }}>Advertisement</p>
-            <div className="flex items-center gap-3 mb-2">
-              <span className="text-2xl" aria-hidden="true">🛡️</span>
+        {/* SPONSORED label */}
+        <p
+          className="absolute top-2 right-3 text-[9px] font-bold uppercase tracking-widest"
+          style={{ color: '#4b5563' }}
+        >
+          SPONSORED
+        </p>
+
+        <a
+          href="https://www.prestigetrucking.com"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex flex-col sm:flex-row items-center justify-between gap-6 px-7 py-5 w-full transition-opacity hover:opacity-90"
+          style={{ textDecoration: 'none' }}
+        >
+          {/* Left: icon + copy */}
+          <div className="flex items-center gap-5">
+            {/* Shield badge icon in yellow circle */}
+            <div
+              className="shrink-0 flex items-center justify-center rounded-full"
+              style={{ width: 52, height: 52, background: '#F5C518' }}
+              aria-hidden="true"
+            >
+              <svg width="26" height="28" viewBox="0 0 26 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M13 1L2 5.5V13.5C2 19.7 6.9 25.5 13 27C19.1 25.5 24 19.7 24 13.5V5.5L13 1Z" fill="#0a0f1e" stroke="#0a0f1e" strokeWidth="0.5"/>
+                <path d="M10.5 14.5L12.5 16.5L16 12" stroke="#F5C518" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+            </div>
+
+            <div>
               <p
                 className="font-black uppercase text-white leading-tight"
-                style={{ fontFamily: 'Impact, Haettenschweiler, Arial Narrow Bold, sans-serif', fontSize: '1.25rem', color: '#ffffff' }}
+                style={{
+                  fontFamily: 'Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif',
+                  fontSize: 'clamp(1rem, 2.5vw, 1.35rem)',
+                  letterSpacing: '0.03em',
+                }}
               >
-                PROTECT YOUR RIG WITH PRESTIGE
+                PRESTIGE TRUCKING INSURANCE
+              </p>
+              <p className="mt-1 text-sm" style={{ color: '#9ca3af' }}>
+                Trusted Coverage for Owner-Operators &amp; Fleets
               </p>
             </div>
-            <p className="text-xs" style={{ color: '#6b7280' }}>
-              Trucking insurance built for owner-operators. Fast quotes. Real coverage.
-            </p>
           </div>
-        </div>
-        <span
-          className="shrink-0 px-5 py-2.5 text-xs font-black uppercase tracking-widest whitespace-nowrap"
-          style={{ background: '#F5C518', color: '#0d0d0d' }}
-        >
-          Get Free Quote →
-        </span>
-      </a>
+
+          {/* Right: CTA button */}
+          <span
+            className="shrink-0 px-6 py-3 text-sm font-black uppercase tracking-widest whitespace-nowrap transition-all hover:brightness-110"
+            style={{ background: '#F5C518', color: '#0a0f1e', letterSpacing: '0.06em' }}
+          >
+            GET A FREE QUOTE &rarr;
+          </span>
+        </a>
+      </div>
     );
   }
 
   // ── Slot 2: GEICO Commercial Insurance (mid_page) ──
   if (slot === 'mid_page') {
     return (
-      <a
-        href="https://www.geico.com/commercial-auto/"
-        target="_blank"
-        rel="noopener noreferrer"
-        className="flex flex-col sm:flex-row items-center justify-between gap-5 px-6 py-5 w-full transition-opacity hover:opacity-90"
-        style={{ background: '#0d1a0d', border: '1px solid rgba(0,166,81,0.4)', textDecoration: 'none' }}
-        aria-label="Advertisement: GEICO Commercial Insurance"
+      <div
+        className="relative w-full overflow-hidden"
+        style={{
+          background: '#0a1a0a',
+          backgroundImage: 'repeating-linear-gradient(45deg, rgba(255,255,255,0.018) 0px, rgba(255,255,255,0.018) 1px, transparent 1px, transparent 12px)',
+          borderLeft: '4px solid #00a651',
+        }}
+        role="complementary"
+        aria-label="Advertisement: GEICO Commercial Auto Insurance"
       >
-        <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4 w-full">
-          <div className="flex flex-col">
-            <p className="text-[9px] font-black uppercase tracking-widest mb-2" style={{ color: '#4b5563' }}>Advertisement</p>
-            <div className="flex items-center gap-3 mb-2">
-              <span className="text-2xl" aria-hidden="true">🦎</span>
+        {/* SPONSORED label */}
+        <p
+          className="absolute top-2 right-3 text-[9px] font-bold uppercase tracking-widest"
+          style={{ color: '#4b5563' }}
+        >
+          SPONSORED
+        </p>
+
+        <a
+          href="https://www.geico.com/commercial-auto/"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex flex-col sm:flex-row items-center justify-between gap-6 px-7 py-5 w-full transition-opacity hover:opacity-90"
+          style={{ textDecoration: 'none' }}
+        >
+          {/* Left: icon + copy */}
+          <div className="flex items-center gap-5">
+            {/* Gecko silhouette in green circle */}
+            <div
+              className="shrink-0 flex items-center justify-center rounded-full"
+              style={{ width: 52, height: 52, background: '#00a651' }}
+              aria-hidden="true"
+            >
+              <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+                {/* Simple lizard/gecko silhouette */}
+                <ellipse cx="14" cy="13" rx="4" ry="6" fill="#0a1a0a"/>
+                <ellipse cx="14" cy="9" rx="2.5" ry="2" fill="#0a1a0a"/>
+                <path d="M10 10 Q6 8 4 11" stroke="#0a1a0a" strokeWidth="2" strokeLinecap="round"/>
+                <path d="M18 10 Q22 8 24 11" stroke="#0a1a0a" strokeWidth="2" strokeLinecap="round"/>
+                <path d="M11 17 Q8 21 6 20" stroke="#0a1a0a" strokeWidth="2" strokeLinecap="round"/>
+                <path d="M17 17 Q20 21 22 20" stroke="#0a1a0a" strokeWidth="2" strokeLinecap="round"/>
+                <path d="M14 19 Q13 23 14 26" stroke="#0a1a0a" strokeWidth="2" strokeLinecap="round"/>
+              </svg>
+            </div>
+
+            <div>
               <p
                 className="font-black uppercase text-white leading-tight"
-                style={{ fontFamily: 'Impact, Haettenschweiler, Arial Narrow Bold, sans-serif', fontSize: '1.25rem', color: '#ffffff' }}
+                style={{
+                  fontFamily: 'Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif',
+                  fontSize: 'clamp(1rem, 2.5vw, 1.35rem)',
+                  letterSpacing: '0.03em',
+                }}
               >
-                GEICO COMMERCIAL — COULD SAVE YOU 15%
+                GEICO COMMERCIAL AUTO
+              </p>
+              <p className="mt-1 text-sm" style={{ color: '#9ca3af' }}>
+                Save on Commercial Truck Insurance &mdash; Compare in Minutes
               </p>
             </div>
-            <p className="text-xs" style={{ color: '#6b7280' }}>
-              Commercial truck insurance from America&apos;s trusted name. Get your quote in minutes.
-            </p>
           </div>
-        </div>
-        <span
-          className="shrink-0 px-5 py-2.5 text-xs font-black uppercase tracking-widest whitespace-nowrap"
-          style={{ background: '#00a651', color: '#ffffff' }}
-        >
-          Get Quote →
-        </span>
-      </a>
+
+          {/* Right: CTA button */}
+          <span
+            className="shrink-0 px-6 py-3 text-sm font-black uppercase tracking-widest whitespace-nowrap transition-all hover:brightness-110"
+            style={{ background: '#00a651', color: '#ffffff', letterSpacing: '0.06em' }}
+          >
+            COMPARE RATES &rarr;
+          </span>
+        </a>
+      </div>
     );
   }
 
-  // ── Slots 3 & 4: Generic "Advertise Here" placeholders ──
-  const placeholders: Record<'sidebar_a' | 'footer_banner', { label: string; headline: string; sub: string; cta: string }> = {
-    sidebar_a: {
-      label: 'Sponsored',
-      headline: 'Your Brand Here',
-      sub: 'Targeted ads for trucking professionals. Insurance, equipment, fuel cards, and more.',
-      cta: 'Advertise →',
-    },
-    footer_banner: {
-      label: 'Advertisement — Footer',
-      headline: 'Connect With Truck King Hub Readers',
-      sub: 'Join the brands that reach independent owner-operators and small fleet owners every day.',
-      cta: 'Contact Us →',
-    },
-  };
+  // ── Slot 3: sidebar_a — professional "Advertise Here" placeholder ──
+  if (slot === 'sidebar_a') {
+    return (
+      <div
+        className="flex flex-col sm:flex-row items-center justify-between gap-6 px-7 py-6 w-full"
+        style={{
+          background: '#0d0d0d',
+          border: '2px dashed #F5C518',
+        }}
+        role="complementary"
+        aria-label="Advertisement placeholder"
+      >
+        <div className="flex items-center gap-5">
+          {/* Truck icon SVG */}
+          <div
+            className="shrink-0 flex items-center justify-center"
+            style={{ width: 52, height: 52 }}
+            aria-hidden="true"
+          >
+            <svg width="48" height="36" viewBox="0 0 48 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect x="1" y="8" width="28" height="20" rx="2" fill="none" stroke="#F5C518" strokeWidth="2"/>
+              <path d="M29 14h10l6 8v6H29V14Z" fill="none" stroke="#F5C518" strokeWidth="2"/>
+              <circle cx="9" cy="30" r="4" fill="none" stroke="#F5C518" strokeWidth="2"/>
+              <circle cx="37" cy="30" r="4" fill="none" stroke="#F5C518" strokeWidth="2"/>
+              <line x1="13" y1="30" x2="33" y2="30" stroke="#F5C518" strokeWidth="2"/>
+            </svg>
+          </div>
 
-  const m = placeholders[slot];
+          <div>
+            <p
+              className="font-black uppercase text-white leading-tight mb-1"
+              style={{
+                fontFamily: 'Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif',
+                fontSize: 'clamp(1rem, 2.5vw, 1.2rem)',
+                letterSpacing: '0.04em',
+              }}
+            >
+              ADVERTISE HERE
+            </p>
+            <p className="text-sm" style={{ color: '#9ca3af' }}>
+              Reach 10,000+ trucking professionals monthly
+            </p>
+          </div>
+        </div>
+
+        <a
+          href="mailto:info@truckkinghub.com"
+          className="shrink-0 px-6 py-3 text-sm font-black uppercase tracking-widest whitespace-nowrap transition-opacity hover:opacity-80"
+          style={{ background: '#F5C518', color: '#0d0d0d', letterSpacing: '0.06em' }}
+        >
+          CONTACT US &rarr;
+        </a>
+      </div>
+    );
+  }
+
+  // ── Slot 4: footer_banner — full-width "Advertise Here" placeholder ──
   return (
     <div
-      className="flex flex-col sm:flex-row items-center justify-between gap-4 px-6 py-5"
-      style={{ background: 'rgba(245,197,24,0.05)', border: '1px dashed rgba(245,197,24,0.3)' }}
+      className="flex flex-col sm:flex-row items-center justify-between gap-6 px-7 py-6 w-full"
+      style={{
+        background: '#0d0d0d',
+        border: '2px dashed #F5C518',
+      }}
+      role="complementary"
+      aria-label="Advertisement placeholder"
     >
-      <div>
-        <p className="text-[9px] font-black uppercase tracking-widest mb-1" style={{ color: '#4b5563' }}>{m.label}</p>
-        <p className="font-black uppercase text-white leading-tight mb-1" style={{ fontFamily: 'Impact, sans-serif', fontSize: '1.05rem' }}>{m.headline}</p>
-        <p className="text-xs" style={{ color: '#6b7280' }}>{m.sub}</p>
+      <div className="flex items-center gap-5">
+        {/* Truck icon SVG */}
+        <div
+          className="shrink-0 flex items-center justify-center"
+          style={{ width: 52, height: 36 }}
+          aria-hidden="true"
+        >
+          <svg width="48" height="36" viewBox="0 0 48 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="1" y="8" width="28" height="20" rx="2" fill="none" stroke="#F5C518" strokeWidth="2"/>
+            <path d="M29 14h10l6 8v6H29V14Z" fill="none" stroke="#F5C518" strokeWidth="2"/>
+            <circle cx="9" cy="30" r="4" fill="none" stroke="#F5C518" strokeWidth="2"/>
+            <circle cx="37" cy="30" r="4" fill="none" stroke="#F5C518" strokeWidth="2"/>
+            <line x1="13" y1="30" x2="33" y2="30" stroke="#F5C518" strokeWidth="2"/>
+          </svg>
+        </div>
+
+        <div>
+          <p
+            className="font-black uppercase text-white leading-tight mb-1"
+            style={{
+              fontFamily: 'Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif',
+              fontSize: 'clamp(1rem, 2.5vw, 1.2rem)',
+              letterSpacing: '0.04em',
+            }}
+          >
+            ADVERTISE HERE
+          </p>
+          <p className="text-sm" style={{ color: '#9ca3af' }}>
+            Reach 10,000+ trucking professionals monthly
+          </p>
+        </div>
       </div>
+
       <a
         href="mailto:info@truckkinghub.com"
-        className="shrink-0 px-5 py-2.5 text-xs font-black uppercase tracking-widest transition-opacity hover:opacity-80 whitespace-nowrap"
-        style={{ background: '#F5C518', color: '#0d0d0d' }}
+        className="shrink-0 px-6 py-3 text-sm font-black uppercase tracking-widest whitespace-nowrap transition-opacity hover:opacity-80"
+        style={{ background: '#F5C518', color: '#0d0d0d', letterSpacing: '0.06em' }}
       >
-        {m.cta}
+        CONTACT US &rarr;
       </a>
     </div>
   );
@@ -365,10 +526,11 @@ function DarkCard({ item, imgUrl }: { item: Article; imgUrl: string }) {
 
 export default async function HomePage() {
   noStore();
-  const [latest, compliance, insurance] = await Promise.all([
+  const [latest, compliance, insurance, diesel] = await Promise.all([
     getArticles(undefined, 12),
     getArticles('compliance', 4),
     getArticles('insurance', 3),
+    getDieselSnapshot(),
   ]);
 
   const hero = latest.find((a) => a.featured) || latest[0];
@@ -444,6 +606,52 @@ export default async function HomePage() {
         <RealAdBanner slot="leaderboard" />
       </div>
 
+      {/* ── TODAY'S TRUCKING SNAPSHOT ── */}
+      <section style={{ background: '#111111', borderTop: '1px solid #2a2a2a', borderBottom: '1px solid #2a2a2a' }} className="py-6">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center gap-3 mb-4">
+            <span className="pulse-dot" />
+            <p className="text-[10px] font-black uppercase tracking-widest" style={{ color: '#F5C518' }}>
+              Today&apos;s Trucking Snapshot — {new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+            </p>
+          </div>
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+            {/* Diesel Price — live from EIA */}
+            <Link href="/freight" className="group flex flex-col gap-1 p-4 transition-opacity hover:opacity-80" style={{ background: '#1a1a1a', border: '1px solid #2a2a2a' }}>
+              <p className="text-[10px] font-bold uppercase tracking-widest" style={{ color: '#9ca3af' }}>⛽ National Diesel Avg</p>
+              <p className="text-2xl font-black" style={{ color: '#F5C518', fontFamily: 'Impact, sans-serif' }}>${diesel.price.toFixed(3)}</p>
+              <p className="text-xs" style={{ color: diesel.change <= 0 ? '#22c55e' : '#ef4444' }}>
+                {diesel.change <= 0 ? '↓' : '↑'} ${Math.abs(diesel.change).toFixed(3)} vs last week
+              </p>
+              <p className="text-[10px] mt-1" style={{ color: '#555' }}>
+                {diesel.source === 'fallback' ? 'Est. — EIA unavailable' : `EIA · ${diesel.weekOf}`}
+              </p>
+            </Link>
+            {/* Compliance Alert */}
+            <Link href="/compliance" className="group flex flex-col gap-1 p-4 transition-opacity hover:opacity-80" style={{ background: '#1a0000', border: '1px solid #7f1d1d' }}>
+              <p className="text-[10px] font-bold uppercase tracking-widest" style={{ color: '#f87171' }}>🚨 Compliance Alert</p>
+              <p className="text-sm font-bold text-white leading-snug">FMCSA short-haul ELD exemption update proposed</p>
+              <p className="text-[10px] mt-1" style={{ color: '#f87171' }}>Jun 10, 2025 — Review now</p>
+            </Link>
+            {/* Freight Pulse */}
+            <Link href="/freight" className="group flex flex-col gap-1 p-4 transition-opacity hover:opacity-80" style={{ background: '#0a1a00', border: '1px solid #166534' }}>
+              <p className="text-[10px] font-bold uppercase tracking-widest" style={{ color: '#86efac' }}>📦 Freight Market</p>
+              <p className="text-sm font-bold text-white leading-snug">Dry van spot rates holding $2.20–2.40/mi</p>
+              <p className="text-[10px] mt-1" style={{ color: '#86efac' }}>L/T ratio: 2.8 — Moderate</p>
+            </Link>
+            {/* Featured Calculator */}
+            <Link href="/calculators" className="group flex flex-col gap-1 p-4 transition-opacity hover:opacity-80" style={{ background: '#1a1a00', border: '1px solid #3f3f00' }}>
+              <p className="text-[10px] font-bold uppercase tracking-widest" style={{ color: '#fde047' }}>🧮 Quick Tool</p>
+              <p className="text-sm font-bold text-white leading-snug">Is this load profitable? Run the numbers →</p>
+              <p className="text-[10px] mt-1" style={{ color: '#fde047' }}>Profit Per Load Calculator</p>
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* ── DIESEL PRICE TRACKER ── */}
+      <DieselTracker />
+
       {/* ── AUDIENCE TILES ── */}
       <div style={{ borderTop: '4px solid #F5C518', background: '#0d0d0d' }}>
         <div className="grid grid-cols-2 lg:grid-cols-4">
@@ -473,7 +681,7 @@ export default async function HomePage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <ScrollReveal>
             <SectionEyebrow label="Trucking Calculators" />
-            <h2 className="heading-bar text-3xl font-black uppercase text-white mb-4" style={{ fontFamily: 'Impact, sans-serif' }}>
+            <h2 className="heading-bar text-3xl font-black uppercase text-white mb-4" style={{ fontFamily: 'Georgia, serif' }}>
               Plan Costs Before You Roll
             </h2>
             <p className="max-w-3xl text-sm leading-relaxed mb-8" style={{ color: '#9ca3af' }}>
@@ -493,7 +701,7 @@ export default async function HomePage() {
                   <p className="text-[10px] font-black uppercase tracking-widest mb-3" style={{ color: '#F5C518' }}>
                     Calculator
                   </p>
-                  <h3 className="text-lg font-black uppercase text-white leading-snug" style={{ fontFamily: 'Impact, sans-serif' }}>
+                  <h3 className="text-lg font-black uppercase text-white leading-snug" style={{ fontFamily: 'Georgia, serif' }}>
                     {item.title}
                   </h3>
                   <p className="mt-2 text-sm leading-relaxed" style={{ color: '#9ca3af' }}>
@@ -517,7 +725,7 @@ export default async function HomePage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <ScrollReveal>
           <SectionEyebrow label="Truck King Resources" />
-          <h2 className="heading-bar text-3xl font-black uppercase text-white mb-8" style={{ fontFamily: 'Impact, sans-serif' }}>
+          <h2 className="heading-bar text-3xl font-black uppercase text-white mb-8" style={{ fontFamily: 'Georgia, serif' }}>
             Resource Center
           </h2>
           </ScrollReveal>
@@ -560,7 +768,7 @@ export default async function HomePage() {
               <SectionEyebrow label="Latest Update" />
               {latest[0] ? (
                 <>
-                  <h3 className="text-2xl font-black uppercase text-white mb-4 leading-tight" style={{ fontFamily: 'Impact, sans-serif' }}>
+                  <h3 className="text-2xl font-black text-white mb-4 leading-tight" style={{ fontFamily: 'Georgia, serif', lineHeight: 1.25 }}>
                     {latest[0].title}
                   </h3>
                   <p className="text-sm mb-6 leading-relaxed" style={{ color: '#9ca3af' }}>{latest[0].excerpt}</p>
@@ -579,7 +787,7 @@ export default async function HomePage() {
 
             <div className="p-8" style={{ background: '#1a1a1a', border: '1px solid #2a2a2a' }}>
               <SectionEyebrow label="About Us" />
-              <h3 className="text-2xl font-black uppercase text-white mb-4 leading-tight" style={{ fontFamily: 'Impact, sans-serif' }}>
+              <h3 className="text-2xl font-black uppercase text-white mb-4 leading-tight" style={{ fontFamily: 'Georgia, serif' }}>
                 Built For The Road Ahead
               </h3>
               <p className="text-sm mb-6 leading-relaxed" style={{ color: '#9ca3af' }}>
@@ -605,7 +813,7 @@ export default async function HomePage() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div>
               <SectionEyebrow label="FMCSA & Compliance Watch" />
-              <h2 className="text-3xl font-black uppercase text-white mb-4 leading-tight" style={{ fontFamily: 'Impact, sans-serif' }}>
+              <h2 className="text-3xl font-black uppercase text-white mb-4 leading-tight" style={{ fontFamily: 'Georgia, serif' }}>
                 Stay Ahead Of Every Regulation
               </h2>
               <p className="text-sm leading-relaxed mb-6" style={{ color: '#9ca3af' }}>
@@ -648,7 +856,7 @@ export default async function HomePage() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div>
               <SectionEyebrow label="Testimonials" />
-              <h2 className="text-3xl font-black uppercase mb-8 leading-tight" style={{ color: '#0d0d0d', fontFamily: 'Impact, sans-serif' }}>
+              <h2 className="text-3xl font-black uppercase mb-8 leading-tight" style={{ color: '#0d0d0d', fontFamily: 'Georgia, serif' }}>
                 What Operators Say
               </h2>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
@@ -670,7 +878,7 @@ export default async function HomePage() {
             <div className="hidden lg:block relative overflow-hidden" style={{ height: 420 }}>
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
-                src="https://images.unsplash.com/photo-1601584115197-04ecc0da31d7?w=900&q=80&auto=format&fit=crop"
+                src="https://images.unsplash.com/photo-1530268729831-4b0b9e170218?w=900&q=80&auto=format&fit=crop"
                 alt="Semi truck on highway"
                 className="w-full h-full object-cover"
               />
@@ -690,7 +898,7 @@ export default async function HomePage() {
               <span className="shrink-0 text-2xl">⚡</span>
               <div>
                 <p className="text-[10px] font-black uppercase tracking-widest mb-0.5" style={{ color: '#F5C518' }}>Resource Guide</p>
-                <p className="font-black uppercase text-white text-base leading-snug" style={{ fontFamily: 'Impact, sans-serif' }}>
+                <p className="font-black text-white text-base leading-snug" style={{ fontFamily: 'system-ui, sans-serif' }}>
                   What Each Resource Category Helps With
                 </p>
                 <p className="text-xs mt-1" style={{ color: '#9ca3af' }}>
@@ -712,7 +920,7 @@ export default async function HomePage() {
       <section style={{ background: '#0d0d0d', borderTop: '1px solid #2a2a2a' }} className="py-14">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <SectionEyebrow label="Latest News" />
-          <h2 className="text-3xl font-black uppercase text-white mb-8" style={{ fontFamily: 'Impact, sans-serif' }}>
+          <h2 className="text-3xl font-black uppercase text-white mb-8" style={{ fontFamily: 'Georgia, serif' }}>
             What&apos;s Happening In Trucking
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -763,7 +971,7 @@ export default async function HomePage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <ScrollReveal>
             <SectionEyebrow label="Industry Intelligence" />
-            <h2 className="heading-bar text-3xl font-black uppercase text-white mb-8" style={{ fontFamily: 'Impact, sans-serif' }}>
+            <h2 className="heading-bar text-3xl font-black uppercase text-white mb-8" style={{ fontFamily: 'Georgia, serif' }}>
               Facts Every Operator Should Know
             </h2>
           </ScrollReveal>
@@ -785,7 +993,7 @@ export default async function HomePage() {
                     </div>
                   </div>
                   <div className="p-5">
-                    <h3 className="font-black uppercase text-white text-base mb-2 leading-snug" style={{ fontFamily: 'Impact, sans-serif' }}>{fact.title}</h3>
+                    <h3 className="font-black uppercase text-white text-base mb-2 leading-snug" style={{ fontFamily: 'Georgia, serif' }}>{fact.title}</h3>
                     <p className="text-sm leading-relaxed" style={{ color: '#9ca3af' }}>{fact.body}</p>
                   </div>
                 </div>
@@ -800,7 +1008,7 @@ export default async function HomePage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <ScrollReveal>
             <SectionEyebrow label="Quick Reference" />
-            <h2 className="heading-bar text-3xl font-black uppercase text-white mb-8" style={{ fontFamily: 'Impact, sans-serif' }}>
+            <h2 className="heading-bar text-3xl font-black uppercase text-white mb-8" style={{ fontFamily: 'Georgia, serif' }}>
               Essential Rules &amp; Requirements
             </h2>
           </ScrollReveal>
@@ -824,6 +1032,133 @@ export default async function HomePage() {
         </div>
       </section>
 
+      {/* ── TRUCKING RANKINGS ── */}
+      <section style={{ background: '#0d0d0d', borderTop: '1px solid #2a2a2a' }} className="py-14">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <ScrollReveal>
+            <SectionEyebrow icon="🏆" label="Trucking Rankings" />
+            <h2 className="text-3xl font-black uppercase text-white mb-8" style={{ fontFamily: 'Georgia, serif' }}>
+              Top Picks For Owner-Operators
+            </h2>
+          </ScrollReveal>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+
+            {/* Top Truck Brands */}
+            <div className="p-5" style={{ background: '#1a1a1a', border: '1px solid #2a2a2a' }}>
+              <p className="text-[10px] font-black uppercase tracking-widest mb-4 flex items-center gap-1.5" style={{ color: '#F5C518' }}>🚛 Top Truck Brands</p>
+              <ol className="space-y-2.5">
+                {['Kenworth', 'Peterbilt', 'Freightliner', 'Volvo', 'International'].map((b, i) => (
+                  <li key={b} className="flex items-center gap-3 text-sm">
+                    <span className="w-5 h-5 flex items-center justify-center text-[10px] font-black shrink-0" style={{ background: i === 0 ? '#F5C518' : '#2a2a2a', color: i === 0 ? '#0d0d0d' : '#9ca3af' }}>{i + 1}</span>
+                    <span style={{ color: '#e5e7eb' }}>{b}</span>
+                  </li>
+                ))}
+              </ol>
+              <Link href="/brief?category=equipment" className="inline-block mt-4 text-xs font-bold uppercase tracking-widest hover:underline" style={{ color: '#F5C518' }}>View Equipment →</Link>
+            </div>
+
+            {/* Top Insurance Companies */}
+            <div className="p-5" style={{ background: '#1a1a1a', border: '1px solid #2a2a2a' }}>
+              <p className="text-[10px] font-black uppercase tracking-widest mb-4 flex items-center gap-1.5" style={{ color: '#F5C518' }}>🛡️ Top Insurance Carriers</p>
+              <ol className="space-y-2.5">
+                {['Progressive Commercial', 'Old Republic', 'Sentry Insurance', 'OOIDA Trust', 'GEICO Commercial'].map((b, i) => (
+                  <li key={b} className="flex items-center gap-3 text-sm">
+                    <span className="w-5 h-5 flex items-center justify-center text-[10px] font-black shrink-0" style={{ background: i === 0 ? '#F5C518' : '#2a2a2a', color: i === 0 ? '#0d0d0d' : '#9ca3af' }}>{i + 1}</span>
+                    <span style={{ color: '#e5e7eb' }}>{b}</span>
+                  </li>
+                ))}
+              </ol>
+              <Link href="/insurance" className="inline-block mt-4 text-xs font-bold uppercase tracking-widest hover:underline" style={{ color: '#F5C518' }}>Insurance Center →</Link>
+            </div>
+
+            {/* Top Load Boards */}
+            <div className="p-5" style={{ background: '#1a1a1a', border: '1px solid #2a2a2a' }}>
+              <p className="text-[10px] font-black uppercase tracking-widest mb-4 flex items-center gap-1.5" style={{ color: '#F5C518' }}>📦 Top Load Boards</p>
+              <ol className="space-y-2.5">
+                {['DAT Solutions', 'Truckstop.com', 'Convoy', 'Uber Freight', 'Loadsmart'].map((b, i) => (
+                  <li key={b} className="flex items-center gap-3 text-sm">
+                    <span className="w-5 h-5 flex items-center justify-center text-[10px] font-black shrink-0" style={{ background: i === 0 ? '#F5C518' : '#2a2a2a', color: i === 0 ? '#0d0d0d' : '#9ca3af' }}>{i + 1}</span>
+                    <span style={{ color: '#e5e7eb' }}>{b}</span>
+                  </li>
+                ))}
+              </ol>
+              <Link href="/resources" className="inline-block mt-4 text-xs font-bold uppercase tracking-widest hover:underline" style={{ color: '#F5C518' }}>All Resources →</Link>
+            </div>
+
+            {/* Top Fuel Cards */}
+            <div className="p-5" style={{ background: '#1a1a1a', border: '1px solid #2a2a2a' }}>
+              <p className="text-[10px] font-black uppercase tracking-widest mb-4 flex items-center gap-1.5" style={{ color: '#F5C518' }}>⛽ Top Fuel Cards</p>
+              <ol className="space-y-2.5">
+                {['EFS (Fleetcor)', 'Comdata', 'Relay Payments', 'TCS Fuel Card', 'Coast (Trucking)'].map((b, i) => (
+                  <li key={b} className="flex items-center gap-3 text-sm">
+                    <span className="w-5 h-5 flex items-center justify-center text-[10px] font-black shrink-0" style={{ background: i === 0 ? '#F5C518' : '#2a2a2a', color: i === 0 ? '#0d0d0d' : '#9ca3af' }}>{i + 1}</span>
+                    <span style={{ color: '#e5e7eb' }}>{b}</span>
+                  </li>
+                ))}
+              </ol>
+              <Link href="/resources" className="inline-block mt-4 text-xs font-bold uppercase tracking-widest hover:underline" style={{ color: '#F5C518' }}>All Resources →</Link>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      {/* ── COMMUNITY BLOCK ── */}
+      <section style={{ background: '#111111', borderTop: '1px solid #2a2a2a' }} className="py-14">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <ScrollReveal>
+            <SectionEyebrow icon="🚛" label="Community" />
+            <h2 className="text-3xl font-black uppercase text-white mb-8" style={{ fontFamily: 'Georgia, serif' }}>
+              Built By & For Truckers
+            </h2>
+          </ScrollReveal>
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+            {/* Driver Spotlight */}
+            <div className="p-6 flex flex-col" style={{ background: '#1a1a1a', border: '1px solid #2a2a2a' }}>
+              <p className="text-[10px] font-black uppercase tracking-widest mb-3" style={{ color: '#F5C518' }}>🌟 Driver Spotlight</p>
+              <p className="text-base font-bold text-white mb-3 leading-snug">&ldquo;Ran my first 500,000 miles as an owner-op last year. The compliance resources on this site helped me stay out of trouble and keep my CSA score clean.&rdquo;</p>
+              <p className="text-xs mb-5" style={{ color: '#9ca3af' }}>— Marcus T., Independent Owner-Operator, Texas</p>
+              <a href="mailto:info@truckkinghub.com?subject=Driver Story" className="mt-auto inline-block px-4 py-2 text-xs font-black uppercase tracking-widest transition-opacity hover:opacity-80" style={{ background: '#F5C518', color: '#0d0d0d' }}>
+                Share Your Story
+              </a>
+            </div>
+
+            {/* Submit a Tip */}
+            <div className="p-6 flex flex-col" style={{ background: '#1a1a1a', border: '1px solid #2a2a2a' }}>
+              <p className="text-[10px] font-black uppercase tracking-widest mb-3" style={{ color: '#F5C518' }}>📨 Submit a Tip</p>
+              <p className="text-sm text-white mb-3 font-bold">Know something the trucking community needs to hear?</p>
+              <p className="text-sm leading-relaxed mb-5" style={{ color: '#9ca3af' }}>
+                Spot a new FMCSA rule? Found a great load board feature? Dealing with a broker issue? Drop us a tip and we&apos;ll look into it for a future story.
+              </p>
+              <a href="mailto:info@truckkinghub.com?subject=Tip - Truck King Hub" className="mt-auto inline-block px-4 py-2 text-xs font-black uppercase tracking-widest border transition-opacity hover:opacity-80" style={{ borderColor: '#F5C518', color: '#F5C518' }}>
+                Send a Tip →
+              </a>
+            </div>
+
+            {/* Quick Poll */}
+            <div className="p-6 flex flex-col" style={{ background: '#1a1a1a', border: '1px solid #2a2a2a' }}>
+              <p className="text-[10px] font-black uppercase tracking-widest mb-3" style={{ color: '#F5C518' }}>📊 Quick Poll</p>
+              <p className="text-base font-bold text-white mb-4 leading-snug">What&apos;s your biggest business challenge right now?</p>
+              <div className="space-y-2 mb-5">
+                {['Rising insurance premiums', 'Low spot freight rates', 'Fuel costs eating margins', 'FMCSA compliance burden', 'Finding reliable brokers'].map((opt) => (
+                  <a
+                    key={opt}
+                    href={`mailto:info@truckkinghub.com?subject=Poll: ${encodeURIComponent(opt)}`}
+                    className="block w-full text-left px-3 py-2 text-xs font-semibold border transition-colors hover:border-yellow-400 hover:text-white"
+                    style={{ borderColor: '#2a2a2a', color: '#9ca3af' }}
+                  >
+                    {opt}
+                  </a>
+                ))}
+              </div>
+              <p className="text-[10px]" style={{ color: '#555' }}>Click to vote via email. Results in next week&apos;s digest.</p>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
       {/* ── AD SLOT 4: Footer banner (before Insurance CTA) ── */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-6" style={{ background: '#0d0d0d' }}>
         <RealAdBanner slot="footer_banner" />
@@ -835,7 +1170,7 @@ export default async function HomePage() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div>
               <SectionEyebrow label="Insurance & Risk Intelligence" />
-              <h2 className="text-3xl font-black uppercase text-white mb-4 leading-tight" style={{ fontFamily: 'Impact, sans-serif' }}>
+              <h2 className="text-3xl font-black uppercase text-white mb-4 leading-tight" style={{ fontFamily: 'Georgia, serif' }}>
                 What Your Safety Score Is Costing You Right Now
               </h2>
               <p className="text-sm leading-relaxed mb-6" style={{ color: '#9ca3af' }}>

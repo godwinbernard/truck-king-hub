@@ -10,11 +10,11 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 const adPlacements = [
-  { placement: 'Homepage Leaderboard', size: '728×90', format: 'Display', rate: '$299/mo', notes: 'Top-of-page visibility' },
-  { placement: 'Mid-Page Banner', size: '300×250', format: 'Display', rate: '$199/mo', notes: 'In-content placement' },
-  { placement: 'Article Sidebar', size: '300×600', format: 'Display', rate: '$149/mo', notes: 'All article pages' },
-  { placement: 'Newsletter Slot', size: 'Full-width', format: 'Email', rate: '$249/mo', notes: 'Weekly digest audience' },
-  { placement: 'Sponsored Article', size: 'Full page', format: 'Editorial', rate: '$499 flat', notes: 'Labeled sponsored content' },
+  { placement: 'Homepage Leaderboard', size: '728×90', format: 'Display', rate: '$150/mo', notes: 'Top-of-page visibility' },
+  { placement: 'Mid-Page Banner', size: '300×250', format: 'Display', rate: '$100/mo', notes: 'In-content placement' },
+  { placement: 'Article Sidebar', size: '300×600', format: 'Display', rate: '$75/mo', notes: 'All article pages' },
+  { placement: 'Newsletter Slot', size: 'Full-width', format: 'Email', rate: '$125/mo', notes: 'Weekly digest audience' },
+  { placement: 'Sponsored Article', size: 'Full page', format: 'Editorial', rate: '$250 flat', notes: 'Labeled sponsored content' },
 ];
 
 const demographics = [
@@ -105,7 +105,7 @@ export default function MediaKitPage() {
 
         {/* Ad Placements Table */}
         <section className="mb-14">
-          <div className="flex items-center gap-3 mb-6">
+          <div className="flex items-center gap-3 mb-3">
             <span style={{ background: '#F5C518', width: 4, height: 28, display: 'inline-block', borderRadius: 2 }} />
             <h2
               className="text-2xl font-bold uppercase"
@@ -113,7 +113,13 @@ export default function MediaKitPage() {
             >
               Ad Placements & Rates
             </h2>
+            <span className="px-3 py-1 text-xs font-black uppercase tracking-widest" style={{ background: '#F5C518', color: '#0d0d0d' }}>
+              50% LAUNCH DISCOUNT
+            </span>
           </div>
+          <p className="text-sm mb-6" style={{ color: '#9ca3af' }}>
+            Introductory pricing for early advertisers. Lock in your rate before we reach 25,000 monthly readers.
+          </p>
           <div className="rounded-lg overflow-hidden" style={{ border: '1px solid #2a2a2a' }}>
             <div
               className="grid grid-cols-5 gap-0 px-4 py-3 text-xs uppercase tracking-widest font-bold"

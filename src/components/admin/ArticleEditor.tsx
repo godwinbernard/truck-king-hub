@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { ArticleBodyRenderer } from '@/components/ArticleBodyRenderer';
 
 type ArticleForm = {
   title: string;
@@ -73,7 +74,9 @@ export function ArticleEditor({
     status: initial?.status ?? 'draft',
   });
   const [saving, setSaving] = useState(false);
+  const [uploadingCover, setUploadingCover] = useState(false);
   const [error, setError] = useState('');
+  const [bodyTab, setBodyTab] = useState<'write' | 'preview'>('write');
 
   function set(field: keyof ArticleForm, value: string | boolean) {
     setForm((prev) => {
@@ -117,6 +120,34 @@ export function ArticleEditor({
       setError('Network error — try again.');
     } finally {
       setSaving(false);
+    }
+  }
+
+  async function uploadCover(file: File | null) {
+    if (!file) return;
+
+    setUploadingCover(true);
+    setError('');
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('altText', form.title || file.name);
+
+      const res = await fetch('/api/admin/media', {
+        method: 'POST',
+        body: formData,
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        setError(data.error ?? 'Upload failed');
+        return;
+      }
+
+      setForm((prev) => ({ ...prev, coverImage: data.media?.url ?? prev.coverImage }));
+    } catch {
+      setError('Upload failed. Please try again.');
+    } finally {
+      setUploadingCover(false);
     }
   }
 
@@ -186,20 +217,73 @@ export function ArticleEditor({
               </div>
 
               <div>
-                <label className={labelCls} htmlFor="body">Article Body</label>
-                <textarea
-                  id="body"
-                  className={`${inputCls} min-h-[24rem] font-mono text-xs leading-6`}
-                  value={form.body}
-                  onChange={(e) => set('body', e.target.value)}
-                  placeholder="Write your full article here. You can use Markdown headings, lists, quotes, and tables."
-                />
-                <p className="mt-1 text-xs text-silver">Markdown-supported editor for editorial publishing.</p>
+                <div className="flex items-center justify-between mb-2">
+                  <label className={labelCls} htmlFor="body">Article Body</label>
+                  <div className="flex rounded-xl overflow-hidden border border-silver-light text-xs font-semibold">
+                    <button
+                      type="button"
+                      onClick={() => setBodyTab('write')}
+                      className={`px-3 py-1.5 transition ${bodyTab === 'write' ? 'bg-ink text-white' : 'bg-white text-charcoal hover:bg-parchment'}`}
+                    >
+                      Write
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setBodyTab('preview')}
+                      className={`px-3 py-1.5 transition ${bodyTab === 'preview' ? 'bg-ink text-white' : 'bg-white text-charcoal hover:bg-parchment'}`}
+                    >
+                      Preview
+                    </button>
+                  </div>
+                </div>
+                {bodyTab === 'write' ? (
+                  <>
+                    <textarea
+                      id="body"
+                      className={`${inputCls} min-h-96 font-mono text-xs leading-6`}
+                      value={form.body}
+                      onChange={(e) => set('body', e.target.value)}
+                      placeholder={`Write your article here using the renderBody markup:\n\n## Section heading\n# Sub-heading\n### H4\n> Callout / tip box\n!! Warning box\n:: Key Takeaway\n$$3.62|Diesel Price\n1. Numbered item\n- Bullet item\n>>> truck: Icon bullet\n---  (divider)\n**bold** *italic*`}
+                    />
+                    <p className="mt-1 text-xs text-silver">
+                      Headings: <code className="bg-parchment px-1">## H2</code> <code className="bg-parchment px-1"># H3</code> · Callout: <code className="bg-parchment px-1">&gt; text</code> · Warning: <code className="bg-parchment px-1">!! text</code> · Stat: <code className="bg-parchment px-1">$$Value|Label</code>
+                    </p>
+                  </>
+                ) : (
+                  <div
+                    className="min-h-96 rounded-2xl border border-silver-light overflow-y-auto p-6"
+                    style={{ background: '#0d0d0d' }}
+                  >
+                    {form.body.trim() ? (
+                      <ArticleBodyRenderer body={form.body} />
+                    ) : (
+                      <p className="text-sm text-silver italic">Nothing to preview yet — write something in the body field.</p>
+                    )}
+                  </div>
+                )}
               </div>
 
               <div>
                 <label className={labelCls} htmlFor="coverImage">Cover Image URL</label>
                 <input id="coverImage" className={inputCls} value={form.coverImage} onChange={(e) => set('coverImage', e.target.value)} placeholder="https://images.unsplash.com/..." />
+                <div className="mt-3 rounded-2xl border border-dashed border-silver-light bg-parchment/40 p-4">
+                  <label className="block text-[11px] font-bold uppercase tracking-[0.22em] text-silver" htmlFor="coverUpload">
+                    Upload Cover Image
+                  </label>
+                  <div className="mt-3 flex flex-col gap-3 sm:flex-row sm:items-center">
+                    <input
+                      id="coverUpload"
+                      type="file"
+                      accept="image/*"
+                      onChange={(e) => uploadCover(e.target.files?.[0] ?? null)}
+                      className="block w-full text-sm text-silver file:mr-4 file:rounded-full file:border-0 file:bg-ink file:px-4 file:py-2 file:text-sm file:font-semibold file:text-white hover:file:bg-charcoal"
+                    />
+                    {uploadingCover && <span className="text-xs font-semibold text-silver">Uploading…</span>}
+                  </div>
+                  <p className="mt-2 text-xs text-silver">
+                    Uploaded files are stored as media records and the resulting URL is copied into the cover field.
+                  </p>
+                </div>
               </div>
             </div>
           </div>

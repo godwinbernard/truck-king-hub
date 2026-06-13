@@ -5,6 +5,7 @@ import { desc, eq } from 'drizzle-orm';
 import { NextRequest } from 'next/server';
 import { ArticleValidationError, buildArticlePayload } from '@/lib/admin/articles';
 import { can } from '@/lib/admin/permissions';
+import { writeAuditLog } from '@/lib/admin/audit';
 
 export async function GET() {
   const session = await getSession();
@@ -57,6 +58,8 @@ export async function POST(req: NextRequest) {
       publishedAt: payload.status === 'published' ? new Date() : null,
       scheduledAt: payload.status === 'scheduled' ? new Date(payload.scheduledAt!) : null,
     }).returning();
+
+    await writeAuditLog(session.email ?? 'admin', 'created_article', 'article', payload.title, { id: article.id, status: payload.status });
 
     return Response.json({ article }, { status: 201 });
   } catch (error) {

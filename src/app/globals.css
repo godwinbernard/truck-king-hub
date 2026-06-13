@@ -11,6 +11,8 @@
   --color-tk-gray:        #9ca3af;
   --color-tk-gray-light:  #e5e7eb;
   --color-tk-charcoal:    #2c2c2c;
+  --color-navy:           #1e2f4f;
+  --color-navy-light:     #284065;
 
   /* Legacy aliases kept so admin pages don't break */
   --color-ink:           #0d0d0d;

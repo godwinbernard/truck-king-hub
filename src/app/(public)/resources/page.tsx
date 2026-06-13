@@ -203,7 +203,7 @@ export default async function ResourcesPage() {
       <div style={{ borderBottom: '1px solid #2a2a2a', background: '#111111' }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
           <p className="text-[10px] font-black uppercase tracking-widest mb-3 flex items-center gap-1" style={{ color: '#F5C518' }}>⚡ Truck King Hub</p>
-          <h1 className="text-4xl font-black uppercase text-white" style={{ fontFamily: 'Impact, sans-serif' }}>
+          <h1 className="text-4xl font-black uppercase text-white" style={{ fontFamily: 'Georgia, serif' }}>
             Owner-Operator Resource Directory
           </h1>
           <p className="text-sm mt-2" style={{ color: '#9ca3af' }}>
@@ -218,7 +218,7 @@ export default async function ResourcesPage() {
           <div className="flex items-start justify-between gap-4 mb-5">
             <div>
               <p className="text-[10px] font-black uppercase tracking-widest mb-2 flex items-center gap-1" style={{ color: '#F5C518' }}>⚡ Editorial Picks</p>
-              <h2 className="text-2xl font-black uppercase text-white" style={{ fontFamily: 'Impact, sans-serif' }}>Essential Resources for Truckers</h2>
+              <h2 className="text-2xl font-black uppercase text-white" style={{ fontFamily: 'Georgia, serif' }}>Essential Resources for Truckers</h2>
             </div>
             <p className="hidden md:block text-xs text-right max-w-md" style={{ color: '#9ca3af' }}>
               Official lookup tools, freight marketplaces, and trucking organizations that help owner-operators and fleets stay compliant and profitable.
@@ -255,7 +255,7 @@ export default async function ResourcesPage() {
 
         <section className="p-6" style={{ background: '#111111', border: '1px solid #2a2a2a' }}>
           <p className="text-[10px] font-black uppercase tracking-widest mb-3 flex items-center gap-1" style={{ color: '#F5C518' }}>⚡ Resource Guide</p>
-          <h2 className="text-xl sm:text-2xl font-black uppercase text-white mb-3" style={{ fontFamily: 'Impact, sans-serif' }}>
+          <h2 className="text-xl sm:text-2xl font-black uppercase text-white mb-3" style={{ fontFamily: 'Georgia, serif' }}>
             What Each Resource Category Helps With
           </h2>
           <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
@@ -296,7 +296,7 @@ export default async function ResourcesPage() {
           <div className="flex items-start justify-between gap-4 mb-5">
             <div>
               <p className="text-[10px] font-black uppercase tracking-widest mb-2 flex items-center gap-1" style={{ color: '#F5C518' }}>⚡ Directory</p>
-              <h2 className="text-2xl font-black uppercase text-white" style={{ fontFamily: 'Impact, sans-serif' }}>Reviewed Listings</h2>
+              <h2 className="text-2xl font-black uppercase text-white" style={{ fontFamily: 'Georgia, serif' }}>Reviewed Listings</h2>
             </div>
             <p className="text-xs text-right" style={{ color: '#9ca3af' }}>
               {categoryCount} categories · {listings.length} listings
@@ -318,7 +318,7 @@ export default async function ResourcesPage() {
                     </svg>
                   </div>
                   <div>
-                    <h2 id={`cat-${category}`} className="text-base font-black uppercase text-white" style={{ fontFamily: 'Impact, sans-serif' }}>
+                    <h2 id={`cat-${category}`} className="text-base font-black uppercase text-white" style={{ fontFamily: 'Georgia, serif' }}>
                       {CATEGORY_LABELS[category] ?? category}
                     </h2>
                     {CATEGORY_DESC[category] && (

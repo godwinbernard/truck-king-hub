@@ -1,9 +1,11 @@
 import { db } from '@/lib/db/client';
 import { articles } from '@/lib/db/schema';
-import { eq, desc } from 'drizzle-orm';
+import { desc, eq } from 'drizzle-orm';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
+import { ArticleBodyRenderer } from '@/components/ArticleBodyRenderer';
+import { ArticleShareBar } from '@/components/public/ArticleShareBar';
 
 export const dynamic = 'force-dynamic';
 
@@ -17,169 +19,6 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   };
 }
 
-// Icon map for >>> icon: lines
-const ICONS: Record<string, string> = {
-  truck:      '🚛', money:     '💰', shield:   '🛡️', clock:    '🕐',
-  check:      '✅', warning:   '⚠️', fuel:     '⛽', chart:    '📊',
-  wrench:     '🔧', doc:       '📋', star:     '⭐', phone:    '📞',
-  map:        '🗺️', key:       '🔑', fire:     '🔥', bolt:     '⚡',
-  info:       'ℹ️', tip:       '💡', people:   '👥', package:  '📦',
-};
-
-function renderBody(body: string) {
-  const paragraphs = body.split(/\n\n+/);
-  const elements: React.ReactNode[] = [];
-
-  for (let i = 0; i < paragraphs.length; i++) {
-    const trimmed = paragraphs[i].trim();
-    if (!trimmed) continue;
-
-    // ## H2
-    if (trimmed.startsWith('## ')) {
-      elements.push(
-        <h2 key={i} className="text-2xl font-black uppercase mt-12 mb-3 text-white flex items-center gap-3" style={{ fontFamily: 'Impact, sans-serif' }}>
-          <span className="w-1 h-7 shrink-0 rounded-sm" style={{ background: '#F5C518' }} />
-          {trimmed.slice(3)}
-        </h2>
-      );
-      continue;
-    }
-
-    // # H3
-    if (trimmed.startsWith('# ')) {
-      elements.push(
-        <h3 key={i} className="text-lg font-black uppercase mt-8 mb-2 text-white" style={{ fontFamily: 'Impact, sans-serif', color: '#e5e7eb' }}>
-          {trimmed.slice(2)}
-        </h3>
-      );
-      continue;
-    }
-
-    // ### H4
-    if (trimmed.startsWith('### ')) {
-      elements.push(
-        <h4 key={i} className="text-base font-bold mt-6 mb-2" style={{ color: '#F5C518' }}>
-          {trimmed.slice(4)}
-        </h4>
-      );
-      continue;
-    }
-
-    // > Callout / blockquote
-    if (trimmed.startsWith('> ')) {
-      const text = trimmed.slice(2);
-      elements.push(
-        <div key={i} className="my-6 p-5 flex gap-4 items-start" style={{ background: 'rgba(245,197,24,0.08)', borderLeft: '4px solid #F5C518' }}>
-          <span className="text-xl shrink-0">💡</span>
-          <p className="text-sm leading-relaxed font-medium italic" style={{ color: '#e5e7eb' }}>{text}</p>
-        </div>
-      );
-      continue;
-    }
-
-    // !! Warning box
-    if (trimmed.startsWith('!! ')) {
-      const text = trimmed.slice(3);
-      elements.push(
-        <div key={i} className="my-6 p-5 flex gap-4 items-start" style={{ background: 'rgba(220,38,38,0.08)', borderLeft: '4px solid #dc2626' }}>
-          <span className="text-xl shrink-0">⚠️</span>
-          <p className="text-sm leading-relaxed font-medium" style={{ color: '#fca5a5' }}>{text}</p>
-        </div>
-      );
-      continue;
-    }
-
-    // :: Key Takeaway box
-    if (trimmed.startsWith(':: ')) {
-      const text = trimmed.slice(3);
-      elements.push(
-        <div key={i} className="my-6 p-5" style={{ background: '#1a1a1a', border: '1px solid #2a2a2a' }}>
-          <p className="text-[10px] font-black uppercase tracking-widest mb-2" style={{ color: '#F5C518' }}>⚡ Key Takeaway</p>
-          <p className="text-base font-bold text-white leading-snug">{text}</p>
-        </div>
-      );
-      continue;
-    }
-
-    // Stat card: $$VALUE|Label
-    if (trimmed.startsWith('$$')) {
-      const parts = trimmed.slice(2).split('|');
-      const val = parts[0]?.trim();
-      const label = parts[1]?.trim();
-      elements.push(
-        <div key={i} className="my-4 inline-flex items-center gap-4 px-6 py-4" style={{ background: '#1a1a1a', border: '1px solid rgba(245,197,24,0.3)' }}>
-          <span className="font-black text-3xl leading-none" style={{ color: '#F5C518', fontFamily: 'Impact, sans-serif' }}>{val}</span>
-          {label && <span className="text-sm font-bold text-white uppercase tracking-wide">{label}</span>}
-        </div>
-      );
-      continue;
-    }
-
-    // Numbered list: 1. item
-    if (/^\d+\.\s/.test(trimmed)) {
-      const items = trimmed.split('\n').filter((l) => /^\d+\.\s/.test(l));
-      elements.push(
-        <ol key={i} className="my-4 space-y-3 counter-reset-list">
-          {items.map((item, j) => (
-            <li key={j} className="flex items-start gap-3">
-              <span className="shrink-0 w-6 h-6 flex items-center justify-center text-xs font-black" style={{ background: '#F5C518', color: '#0d0d0d' }}>{j + 1}</span>
-              <span className="text-sm leading-relaxed pt-0.5" style={{ color: '#d1d5db' }}>{item.replace(/^\d+\.\s/, '')}</span>
-            </li>
-          ))}
-        </ol>
-      );
-      continue;
-    }
-
-    // Bullet list: - item
-    if (trimmed.startsWith('- ')) {
-      const items = trimmed.split('\n').filter((l) => l.startsWith('- '));
-      elements.push(
-        <ul key={i} className="my-4 space-y-2">
-          {items.map((item, j) => (
-            <li key={j} className="flex items-start gap-3 text-sm leading-relaxed" style={{ color: '#d1d5db' }}>
-              <span className="shrink-0 mt-1.5 w-1.5 h-1.5 rounded-full" style={{ background: '#F5C518' }} />
-              <span>{item.slice(2)}</span>
-            </li>
-          ))}
-        </ul>
-      );
-      continue;
-    }
-
-    // Icon bullet: >>> icon: text
-    if (trimmed.startsWith('>>> ')) {
-      const rest = trimmed.slice(4);
-      const colonIdx = rest.indexOf(':');
-      const iconKey = colonIdx > -1 ? rest.slice(0, colonIdx).trim() : 'bolt';
-      const text = colonIdx > -1 ? rest.slice(colonIdx + 1).trim() : rest;
-      const emoji = ICONS[iconKey] ?? '⚡';
-      elements.push(
-        <div key={i} className="flex items-start gap-3 my-3 p-4" style={{ background: '#1a1a1a', border: '1px solid #2a2a2a' }}>
-          <span className="text-xl shrink-0">{emoji}</span>
-          <p className="text-sm leading-relaxed" style={{ color: '#d1d5db' }}>{text}</p>
-        </div>
-      );
-      continue;
-    }
-
-    // Divider: ---
-    if (trimmed === '---') {
-      elements.push(<hr key={i} className="my-10" style={{ borderColor: '#2a2a2a' }} />);
-      continue;
-    }
-
-    // Regular paragraph
-    const rendered = trimmed
-      .replace(/\*\*(.+?)\*\*/g, '<strong style="color:#e5e7eb">$1</strong>')
-      .replace(/\*(.+?)\*/g, '<em>$1</em>');
-    elements.push(
-      <p key={i} className="text-base leading-relaxed my-4" style={{ color: '#d1d5db' }} dangerouslySetInnerHTML={{ __html: rendered }} />
-    );
-  }
-
-  return elements;
-}
 
 const CAT_COLORS: Record<string, string> = {
   compliance: '#dc2626', freight: '#1d4ed8', insurance: '#d97706',
@@ -277,8 +116,8 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
             </span>
           </div>
           <h1
-            className="font-black uppercase leading-tight text-white"
-            style={{ fontFamily: 'Impact, sans-serif', fontSize: 'clamp(1.6rem, 4vw, 2.8rem)' }}
+            className="font-black leading-tight text-white"
+            style={{ fontFamily: 'Georgia, serif', fontSize: 'clamp(1.5rem, 3.5vw, 2.5rem)', lineHeight: 1.2 }}
           >
             {article.title}
           </h1>
@@ -306,6 +145,12 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
               </div>
             </div>
 
+            {/* Share bar */}
+            <ArticleShareBar
+              title={article.title}
+              url={`${process.env.NEXT_PUBLIC_BASE_URL ?? 'https://www.truckkinghub.com'}/article/${article.slug}`}
+            />
+
             {/* Excerpt */}
             <p className="text-xl leading-relaxed mb-8 font-medium pl-5" style={{ color: '#d1d5db', borderLeft: '4px solid #F5C518' }}>
               {article.excerpt}
@@ -313,7 +158,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
 
             {/* Body */}
             <div className="prose-content max-w-none">
-              {renderBody(article.body)}
+              <ArticleBodyRenderer body={article.body} />
             </div>
 
             {/* Mid-article image */}
@@ -375,16 +220,17 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
             {/* Quick links */}
             <div className="p-5" style={{ background: '#111111', border: '1px solid #2a2a2a' }}>
               <p className="text-[10px] font-black uppercase tracking-widest mb-4" style={{ color: '#F5C518' }}>⚡ Quick Links</p>
-              <div className="space-y-2">
+              <div className="grid grid-cols-2 gap-2">
                 {[
-                  { label: '📋 Compliance Center', href: '/compliance' },
-                  { label: '🛡️ Insurance Center', href: '/insurance' },
-                  { label: '📦 Resources Directory', href: '/resources' },
-                  { label: '🔍 Search Articles', href: '/search' },
+                  { label: '📋 Compliance', href: '/compliance' },
+                  { label: '🛡️ Insurance', href: '/insurance' },
+                  { label: '📦 Resources', href: '/resources' },
+                  { label: '🔍 Search', href: '/search' },
                   { label: '📰 All News', href: '/brief' },
+                  { label: '🏠 Home', href: '/' },
                 ].map((l) => (
                   <Link key={l.href} href={l.href}
-                    className="block text-xs font-semibold py-2 px-3 transition-colors hover:opacity-80"
+                    className="block text-xs font-semibold py-2 px-3 transition-colors hover:opacity-80 text-center"
                     style={{ background: '#1a1a1a', color: '#d1d5db', border: '1px solid #2a2a2a' }}>
                     {l.label}
                   </Link>

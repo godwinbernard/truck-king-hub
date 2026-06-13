@@ -7,6 +7,9 @@ const WORKSPACES = [
   { label: 'Dashboard', href: '/admin' },
   { label: 'Articles', href: '/admin/articles' },
   { label: 'Directory', href: '/admin/directory' },
+  { label: 'Ads', href: '/admin/ads' },
+  { label: 'Team', href: '/admin/users' },
+  { label: 'Logins', href: '/admin/logins' },
   { label: 'Takedowns', href: '/admin/takedowns' },
   { label: 'Queue', href: '/admin/queue' },
 ] as const;

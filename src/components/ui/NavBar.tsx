@@ -7,11 +7,8 @@ const NAV_LINKS = [
   { href: '/',                            label: 'Home' },
   { href: '/calculators',                 label: 'Calculators' },
   { href: '/brief',                       label: 'News' },
-  { href: '/brief?category=freight',      label: 'Logistics' },
   { href: '/brief?category=compliance',   label: 'Compliance' },
-  { href: '/brief?category=equipment',    label: 'Trucks' },
   { href: '/insurance',                   label: 'Insurance' },
-  { href: '/resources',                   label: 'Resources' },
   { href: '/brief?category=general',      label: 'Lifestyle' },
 ];
 

@@ -1,10 +1,10 @@
 const QUICK_LINKS = [
   { href: '/brief',                     label: 'News & Updates' },
   { href: '/brief?category=compliance', label: 'Compliance & FMCSA' },
-  { href: '/brief?category=freight',    label: 'Freight & Logistics' },
+  { href: '/freight',                   label: 'Freight & Logistics' },
   { href: '/brief?category=equipment',  label: 'Trucks & Equipment' },
-  { href: '/insurance',                 label: 'Insurance & Risk' },
   { href: '/resources',                 label: 'Resource Directory' },
+  { href: '/insurance',                 label: 'Insurance & Risk' },
   { href: '/about',                     label: 'About Us' },
   { href: '/media-kit',                 label: 'Media Kit' },
 ];
@@ -123,6 +123,17 @@ export function Footer() {
           {LEGAL_LINKS.map((l) => (
             <a key={l.href} href={l.href} className="text-xs hover:underline transition-colors" style={{ color: '#666' }}>{l.label}</a>
           ))}
+        </div>
+
+        {/* Disclaimer bar */}
+        <div className="mb-4 px-4 py-3 text-xs leading-relaxed" style={{ background: '#f9f9f9', border: '1px solid #e5e7eb', color: '#555' }}>
+          <strong style={{ color: '#0d0d0d' }}>⚠️ Disclaimer:</strong>{' '}
+          The information published on Truck King Hub is for general informational purposes only and may not always be accurate, complete, or current.
+          Trucking regulations, insurance requirements, and compliance rules change frequently — always verify critical information with the relevant
+          federal agencies (FMCSA, DOT), licensed insurance professionals, or qualified legal counsel before making business decisions.
+          Truck King Hub assumes no liability for errors, omissions, or actions taken based on content found on this website.
+          Use of this site constitutes acceptance of our{' '}
+          <a href="/terms" style={{ color: '#0d0d0d', textDecoration: 'underline' }}>Terms of Use</a>.
         </div>
 
         {/* Bottom bar */}

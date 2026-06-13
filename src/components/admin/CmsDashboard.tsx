@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { CMS_NAV, type DashboardModel } from '@/lib/admin/cms-dashboard';
-import type { ArticleRow } from '@/lib/admin/cms-dashboard';
+import type { ArticleRow, CommentRow, AdRow, CmsUserRow, AuditLogRow, NotificationRow } from '@/lib/admin/cms-dashboard';
+import { CommentActions } from '@/components/admin/CommentActions';
 
 function Panel({
   id,
@@ -176,22 +177,22 @@ export function CmsDashboard({ data }: { data: DashboardModel }) {
             <div className="rounded-2xl bg-white/10 p-4">
               <p className="text-[11px] font-bold uppercase tracking-[0.22em] text-parchment/70">Publishing Queue</p>
               <div className="mt-3 flex items-baseline justify-between">
-                <span className="text-3xl font-display-hed">3</span>
-                <Pill tone="accent">Awaiting approval</Pill>
+                <span className="text-3xl font-display-hed">{data.scheduledItems.length}</span>
+                <Pill tone="accent">Scheduled</Pill>
               </div>
             </div>
             <div className="rounded-2xl bg-white/10 p-4">
-              <p className="text-[11px] font-bold uppercase tracking-[0.22em] text-parchment/70">Ad Fill Rate</p>
+              <p className="text-[11px] font-bold uppercase tracking-[0.22em] text-parchment/70">Ad Slots</p>
               <div className="mt-3 flex items-baseline justify-between">
-                <span className="text-3xl font-display-hed">92%</span>
-                <Pill tone="success">Strong inventory</Pill>
+                <span className="text-3xl font-display-hed">{data.ads.filter((a: AdRow) => a.status === 'active').length}</span>
+                <Pill tone="success">Active</Pill>
               </div>
             </div>
             <div className="rounded-2xl bg-white/10 p-4">
-              <p className="text-[11px] font-bold uppercase tracking-[0.22em] text-parchment/70">Traffic Trend</p>
+              <p className="text-[11px] font-bold uppercase tracking-[0.22em] text-parchment/70">Pending Comments</p>
               <div className="mt-3 flex items-baseline justify-between">
-                <span className="text-3xl font-display-hed">+18%</span>
-                <Pill tone="warning">7-day lift</Pill>
+                <span className="text-3xl font-display-hed">{data.comments.filter((c: CommentRow) => c.status === 'pending').length}</span>
+                <Pill tone="warning">To review</Pill>
               </div>
             </div>
           </div>
@@ -389,31 +390,69 @@ export function CmsDashboard({ data }: { data: DashboardModel }) {
       </Panel>
 
       <Panel id="analytics" eyebrow="Analytics" title="Traffic, audience trends, and monetization performance">
-        <div className="grid gap-6 xl:grid-cols-[1.1fr_0.9fr]">
-          <div className="space-y-6">
-            <div className="grid gap-4 md:grid-cols-3">
-              <StatCard label="Page Views" value="182K" detail="Last 30 days across all public pages" />
-              <StatCard label="Sessions" value="64K" detail="Returning readers plus first-time visitors" />
-              <StatCard label="Bounce Rate" value="41%" detail="Average engagement across article pages" />
+        <div className="rounded-3xl border border-silver-light bg-white p-6 mb-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div className="flex items-start gap-4">
+            <div className="rounded-2xl bg-parchment p-3 shrink-0">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" className="text-crimson">
+                <path d="M3 17l4-8 4 4 4-6 4 10" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
             </div>
-            <ProgressBars items={data.analytics.trafficSources.map((item) => ({ name: item.source, value: item.value, detail: item.detail }))} label="Traffic sources" />
+            <div>
+              <p className="font-semibold text-ink">Vercel Analytics is active</p>
+              <p className="text-sm text-silver mt-1">Page views, visitors, referrers, and top pages are tracked automatically. Data appears in your Vercel dashboard within minutes of deployment.</p>
+            </div>
           </div>
-          <div className="space-y-6">
-            <ProgressBars items={data.analytics.deviceBreakdown.map((item) => ({ name: item.device, value: item.value, detail: item.detail }))} label="Device breakdown" />
-            <div className="rounded-3xl border border-silver-light bg-white p-5">
-              <p className="text-[11px] font-bold uppercase tracking-[0.22em] text-silver mb-4">Top content</p>
-              <div className="space-y-4">
-                {data.analytics.topPages.map((page) => (
-                  <div key={page.title} className="flex items-start justify-between gap-4 border-b border-silver-light pb-3 last:border-0 last:pb-0">
-                    <div>
-                      <p className="font-semibold text-ink">{page.title}</p>
-                      <p className="text-xs text-silver">{page.detail}</p>
-                    </div>
-                    <span className="text-sm font-bold text-crimson">{page.value}</span>
+          <a
+            href="https://vercel.com/bernardg-projects/truck-king-hub/analytics"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="shrink-0 rounded-2xl bg-ink px-5 py-2.5 text-sm font-semibold text-white hover:bg-charcoal transition"
+          >
+            Open Analytics →
+          </a>
+        </div>
+
+        <div className="grid gap-6 xl:grid-cols-[1fr_1fr]">
+          <div className="rounded-3xl border border-silver-light bg-white p-5">
+            <p className="text-[11px] font-bold uppercase tracking-[0.22em] text-silver mb-4">Recent articles by status</p>
+            <div className="space-y-3">
+              {data.analytics.topPages.map((page) => (
+                <div key={page.title} className="flex items-start justify-between gap-4 border-b border-silver-light pb-3 last:border-0 last:pb-0">
+                  <div>
+                    <p className="font-semibold text-ink text-sm">{page.title}</p>
+                    <p className="text-xs text-silver capitalize">{page.detail}</p>
                   </div>
-                ))}
-              </div>
+                  <Pill tone={page.value === 'published' ? 'success' : page.value === 'draft' ? 'accent' : 'neutral'}>{page.value}</Pill>
+                </div>
+              ))}
             </div>
+          </div>
+
+          <div className="rounded-3xl border border-silver-light bg-parchment p-5 flex flex-col gap-4">
+            <p className="text-[11px] font-bold uppercase tracking-[0.22em] text-silver">What Vercel Analytics tracks</p>
+            <ul className="space-y-2 text-sm text-charcoal">
+              {[
+                'Page views and unique visitors',
+                'Top pages by traffic',
+                'Traffic sources and referrers',
+                'Country and device breakdown',
+                'Core Web Vitals (LCP, CLS, FID)',
+                'Real-time visitor activity',
+              ].map((item) => (
+                <li key={item} className="flex items-center gap-2">
+                  <span className="w-1.5 h-1.5 rounded-full bg-crimson shrink-0" />
+                  {item}
+                </li>
+              ))}
+            </ul>
+            <a
+              href="https://vercel.com/bernardg-projects/truck-king-hub/analytics"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-auto text-xs font-semibold text-crimson hover:underline"
+            >
+              View full analytics dashboard →
+            </a>
           </div>
         </div>
       </Panel>
@@ -426,21 +465,29 @@ export function CmsDashboard({ data }: { data: DashboardModel }) {
                 <p className="text-[11px] font-bold uppercase tracking-[0.22em] text-silver">Comment moderation</p>
                 <h3 className="text-xl font-editorial font-bold text-ink">Approve, reject, or flag discussion</h3>
               </div>
-              <Pill tone="warning">4 waiting</Pill>
+              <Pill tone="warning">{data.comments.filter((c: CommentRow) => c.status === 'pending').length} pending</Pill>
             </div>
-            <div className="space-y-4">
-              {data.comments.map((comment) => (
-                <div key={comment.title} className="rounded-2xl border border-silver-light p-4">
-                  <div className="flex items-start justify-between gap-4">
-                    <div>
-                      <h4 className="font-semibold text-ink">{comment.title}</h4>
-                      <p className="mt-1 text-sm text-silver">{comment.subtitle}</p>
+            {data.comments.length === 0 ? (
+              <p className="text-sm text-silver">No comments yet. Comments submitted via the public site appear here.</p>
+            ) : (
+              <div className="space-y-4">
+                {data.comments.map((comment: CommentRow) => (
+                  <div key={comment.id} className="rounded-2xl border border-silver-light p-4">
+                    <div className="flex items-start justify-between gap-4">
+                      <div className="flex-1 min-w-0">
+                        <h4 className="font-semibold text-ink">{comment.authorName}</h4>
+                        <p className="mt-1 text-sm text-silver">{comment.body.slice(0, 120)}{comment.body.length > 120 ? '…' : ''}</p>
+                        <p className="mt-1 text-xs text-silver">{new Date(comment.createdAt).toLocaleDateString()}</p>
+                        <CommentActions id={comment.id} status={comment.status} flagged={comment.flagged} />
+                      </div>
+                      <Pill tone={comment.flagged ? 'danger' : comment.status === 'approved' ? 'success' : 'neutral'}>
+                        {comment.flagged ? 'Flagged' : comment.status}
+                      </Pill>
                     </div>
-                    <Pill tone="neutral">{comment.status ?? 'Pending'}</Pill>
                   </div>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            )}
           </div>
 
           <div className="space-y-6">
@@ -450,21 +497,30 @@ export function CmsDashboard({ data }: { data: DashboardModel }) {
                   <p className="text-[11px] font-bold uppercase tracking-[0.22em] text-silver">Ads</p>
                   <h3 className="text-xl font-editorial font-bold text-ink">Sponsored placements and monetization</h3>
                 </div>
-                <Pill tone="success">92% fill</Pill>
+                <div className="flex items-center gap-2">
+                  <Pill tone="neutral">{data.ads.length} slots</Pill>
+                  <Link href="/admin/ads" className="rounded-full bg-ink px-3 py-1.5 text-xs font-semibold text-white hover:bg-ink/80">
+                    Manage
+                  </Link>
+                </div>
               </div>
-              <div className="space-y-3">
-                {data.ads.map((ad) => (
-                  <div key={ad.title} className="rounded-2xl border border-silver-light p-4">
-                    <div className="flex items-center justify-between gap-4">
-                      <div>
-                        <h4 className="font-semibold text-ink">{ad.title}</h4>
-                        <p className="text-sm text-silver">{ad.subtitle}</p>
+              {data.ads.length === 0 ? (
+                <p className="text-sm text-silver">No ad campaigns yet. Use the API to add sponsored placements.</p>
+              ) : (
+                <div className="space-y-3">
+                  {data.ads.map((ad: AdRow) => (
+                    <div key={ad.id} className="rounded-2xl border border-silver-light p-4">
+                      <div className="flex items-center justify-between gap-4">
+                        <div>
+                          <h4 className="font-semibold text-ink">{ad.name}</h4>
+                          <p className="text-sm text-silver">{ad.placement} · {ad.sponsor} · {ad.impressions.toLocaleString()} impressions · {ad.clicks} clicks</p>
+                        </div>
+                        <Pill tone={ad.status === 'active' ? 'success' : ad.status === 'scheduled' ? 'warning' : 'neutral'}>{ad.status}</Pill>
                       </div>
-                      <Pill tone="accent">{ad.status ?? 'Active'}</Pill>
                     </div>
-                  </div>
-                ))}
-              </div>
+                  ))}
+                </div>
+              )}
             </div>
 
             <div id="users" className="rounded-3xl border border-silver-light bg-white p-5 scroll-mt-24">
@@ -473,21 +529,30 @@ export function CmsDashboard({ data }: { data: DashboardModel }) {
                   <p className="text-[11px] font-bold uppercase tracking-[0.22em] text-silver">Users</p>
                   <h3 className="text-xl font-editorial font-bold text-ink">Editorial team and permissions</h3>
                 </div>
-                <Pill tone="neutral">{data.users.length} active</Pill>
+                <div className="flex items-center gap-2">
+                  <Pill tone="neutral">{data.users.length} members</Pill>
+                  <Link href="/admin/users" className="rounded-full bg-ink px-3 py-1.5 text-xs font-semibold text-white hover:bg-ink/80">
+                    Manage
+                  </Link>
+                </div>
               </div>
-              <div className="space-y-3">
-                {data.users.map((user) => (
-                  <div key={user.title} className="rounded-2xl border border-silver-light p-4">
-                    <div className="flex items-center justify-between gap-4">
-                      <div>
-                        <h4 className="font-semibold text-ink">{user.title}</h4>
-                        <p className="text-sm text-silver">{user.subtitle}</p>
+              {data.users.length === 0 ? (
+                <p className="text-sm text-silver">No CMS users yet. <Link href="/admin/users" className="text-crimson underline">Add team members</Link> to grant editorial access.</p>
+              ) : (
+                <div className="space-y-3">
+                  {data.users.map((user: CmsUserRow) => (
+                    <div key={user.id} className="rounded-2xl border border-silver-light p-4">
+                      <div className="flex items-center justify-between gap-4">
+                        <div>
+                          <h4 className="font-semibold text-ink">{user.name}</h4>
+                          <p className="text-sm text-silver">{user.email} · {user.role}</p>
+                        </div>
+                        <Pill tone={user.status === 'active' ? 'success' : user.status === 'invited' ? 'warning' : 'neutral'}>{user.status}</Pill>
                       </div>
-                      <Pill tone="success">{user.status ?? 'Active'}</Pill>
                     </div>
-                  </div>
-                ))}
-              </div>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -520,30 +585,39 @@ export function CmsDashboard({ data }: { data: DashboardModel }) {
       </div>
 
       <Panel id="audit-logs" eyebrow="Audit logs" title="Content change history and administrative actions">
-        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-          {data.notifications.map((notification) => (
-            <div key={notification.title} className="rounded-3xl border border-silver-light bg-white p-5">
-              <p className="text-[11px] font-bold uppercase tracking-[0.22em] text-silver mb-2">Notification</p>
-              <h3 className="font-editorial text-xl font-bold text-ink">{notification.title}</h3>
-              <p className="mt-2 text-sm text-charcoal">{notification.subtitle}</p>
-            </div>
-          ))}
-        </div>
-        <div className="mt-6 rounded-3xl border border-silver-light bg-white overflow-hidden">
-          <div className="border-b border-silver-light px-5 py-4">
-            <p className="text-[11px] font-bold uppercase tracking-[0.22em] text-silver">Latest actions</p>
-          </div>
-          <div className="divide-y divide-silver-light">
-            {data.auditLogs.map((log) => (
-              <div key={log.title} className="px-5 py-4 flex flex-col gap-1 md:flex-row md:items-center md:justify-between md:gap-6">
-                <div>
-                  <p className="font-semibold text-ink">{log.title}</p>
-                  <p className="text-sm text-silver">{log.subtitle}</p>
-                </div>
-                <Pill tone="neutral">Logged</Pill>
+        {data.notifications.length > 0 && (
+          <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4 mb-6">
+            {data.notifications.map((notification: NotificationRow) => (
+              <div key={notification.id} className="rounded-3xl border border-silver-light bg-white p-5">
+                <p className="text-[11px] font-bold uppercase tracking-[0.22em] text-silver mb-2">{notification.type}</p>
+                <h3 className="font-editorial text-xl font-bold text-ink">{notification.title}</h3>
+                <p className="mt-2 text-sm text-charcoal">{notification.body}</p>
+                <p className="mt-2 text-xs text-silver">{new Date(notification.createdAt).toLocaleDateString()}</p>
               </div>
             ))}
           </div>
+        )}
+        <div className="rounded-3xl border border-silver-light bg-white overflow-hidden">
+          <div className="border-b border-silver-light px-5 py-4 flex items-center justify-between">
+            <p className="text-[11px] font-bold uppercase tracking-[0.22em] text-silver">Latest actions</p>
+            <Pill tone="neutral">{data.auditLogs.length} entries</Pill>
+          </div>
+          {data.auditLogs.length === 0 ? (
+            <div className="px-5 py-8 text-sm text-silver">No audit log entries yet. Actions like publishing, deleting, and editing articles are recorded here.</div>
+          ) : (
+            <div className="divide-y divide-silver-light">
+              {data.auditLogs.map((log: AuditLogRow) => (
+                <div key={log.id} className="px-5 py-4 flex flex-col gap-1 md:flex-row md:items-center md:justify-between md:gap-6">
+                  <div>
+                    <p className="font-semibold text-ink">{log.actor} — {log.action}</p>
+                    <p className="text-sm text-silver">{log.targetType}: {log.targetName}</p>
+                    <p className="text-xs text-silver">{new Date(log.createdAt).toLocaleString()}</p>
+                  </div>
+                  <Pill tone="neutral">Logged</Pill>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       </Panel>
 

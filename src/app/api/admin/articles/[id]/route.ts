@@ -5,6 +5,7 @@ import { eq } from 'drizzle-orm';
 import { NextRequest } from 'next/server';
 import { ArticleValidationError, buildArticlePayload } from '@/lib/admin/articles';
 import { can } from '@/lib/admin/permissions';
+import { writeAuditLog } from '@/lib/admin/audit';
 
 function slugify(value: string) {
   return value.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
@@ -85,6 +86,11 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
       updatedAt: new Date(),
     }).where(eq(articles.id, id)).returning();
 
+    const action = nextStatus === 'published' && existing.status !== 'published' ? 'published_article'
+      : nextStatus === 'archived' ? 'archived_article'
+      : 'updated_article';
+    await writeAuditLog(session.email ?? 'admin', action, 'article', payload.title, { id, status: nextStatus });
+
     return Response.json({ article: updated });
   } catch (error) {
     if (error instanceof ArticleValidationError) {
@@ -133,6 +139,8 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
     scheduledAt: null,
   }).returning();
 
+  await writeAuditLog(session.email ?? 'admin', 'duplicated_article', 'article', existing.title, { originalId: id, newId: article.id });
+
   return Response.json({ article }, { status: 201 });
 }
 
@@ -144,6 +152,10 @@ export async function DELETE(_req: NextRequest, { params }: { params: Promise<{ 
   }
 
   const { id } = await params;
+  const [existing] = await db.select({ title: articles.title }).from(articles).where(eq(articles.id, id));
   await db.delete(articles).where(eq(articles.id, id));
+  if (existing) {
+    await writeAuditLog(session.email ?? 'admin', 'deleted_article', 'article', existing.title, { id });
+  }
   return Response.json({ ok: true });
 }

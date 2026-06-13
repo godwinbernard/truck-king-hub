@@ -19,20 +19,30 @@ export default function AdminLoginPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-slate-50">
-      <div className="bg-white border border-slate-200 rounded-lg p-8 w-full max-w-sm shadow-sm">
-        <h1 className="text-lg font-extrabold text-navy mb-6">Admin Login</h1>
-        {error && <p className="text-red-600 text-sm mb-4">{error}</p>}
-        <form onSubmit={handleSubmit} className="space-y-4">
+    <div className="min-h-[100dvh] flex items-start justify-center bg-slate-50 px-4 py-8 sm:items-center sm:py-12">
+      <div className="w-full max-w-sm rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
+        <div className="mb-6">
+          <p className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400">Truck King Hub</p>
+          <h1 className="mt-2 text-xl font-extrabold text-navy">Admin Login</h1>
+          <p className="mt-2 text-sm leading-relaxed text-slate-500">
+            Sign in to manage articles, SEO, media, and trucking content.
+          </p>
+        </div>
+        {error && <p className="mb-4 rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">{error}</p>}
+        <form onSubmit={handleSubmit} className="space-y-3">
           <div>
             <label className="text-sm font-medium text-slate-700 block mb-1">Email</label>
-            <input name="email" type="email" required className="w-full border border-slate-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy" />
+            <input name="email" type="email" required className="w-full rounded-lg border border-slate-300 px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-navy" />
           </div>
           <div>
             <label className="text-sm font-medium text-slate-700 block mb-1">Password</label>
-            <input name="password" type="password" required className="w-full border border-slate-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy" />
+            <input name="password" type="password" required className="w-full rounded-lg border border-slate-300 px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-navy" />
           </div>
-          <button type="submit" className="w-full bg-navy text-white py-2 rounded text-sm font-semibold hover:bg-navy-light transition-colors">
+          <button
+            type="submit"
+            className="mt-2 w-full rounded-lg py-3 text-sm font-semibold text-white transition-opacity hover:opacity-90"
+            style={{ backgroundColor: '#1e2f4f' }}
+          >
             Sign in
           </button>
         </form>

@@ -1,7 +1,12 @@
 import type { InferSelectModel } from 'drizzle-orm';
-import { articles } from '@/lib/db/schema';
+import { articles, cmsComments, cmsAds, cmsUsers, cmsAuditLogs, cmsNotifications } from '@/lib/db/schema';
 
 export type ArticleRow = InferSelectModel<typeof articles>;
+export type CommentRow = InferSelectModel<typeof cmsComments>;
+export type AdRow = InferSelectModel<typeof cmsAds>;
+export type CmsUserRow = InferSelectModel<typeof cmsUsers>;
+export type AuditLogRow = InferSelectModel<typeof cmsAuditLogs>;
+export type NotificationRow = InferSelectModel<typeof cmsNotifications>;
 
 export type DashboardMetric = {
   label: string;
@@ -34,12 +39,12 @@ export type DashboardModel = {
     deviceBreakdown: Array<{ device: string; value: number; detail: string }>;
     topPages: Array<{ title: string; value: string; detail: string }>;
   };
-  comments: DashboardListItem[];
-  ads: DashboardListItem[];
-  users: DashboardListItem[];
+  comments: CommentRow[];
+  ads: AdRow[];
+  users: CmsUserRow[];
   roles: DashboardListItem[];
-  notifications: DashboardListItem[];
-  auditLogs: DashboardListItem[];
+  notifications: NotificationRow[];
+  auditLogs: AuditLogRow[];
   sitemap: Array<{ path: string; priority: string; status: string }>;
   settings: Array<{ label: string; value: string }>;
 };
@@ -69,13 +74,6 @@ const CONTENT_BUCKETS = [
   { name: 'Sponsored', description: 'Integrated partner content and advertiser placements.', tone: 'Monetized slots' },
 ] as const;
 
-const MEDIA_ASSETS: DashboardListItem[] = [
-  { title: 'Hero rig at dusk', subtitle: 'Cover image · 3.4 MB', status: 'Ready' },
-  { title: 'Driver profile portrait', subtitle: 'Editorial headshot · JPG', status: 'Tagged' },
-  { title: 'Fleet yard loading dock', subtitle: 'News image · 4.1 MB', status: 'SEO alt set' },
-  { title: 'Highway night shot', subtitle: 'Feature banner · WebP', status: 'Approved' },
-];
-
 const SEO_CHECKLIST: DashboardListItem[] = [
   { title: 'Meta title length', subtitle: 'All featured posts under 60 characters', status: 'Healthy' },
   { title: 'Meta descriptions', subtitle: 'Average 152 characters across published posts', status: 'Healthy' },
@@ -83,48 +81,6 @@ const SEO_CHECKLIST: DashboardListItem[] = [
   { title: 'Open Graph previews', subtitle: 'Images and headlines render correctly', status: 'Ready' },
   { title: 'Schema markup', subtitle: 'Article and NewsArticle templates applied', status: 'Ready' },
   { title: 'XML sitemap', subtitle: 'Auto-generated daily for content discoverability', status: 'Updated' },
-];
-
-const ANALYTICS_SOURCES = [
-  { source: 'Organic search', value: 48, detail: 'Largest traffic driver' },
-  { source: 'Direct', value: 23, detail: 'Returning readers and bookmarks' },
-  { source: 'Social', value: 17, detail: 'LinkedIn, Facebook, and X' },
-  { source: 'Referral', value: 12, detail: 'Partner sites and directory links' },
-];
-
-const DEVICE_BREAKDOWN = [
-  { device: 'Desktop', value: 52, detail: 'Long-form readers and editors' },
-  { device: 'Mobile', value: 38, detail: 'Drivers on the road' },
-  { device: 'Tablet', value: 10, detail: 'Dispatch and back-office users' },
-];
-
-const TOP_PAGES = [
-  { title: 'How to Start a Career in Trucking', value: '18.4K views', detail: 'Evergreen top performer' },
-  { title: 'Fuel-Saving Tips for Truck Drivers', value: '12.1K views', detail: 'High commercial intent' },
-  { title: 'DOT Regulations and Compliance', value: '9.7K views', detail: 'Authority content' },
-  { title: 'Electric Trucks in Logistics', value: '8.1K views', detail: 'Trending industry coverage' },
-];
-
-const COMMENTS: DashboardListItem[] = [
-  { title: 'Mike R.', subtitle: 'Asked about the best ELD setup for owner-operators.', status: 'Pending review' },
-  { title: 'Sharon T.', subtitle: 'Highlighted a broken link in the compliance article.', status: 'Flagged' },
-  { title: 'Darnell P.', subtitle: 'Shared a freight-rate tip for fleet managers.', status: 'Approved' },
-  { title: 'Elena S.', subtitle: 'Requested a source citation for a stats claim.', status: 'Needs reply' },
-];
-
-const ADS: DashboardListItem[] = [
-  { title: 'Hero banner', subtitle: 'Top homepage slot · 92% fill rate', status: 'Live' },
-  { title: 'Sponsored story block', subtitle: 'Mid-article placement · 18 clicks today', status: 'Active' },
-  { title: 'Sidebar partner ad', subtitle: 'Newsletter and article sidebar', status: 'Scheduled' },
-  { title: 'Affiliate slot', subtitle: 'Gear review pages and buying guides', status: 'Monetized' },
-];
-
-const USERS: DashboardListItem[] = [
-  { title: 'Avery Stone', subtitle: 'Editor · Content approvals and homepage curation', status: 'Online' },
-  { title: 'Jordan Wells', subtitle: 'SEO Manager · Schema, metadata, and crawl checks', status: 'Active' },
-  { title: 'Priya Patel', subtitle: 'Author · Blogs, lifestyle, and driver stories', status: 'Active' },
-  { title: 'Malik Johnson', subtitle: 'Analyst · Traffic and retention reporting', status: 'Active' },
-  { title: 'Nina Brooks', subtitle: 'Advertiser · Sponsored content placements', status: 'Invited' },
 ];
 
 const ROLES: DashboardListItem[] = [
@@ -136,22 +92,8 @@ const ROLES: DashboardListItem[] = [
   { title: 'Advertiser', subtitle: 'Can manage campaigns and sponsored placements.' },
 ];
 
-const NOTIFICATIONS: DashboardListItem[] = [
-  { title: '3 drafts waiting for approval', subtitle: 'Two articles and one sponsored post are queued.' },
-  { title: 'SEO review due today', subtitle: 'Meta description check on three high-value pages.' },
-  { title: 'Comment moderation alert', subtitle: 'A flagged compliance comment needs a response.' },
-  { title: 'Ad inventory nearly full', subtitle: 'Homepage hero and sidebar are both above 85% fill.' },
-];
-
-const AUDIT_LOGS: DashboardListItem[] = [
-  { title: 'Avery Stone published article', subtitle: 'How the Trucking Industry Is Adapting to New Technology · 12 min ago' },
-  { title: 'Jordan Wells updated SEO', subtitle: 'Added canonical URL and schema markup · 38 min ago' },
-  { title: 'Malik Johnson viewed analytics', subtitle: 'Checked top traffic sources for the last 24 hours · 1 hr ago' },
-  { title: 'Nina Brooks updated ad slot', subtitle: 'Activated sponsored block in the logistics category · 2 hr ago' },
-];
-
 const SETTINGS = [
-  { label: 'Default publish workflow', value: 'Draft -> Review -> Scheduled -> Published' },
+  { label: 'Default publish workflow', value: 'Draft → Review → Scheduled → Published' },
   { label: 'Role approval policy', value: 'Editors approve, admins override' },
   { label: 'Media optimization', value: 'Auto-generate alt text and WebP variants' },
   { label: 'Sitemap refresh', value: 'Nightly at 2:00 AM ET' },
@@ -160,7 +102,6 @@ const SETTINGS = [
 function inferContentType(article: ArticleRow) {
   const contentType = article.contentType?.toLowerCase?.() ?? '';
   if (contentType) return contentType;
-
   const category = article.category.toLowerCase();
   if (category.includes('news')) return 'news';
   if (category.includes('review')) return 'review';
@@ -168,7 +109,18 @@ function inferContentType(article: ArticleRow) {
   return 'blog';
 }
 
-export function buildDashboardModel(articleRows: ArticleRow[]): DashboardModel {
+export type DashboardInput = {
+  articles: ArticleRow[];
+  comments: CommentRow[];
+  ads: AdRow[];
+  users: CmsUserRow[];
+  auditLogs: AuditLogRow[];
+  notifications: NotificationRow[];
+};
+
+export function buildDashboardModel(input: DashboardInput): DashboardModel {
+  const { articles: articleRows, comments, ads, users, auditLogs, notifications } = input;
+
   const totalPosts = articleRows.length;
   const byStatus = articleRows.reduce<Record<string, number>>((acc, article) => {
     acc[article.status] = (acc[article.status] ?? 0) + 1;
@@ -237,26 +189,39 @@ export function buildDashboardModel(articleRows: ArticleRow[]): DashboardModel {
     recentArticles,
     topCategories,
     scheduledItems,
-    mediaAssets: MEDIA_ASSETS,
+    mediaAssets: [],
     seoChecklist: SEO_CHECKLIST,
     analytics: {
-      trafficSources: ANALYTICS_SOURCES,
-      deviceBreakdown: DEVICE_BREAKDOWN,
-      topPages: TOP_PAGES,
+      trafficSources: [
+        { source: 'Organic search', value: 0, detail: 'Connect analytics to see data' },
+        { source: 'Direct', value: 0, detail: 'Connect analytics to see data' },
+        { source: 'Social', value: 0, detail: 'Connect analytics to see data' },
+        { source: 'Referral', value: 0, detail: 'Connect analytics to see data' },
+      ],
+      deviceBreakdown: [
+        { device: 'Desktop', value: 0, detail: 'Connect analytics to see data' },
+        { device: 'Mobile', value: 0, detail: 'Connect analytics to see data' },
+        { device: 'Tablet', value: 0, detail: 'Connect analytics to see data' },
+      ],
+      topPages: recentArticles.slice(0, 4).map((a) => ({
+        title: a.title,
+        value: a.status === 'published' ? 'Published' : a.status,
+        detail: a.category,
+      })),
     },
-    comments: COMMENTS,
-    ads: ADS,
-    users: USERS,
+    comments,
+    ads,
+    users,
     roles: ROLES,
-    notifications: NOTIFICATIONS,
-    auditLogs: AUDIT_LOGS,
+    notifications,
+    auditLogs,
     sitemap: [
       { path: '/article/[slug]', priority: 'High', status: 'Indexed' },
       { path: '/news', priority: 'High', status: 'Indexed' },
-      { path: '/blogs', priority: 'High', status: 'Indexed' },
-      { path: '/reviews', priority: 'Medium', status: 'Indexed' },
-      { path: '/sponsored', priority: 'Medium', status: 'Indexed' },
-      { path: '/categories/[slug]', priority: 'Medium', status: 'Auto-updated' },
+      { path: '/brief', priority: 'High', status: 'Indexed' },
+      { path: '/compliance', priority: 'Medium', status: 'Indexed' },
+      { path: '/insurance', priority: 'Medium', status: 'Indexed' },
+      { path: '/freight', priority: 'Medium', status: 'Indexed' },
     ],
     settings: SETTINGS,
   };
