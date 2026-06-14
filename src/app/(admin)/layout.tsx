@@ -4,14 +4,16 @@ import { getSession } from '@/lib/admin/session';
 import { CMS_NAV } from '@/lib/admin/cms-dashboard';
 
 const WORKSPACES = [
-  { label: 'Dashboard', href: '/admin' },
-  { label: 'Articles', href: '/admin/articles' },
-  { label: 'Directory', href: '/admin/directory' },
-  { label: 'Ads', href: '/admin/ads' },
-  { label: 'Team', href: '/admin/users' },
-  { label: 'Logins', href: '/admin/logins' },
-  { label: 'Takedowns', href: '/admin/takedowns' },
-  { label: 'Queue', href: '/admin/queue' },
+  { label: '🏠 Dashboard',       href: '/admin' },
+  { label: '📝 Articles',        href: '/admin/articles' },
+  { label: '🖼️ Media Library',  href: '/admin/media' },
+  { label: '📢 Ads',             href: '/admin/ads' },
+  { label: '⚙️ Settings',        href: '/admin/settings' },
+  { label: '👤 Profile',         href: '/admin/profile' },
+  { label: '👥 Team',            href: '/admin/users' },
+  { label: '📋 Audit Logs',      href: '/admin/audit-logs' },
+  { label: '⏰ Queue',           href: '/admin/queue' },
+  { label: '🔒 Change Password', href: '/admin/change-password' },
 ] as const;
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
@@ -27,14 +29,17 @@ export default async function AdminLayout({ children }: { children: React.ReactN
         <aside className="border-r border-silver-light bg-white/95 backdrop-blur sticky top-0 hidden h-screen lg:block">
           <div className="flex h-full flex-col">
             <div className="border-b border-silver-light px-6 py-6">
-              <p className="text-[11px] font-bold uppercase tracking-[0.28em] text-crimson">Truck King Hub</p>
-              <h1 className="mt-2 text-2xl font-editorial font-bold">CMS Console</h1>
-              <p className="mt-2 text-sm text-charcoal">WordPress-style publishing for the trucking newsroom.</p>
+              <p className="font-black uppercase tracking-tight leading-none mb-1"
+                style={{ fontFamily: 'Impact, sans-serif', fontSize: '1.35rem', color: '#0d0d0d' }}>
+                TRUCKING<span style={{ color: '#F5C518' }}>TOK</span>
+                <span className="ml-1 text-xs px-1 py-0.5 align-middle" style={{ background: '#F5C518', color: '#0d0d0d', fontFamily: 'system-ui' }}>⚡</span>
+              </p>
+              <p className="mt-2 text-sm text-charcoal">Editorial control center.</p>
             </div>
 
             <nav className="flex-1 overflow-y-auto px-4 py-5">
               <div className="mb-6">
-                <p className="px-2 text-[11px] font-bold uppercase tracking-[0.22em] text-silver mb-3">Workspaces</p>
+                <p className="px-2 text-[11px] font-bold uppercase tracking-[0.22em] text-silver mb-3">Workspace</p>
                 <div className="space-y-1">
                   {WORKSPACES.map((item) => (
                     <Link
@@ -49,9 +54,9 @@ export default async function AdminLayout({ children }: { children: React.ReactN
               </div>
 
               <div>
-                <p className="px-2 text-[11px] font-bold uppercase tracking-[0.22em] text-silver mb-3">Dashboard sections</p>
+                <p className="px-2 text-[11px] font-bold uppercase tracking-[0.22em] text-silver mb-3">Sections</p>
                 <div className="space-y-1">
-                  {CMS_NAV.map((item) => (
+                  {CMS_NAV.slice(0, 8).map((item) => (
                     <a
                       key={item.href}
                       href={`/admin${item.href}`}
@@ -85,7 +90,11 @@ export default async function AdminLayout({ children }: { children: React.ReactN
           <header className="sticky top-0 z-20 border-b border-silver-light bg-white/90 backdrop-blur">
             <div className="flex items-center justify-between gap-4 px-4 py-4 sm:px-6 lg:px-8">
               <div>
-                <p className="text-[11px] font-bold uppercase tracking-[0.28em] text-crimson">Truck King Hub CMS</p>
+                <p className="font-black uppercase tracking-tight leading-none"
+                  style={{ fontFamily: 'Impact, sans-serif', fontSize: '1.1rem', color: '#0d0d0d' }}>
+                  TRUCKING<span style={{ color: '#F5C518' }}>TOK</span>
+                  <span className="ml-1 text-xs px-1 py-0.5 align-middle" style={{ background: '#F5C518', color: '#0d0d0d', fontFamily: 'system-ui' }}>⚡</span>
+                </p>
                 <p className="mt-1 text-sm text-charcoal">Editorial control center</p>
               </div>
 
